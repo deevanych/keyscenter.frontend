@@ -9,4 +9,12 @@ export default defineNuxtConfig({
             autoprefixer: {},
         },
     },
+    modules: ['@nuxtjs/apollo'],
+    apollo: {
+        clients: {
+            default: {
+                httpEndpoint: process.env.GRAPHQL_ENDPOINT ?? "http://localhost:1337/graphql"
+            }
+        },
+    },
 })

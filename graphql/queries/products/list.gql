@@ -1,0 +1,15 @@
+query GetProductsList {
+    products: products {
+        data {
+            id,
+            attributes {
+                title,
+                price,
+                salePrice,
+                createdAt,
+                updatedAt,
+                slug
+            }
+        }
+    }
+}

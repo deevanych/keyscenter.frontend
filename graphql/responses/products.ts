@@ -6,7 +6,16 @@ interface IGQLProductShowResponse {
 		salePrice: number,
 		createdAt: Date,
 		updatedAt: Date,
-		slug: string
+		slug: string,
+		images: {
+			data: [
+				{
+					attributes: {
+						url: string
+					}
+				}
+			]
+		}
 	}
 }
 

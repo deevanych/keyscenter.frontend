@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-	import { IProduct } from '~/models/Product';
+	import { Product } from '~/models/Product';
 	
 	interface IProps {
-		product: IProduct
+		product: Product
 	}
 	
 	const props: IProps = defineProps<IProps>()
-	const product: IProduct = toRaw(props.product)
+	const product: Product = toRaw(props.product)
 </script>
 
 <template>
@@ -15,7 +15,7 @@
 			<ui-tag class="product-card__tag"/>
       <nuxt-link :to="{name: 'shop-category-product', params: { category: 'windows', product: product.slug } }">
         <img class="product-card__preview"
-             src="http://localhost:1337/uploads/1b6e15a1_c9b6_11e5_830b_000c29aa01a1_8ba1b1b4_30d1_11e7_8ea5_000c29aa01a1_31522dc507.jpg" alt=""/>
+             :src="product.preview" alt=""/>
 			</nuxt-link>
       <div class="product-card__meta">
 				<h5 class="product-card__title">{{ product.title }}</h5>
@@ -63,7 +63,7 @@
 		}
 		
 		&__preview {
-			@apply rounded-t-lg aspect-square object-center object-cover;
+			@apply rounded-t-lg aspect-square object-center object-contain;
 		}
 	}
 </style>

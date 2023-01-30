@@ -1,0 +1,17 @@
+query GetProductBySlug ($slug: String) {
+    products(filters: { slug: { eq: $slug }}) {
+        data {
+            attributes {
+                slug
+                title
+                images {
+                    data {
+                        attributes {
+                            url
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

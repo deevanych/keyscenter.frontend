@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import {Product} from "~/models/Product";
+	import AddToCart from '~/components/AddToCart.vue';
 
   interface IProps {
     product: Product
@@ -32,6 +33,7 @@
     <div class="product-booking__availability">
       {{ props.product.isInStockWithCountHumanized }}
     </div>
+		<add-to-cart :max="props.product.availableCount"/>
   </div>
 </template>
 

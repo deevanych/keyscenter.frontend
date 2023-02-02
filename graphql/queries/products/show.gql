@@ -1,6 +1,7 @@
 query GetProductBySlug ($slug: String) {
     products(filters: { slug: { eq: $slug }, publishedAt: { notNull: true }}) {
         data {
+            id
             attributes {
                 slug
                 title

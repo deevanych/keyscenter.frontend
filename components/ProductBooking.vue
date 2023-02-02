@@ -33,7 +33,8 @@
     <div class="product-booking__availability">
       {{ props.product.isInStockWithCountHumanized }}
     </div>
-		<add-to-cart :max="props.product.availableCount"/>
+		<add-to-cart :max="props.product.availableCount"
+								 :product-id="+props.product.id"/>
   </div>
 </template>
 

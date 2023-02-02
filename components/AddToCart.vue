@@ -1,14 +1,36 @@
 <script lang="ts" setup>
+	import { Ref } from 'vue';
+	
 	interface IProps {
-		max: number
+		max: number;
+		productId: number;
 	}
 	
-	const count = ref(1)
+	import { useCartStore } from '~/store/cart';
+	
+	const cartStore = useCartStore()
+	const count: Ref<number> = ref(1)
 	const props = defineProps<IProps>()
+	const existsCartItem = ref(cartStore.getItemById(props.productId))
+	
+	const init = (): void => {
+		existsCartItem.value = cartStore.getItemById(props.productId)
+		
+		if (existsCartItem.value) {
+			count.value = existsCartItem.value.count
+		}
+	}
+	
+	cartStore.$subscribe((): void => {
+		init()
+	})
+
+	init()
 	
 	const changeValue = (increment = true): void => {
 		increment ? count.value++ : count.value--
 	}
+	
 	const isButtonDisabled = (increment = true): boolean => {
 		if (increment && count.value >= props.max) {
 			return true
@@ -19,6 +41,32 @@
 	
 	const isAddToCartButtonEnabled = computed(() => {
 		return count.value > 0 && count.value <= props.max
+	})
+	
+	const addToCart = (): void => {
+		cartStore.addToCart(props.productId, count.value)
+	}
+	
+	const addToCartButtonText = computed((): string => {
+		if (existsCartItem.value) {
+			return existsCartItem.value.count == count.value ? 'В корзине' : 'Обновить'
+		}
+		
+		return 'Купить'
+	})
+	
+	const addToCartButtonClass = computed((): string | void => {
+		if (count.value === 0) {
+			return
+		}
+		
+		let buttonClass = '_buy'
+		
+		if (existsCartItem.value) {
+			buttonClass = existsCartItem.value.count == count.value ? '_exists' : '_update'
+		}
+		
+		return `add-to-cart__cart-button${buttonClass}`
 	})
 </script>
 
@@ -44,7 +92,12 @@
 				</svg>
 			</button>
 		</div>
-		<ui-button :disabled="!isAddToCartButtonEnabled"/>
+		<ui-button :disabled="!isAddToCartButtonEnabled"
+							 @click="addToCart"
+							 class="add-to-cart__cart-button"
+							:class="addToCartButtonClass">
+			{{ addToCartButtonText }}
+		</ui-button>
 	</div>
 </template>
 
@@ -63,13 +116,25 @@
 			}
 		}
 		
+		&__cart-button {
+			@apply w-32 shrink-0;
+			
+			&_update {
+				@apply bg-yellow-400 hover:bg-yellow-500;
+			}
+			
+			&_exists {
+				@apply bg-green-400 hover:bg-green-500;
+			}
+		}
+		
 		&__button {
 			@apply bg-gray-100 text-gray-600
 			hover:text-gray-700 hover:bg-gray-200
 			h-full w-20 cursor-pointer outline-none flex items-center justify-center;
 			
 			&:disabled {
-				@apply cursor-not-allowed bg-gray-50;
+				@apply cursor-not-allowed bg-gray-50 hover:bg-gray-50;
 			}
 		}
 		

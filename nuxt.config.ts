@@ -9,7 +9,11 @@ export default defineNuxtConfig({
             autoprefixer: {},
         },
     },
-    modules: ['@nuxtjs/apollo'],
+    modules: [
+        '@nuxtjs/apollo',
+        '@pinia/nuxt',
+        '@pinia-plugin-persistedstate/nuxt'
+    ],
     apollo: {
         clients: {
             default: {

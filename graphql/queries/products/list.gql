@@ -1,5 +1,5 @@
 query GetProductsList {
-    products: products {
+    products: products(filters: { publishedAt: { notNull: true }}) {
         data {
             id,
             attributes {
@@ -9,6 +9,11 @@ query GetProductsList {
                 createdAt,
                 updatedAt,
                 slug,
+                product_keys (filters: { publishedAt: { notNull: true }}) {
+                    data {
+                        __typename
+                    }
+                }
                 images {
                     data {
                         attributes {

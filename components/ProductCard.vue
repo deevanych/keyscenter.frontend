@@ -12,8 +12,10 @@
 <template>
   <div class="flex justify-center">
     <div class="product-card">
-			<ui-tag class="product-card__tag"/>
-      <nuxt-link :to="{name: 'shop-category-product', params: { category: 'windows', product: product.slug } }">
+			<ui-tag v-if="product.isInStock" class="product-card__tag">
+        В наличии
+      </ui-tag>
+      <nuxt-link :to="{name: 'catalog-category-product', params: { category: 'windows', product: product.slug } }">
         <img class="product-card__preview"
              :src="product.preview" alt=""/>
 			</nuxt-link>

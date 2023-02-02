@@ -7,6 +7,13 @@ interface IGQLProductShowResponse {
 		createdAt: Date,
 		updatedAt: Date,
 		slug: string,
+		product_keys: {
+			data: [
+				{
+					'__typename': "ProductKeyEntity"
+				}
+			]
+		}
 		images: {
 			data: [
 				{

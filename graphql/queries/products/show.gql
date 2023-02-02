@@ -1,9 +1,16 @@
 query GetProductBySlug ($slug: String) {
-    products(filters: { slug: { eq: $slug }}) {
+    products(filters: { slug: { eq: $slug }, publishedAt: { notNull: true }}) {
         data {
             attributes {
                 slug
                 title
+                price
+                salePrice
+                product_keys (filters: { publishedAt: { notNull: true }}) {
+                    data {
+                        __typename
+                    }
+                }
                 images {
                     data {
                         attributes {

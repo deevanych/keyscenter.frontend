@@ -1,7 +1,8 @@
 <template>
 	<div
 			class="tag"
-	>В наличии
+	>
+    <slot></slot>
 	</div>
 </template>
 

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-	import { IProduct } from '~/models/Product';
-	
-	interface IProps {
-		products: IProduct[]
+	import {Product} from "~/models/Product";
+
+  interface IProps {
+		products: Product[]
 	}
 	
 	const props: IProps = defineProps<IProps>()
@@ -10,7 +10,7 @@
 
 <template>
   <div class="grid grid-cols-4 gap-10">
-    <product-component v-for="product in props.products"
+    <product-card v-for="product in props.products"
 											 :key="product.id"
 											 :product="product"/>
   </div>

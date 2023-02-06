@@ -1,11 +1,29 @@
 <script lang="ts" setup>
   import {usePopupsStore} from "~/store/popups";
   const { toggleCartPopup } = usePopupsStore()
+
+  const keypressHandler = (e: KeyboardEvent) => {
+    if (e.isTrusted && e.key === 'Escape') {
+      closePopup()
+    }
+  }
+
+  const closePopup = (): void => {
+    toggleCartPopup(false)
+  }
+
+  onMounted(() => {
+    window.addEventListener('keydown', keypressHandler)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener('keydown', keypressHandler)
+  })
 </script>
 
 <template>
   <div class="cart-popup">
-    <div @click="toggleCartPopup(false)"
+    <div @click="closePopup"
          class="cart-popup__background"></div>
     <div class="cart-popup__wrapper">
       <div class="cart-popup__content">

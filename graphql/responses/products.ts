@@ -14,6 +14,15 @@ interface IGQLProductShowResponse {
 				}
 			]
 		}
+		platforms: {
+			data: [
+				{
+					attributes: {
+						title: string
+					}
+				}
+			]
+		}
 		images: {
 			data: [
 				{

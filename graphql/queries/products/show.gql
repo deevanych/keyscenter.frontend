@@ -12,6 +12,13 @@ query GetProductBySlug ($slug: String) {
                         __typename
                     }
                 }
+                platforms {
+                    data {
+                        attributes {
+                            title
+                        }
+                    }
+                }
                 images {
                     data {
                         attributes {

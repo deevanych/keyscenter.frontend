@@ -20,6 +20,7 @@ interface IProduct {
 	isInStock: boolean;
 	isInStockHumanized: string;
 	isInStockWithCountHumanized: string;
+	platforms: string[];
 }
 
 export class Product extends Model implements IProduct {
@@ -29,6 +30,7 @@ export class Product extends Model implements IProduct {
 	public readonly slug: string;
 	public readonly images: string[];
 	public readonly availableCount: number;
+	public readonly platforms: string[];
 
 	constructor (data: IGQLProductShowResponse) {
 		super(data.id, data.attributes.createdAt, data.attributes.updatedAt);
@@ -38,6 +40,7 @@ export class Product extends Model implements IProduct {
 		this.slug = data.attributes.slug
 		this.images = data.attributes.images.data.map(images => images.attributes.url)
 		this.availableCount = data.attributes.product_keys.data.length
+		this.platforms = data.attributes.platforms.data.map(platform => platform.attributes.title)
 	}
 
 	get isInStock (): boolean {

@@ -506,6 +506,47 @@ type UsersPermissionsUserRelationResponseCollection {
     data: [UsersPermissionsUserEntity!]!
 }
 
+input PlatformFiltersInput {
+    id: IDFilterInput
+    title: StringFilterInput
+    product: ProductFiltersInput
+    createdAt: DateTimeFilterInput
+    updatedAt: DateTimeFilterInput
+    and: [PlatformFiltersInput]
+    or: [PlatformFiltersInput]
+    not: PlatformFiltersInput
+}
+
+input PlatformInput {
+    title: String
+    product: ID
+}
+
+type Platform {
+    title: String!
+    product: ProductEntityResponse
+    createdAt: DateTime
+    updatedAt: DateTime
+}
+
+type PlatformEntity {
+    id: ID
+    attributes: Platform
+}
+
+type PlatformEntityResponse {
+    data: PlatformEntity
+}
+
+type PlatformEntityResponseCollection {
+    data: [PlatformEntity!]!
+    meta: ResponseCollectionMeta!
+}
+
+type PlatformRelationResponseCollection {
+    data: [PlatformEntity!]!
+}
+
 input ProductFiltersInput {
     id: IDFilterInput
     title: StringFilterInput
@@ -516,6 +557,7 @@ input ProductFiltersInput {
     product_keys: ProductKeyFiltersInput
     product_category: ProductCategoryFiltersInput
     slug: StringFilterInput
+    platforms: PlatformFiltersInput
     createdAt: DateTimeFilterInput
     updatedAt: DateTimeFilterInput
     publishedAt: DateTimeFilterInput
@@ -534,6 +576,7 @@ input ProductInput {
     product_keys: [ID]
     product_category: ID
     slug: String
+    platforms: [ID]
     publishedAt: DateTime
 }
 
@@ -556,6 +599,11 @@ type Product {
     ): ProductKeyRelationResponseCollection
     product_category: ProductCategoryEntityResponse
     slug: String
+    platforms(
+        filters: PlatformFiltersInput
+        pagination: PaginationArg = {}
+        sort: [String] = []
+    ): PlatformRelationResponseCollection
     createdAt: DateTime
     updatedAt: DateTime
     publishedAt: DateTime
@@ -676,6 +724,7 @@ union GenericMorph =
     | UsersPermissionsPermission
     | UsersPermissionsRole
     | UsersPermissionsUser
+    | Platform
     | Product
     | ProductCategory
     | ProductKey
@@ -773,6 +822,12 @@ type Query {
         pagination: PaginationArg = {}
         sort: [String] = []
     ): UsersPermissionsUserEntityResponseCollection
+    platform(id: ID): PlatformEntityResponse
+    platforms(
+        filters: PlatformFiltersInput
+        pagination: PaginationArg = {}
+        sort: [String] = []
+    ): PlatformEntityResponseCollection
     product(id: ID): ProductEntityResponse
     products(
         filters: ProductFiltersInput
@@ -807,6 +862,9 @@ type Mutation {
         data: UploadFolderInput!
     ): UploadFolderEntityResponse
     deleteUploadFolder(id: ID!): UploadFolderEntityResponse
+    createPlatform(data: PlatformInput!): PlatformEntityResponse
+    updatePlatform(id: ID!, data: PlatformInput!): PlatformEntityResponse
+    deletePlatform(id: ID!): PlatformEntityResponse
     createProduct(data: ProductInput!): ProductEntityResponse
     updateProduct(id: ID!, data: ProductInput!): ProductEntityResponse
     deleteProduct(id: ID!): ProductEntityResponse

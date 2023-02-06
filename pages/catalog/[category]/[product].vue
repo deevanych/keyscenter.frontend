@@ -24,6 +24,10 @@
     <product-booking :product="product"/>
     <div class="col-span-2">
       <h1 class="font-bold leading-tight text-3xl mt-0 mb-2">{{ product.title }}</h1>
+      <rating-component />
+      <div>
+          Платформа: {{ product.platforms[0] }}
+      </div>
     </div>
   </div>
 </template>

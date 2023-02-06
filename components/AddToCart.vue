@@ -1,31 +1,17 @@
 <script lang="ts" setup>
 	import { Ref } from 'vue';
-	
+  import { useCartStore } from '~/store/cart';
+  import {usePopupsStore} from "~/store/popups";
+
 	interface IProps {
 		max: number;
 		productId: number;
 	}
-	
-	import { useCartStore } from '~/store/cart';
-	
-	const cartStore = useCartStore()
-	const count: Ref<number> = ref(1)
-	const props = defineProps<IProps>()
-	const existsCartItem = ref(cartStore.getItemById(props.productId))
-	
-	const init = (): void => {
-		existsCartItem.value = cartStore.getItemById(props.productId)
-		
-		if (existsCartItem.value) {
-			count.value = existsCartItem.value.count
-		}
-	}
-	
-	cartStore.$subscribe((): void => {
-		init()
-	})
 
-	init()
+	const cartStore = useCartStore()
+	const props = defineProps<IProps>()
+	const existsCartItem = computed(() => cartStore.getItemById(props.productId))
+  const count: Ref<number> = ref(existsCartItem.value ? existsCartItem.value.count : 1)
 	
 	const changeValue = (increment = true): void => {
 		increment ? count.value++ : count.value--
@@ -44,6 +30,10 @@
 	})
 	
 	const addToCart = (): void => {
+    if (existsCartItem.value && existsCartItem.value.count == count.value) {
+      usePopupsStore().toggleCartPopup()
+    }
+
 		cartStore.addToCart(props.productId, count.value)
 	}
 	

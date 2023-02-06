@@ -27,7 +27,7 @@
 					<div v-if="product.oldPrice"
 							 class="product-card__price_old">{{ product.oldPrice }}</div>
 				</div>
-				<ui-button />
+        <ui-button>Купить</ui-button>
       </div>
     </div>
   </div>

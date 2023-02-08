@@ -4,6 +4,9 @@ scalar JSON
 # A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 scalar DateTime
 
+# The `BigInt` scalar type represents non-fractional signed whole numeric values.
+scalar Long
+
 # The `Upload` scalar type represents a file upload.
 scalar Upload
 
@@ -117,6 +120,30 @@ input IntFilterInput {
     in: [Int]
     notIn: [Int]
     between: [Int]
+}
+
+input LongFilterInput {
+    and: [Long]
+    or: [Long]
+    not: LongFilterInput
+    eq: Long
+    eqi: Long
+    ne: Long
+    startsWith: Long
+    endsWith: Long
+    contains: Long
+    notContains: Long
+    containsi: Long
+    notContainsi: Long
+    gt: Long
+    gte: Long
+    lt: Long
+    lte: Long
+    null: Boolean
+    notNull: Boolean
+    in: [Long]
+    notIn: [Long]
+    between: [Long]
 }
 
 input FloatFilterInput {
@@ -547,6 +574,17 @@ type PlatformRelationResponseCollection {
     data: [PlatformEntity!]!
 }
 
+enum ENUM_PRODUCT_PRODUCT_TYPE {
+    Czifrovoj_klyuch
+    Login_parol
+    Ssylka
+}
+
+enum ENUM_PRODUCT_PRODUCT_DELIVERY {
+    Ruchnaya
+    Avtomaticheskaya
+}
+
 input ProductFiltersInput {
     id: IDFilterInput
     title: StringFilterInput
@@ -558,6 +596,9 @@ input ProductFiltersInput {
     product_category: ProductCategoryFiltersInput
     slug: StringFilterInput
     platforms: PlatformFiltersInput
+    product_type: StringFilterInput
+    product_delivery: StringFilterInput
+    views: LongFilterInput
     createdAt: DateTimeFilterInput
     updatedAt: DateTimeFilterInput
     publishedAt: DateTimeFilterInput
@@ -577,6 +618,9 @@ input ProductInput {
     product_category: ID
     slug: String
     platforms: [ID]
+    product_type: ENUM_PRODUCT_PRODUCT_TYPE
+    product_delivery: ENUM_PRODUCT_PRODUCT_DELIVERY
+    views: Long
     publishedAt: DateTime
 }
 
@@ -604,6 +648,9 @@ type Product {
         pagination: PaginationArg = {}
         sort: [String] = []
     ): PlatformRelationResponseCollection
+    product_type: ENUM_PRODUCT_PRODUCT_TYPE
+    product_delivery: ENUM_PRODUCT_PRODUCT_DELIVERY
+    views: Long
     createdAt: DateTime
     updatedAt: DateTime
     publishedAt: DateTime

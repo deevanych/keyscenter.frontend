@@ -7,6 +7,9 @@ interface IGQLProductShowResponse {
 		createdAt: Date,
 		updatedAt: Date,
 		slug: string,
+		views: number,
+		product_type: string,
+		product_delivery: string,
 		product_keys: {
 			data: [
 				{

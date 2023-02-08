@@ -1,7 +1,7 @@
 import { price } from '~/helpers/price';
 import { Model } from '~/models/Model';
 
-interface IProduct {
+interface IShortProduct {
 	id: number;
 	title: string;
 	price: number;
@@ -20,17 +20,22 @@ interface IProduct {
 	isInStock: boolean;
 	isInStockHumanized: string;
 	isInStockWithCountHumanized: string;
-	platforms: string[];
 }
 
-export class Product extends Model implements IProduct {
+interface IProduct extends IShortProduct {
+	platforms: string[];
+	views: number;
+	productType: string;
+	productDelivery: string;
+}
+
+export class ShortProduct extends Model implements IShortProduct {
 	public readonly title: string;
 	public readonly price: number;
 	public readonly salePrice: number;
 	public readonly slug: string;
 	public readonly images: string[];
 	public readonly availableCount: number;
-	public readonly platforms: string[];
 
 	constructor (data: IGQLProductShowResponse) {
 		super(data.id, data.attributes.createdAt, data.attributes.updatedAt);
@@ -40,7 +45,6 @@ export class Product extends Model implements IProduct {
 		this.slug = data.attributes.slug
 		this.images = data.attributes.images.data.map(images => images.attributes.url)
 		this.availableCount = data.attributes.product_keys.data.length
-		this.platforms = data.attributes.platforms.data.map(platform => platform.attributes.title)
 	}
 
 	get isInStock (): boolean {
@@ -73,5 +77,20 @@ export class Product extends Model implements IProduct {
 		}
 
 		return
+	}
+}
+
+export class Product extends ShortProduct implements IProduct {
+	public readonly platforms: string[];
+	public readonly views: number;
+	public readonly productType: string;
+	public readonly productDelivery: string;
+
+	constructor(data: IGQLProductShowResponse) {
+		super(data);
+		this.platforms = data.attributes.platforms.data.map(platform => platform.attributes.title)
+		this.views = data.attributes.views
+		this.productType = data.attributes.product_type
+		this.productDelivery = data.attributes.product_delivery
 	}
 }

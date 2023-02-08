@@ -25,9 +25,8 @@
     <div class="col-span-2">
       <h1 class="font-bold leading-tight text-3xl mt-0 mb-2">{{ product.title }}</h1>
       <rating-component />
-      <div>
-          Платформа: {{ product.platforms[0] }}
-      </div>
+      <product-details :product="product"
+                       class="product-page__details"/>
     </div>
   </div>
 </template>
@@ -35,5 +34,9 @@
 <style lang="scss" scoped>
   .product-page {
     @apply grid grid-cols-3 gap-12;
+
+    &__details {
+      @apply mt-8;
+    }
   }
 </style>

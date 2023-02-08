@@ -12,6 +12,9 @@ query GetProductBySlug ($slug: String) {
                         __typename
                     }
                 }
+                product_delivery
+                product_type
+                views
                 platforms {
                     data {
                         attributes {

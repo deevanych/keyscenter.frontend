@@ -27,6 +27,8 @@ interface IProduct extends IShortProduct {
 	views: number;
 	productType: string;
 	productDelivery: string;
+	description: string;
+	instruction: string;
 }
 
 export class ShortProduct extends Model implements IShortProduct {
@@ -85,6 +87,8 @@ export class Product extends ShortProduct implements IProduct {
 	public readonly views: number;
 	public readonly productType: string;
 	public readonly productDelivery: string;
+	public readonly description: string;
+	public readonly instruction: string;
 
 	constructor(data: IGQLProductShowResponse) {
 		super(data);
@@ -92,5 +96,7 @@ export class Product extends ShortProduct implements IProduct {
 		this.views = data.attributes.views
 		this.productType = data.attributes.product_type
 		this.productDelivery = data.attributes.product_delivery
+		this.description = data.attributes.description
+		this.instruction = data.attributes.instruction
 	}
 }

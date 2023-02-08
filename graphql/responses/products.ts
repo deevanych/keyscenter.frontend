@@ -10,6 +10,8 @@ interface IGQLProductShowResponse {
 		views: number,
 		product_type: string,
 		product_delivery: string,
+		description: string,
+		instruction: string,
 		product_keys: {
 			data: [
 				{

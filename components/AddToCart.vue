@@ -9,29 +9,24 @@
 	}
 
 	const cartStore = useCartStore()
+	const popupStore = usePopupsStore()
 	const props = defineProps<IProps>()
 	const existsCartItem = computed(() => cartStore.getItemById(props.productId))
-  const count: Ref<number> = ref(existsCartItem.value ? existsCartItem.value.count : 1)
+  const count: Ref<number> = ref(existsCartItem.value?.count ?? 1)
 	
 	const changeValue = (increment = true): void => {
 		increment ? count.value++ : count.value--
 	}
 	
 	const isButtonDisabled = (increment = true): boolean => {
-		if (increment && count.value >= props.max) {
-			return true
-		}
-		
-		return !increment && count.value <= 0;
+		return (increment && count.value >= props.max) || !increment && count.value <= 0;
 	}
 	
-	const isAddToCartButtonEnabled = computed(() => {
-		return count.value > 0 && count.value <= props.max
-	})
+	const isAddToCartButtonEnabled = computed(() => 0 < count.value && count.value <= props.max)
 	
 	const addToCart = (): void => {
     if (existsCartItem.value && existsCartItem.value.count == count.value) {
-      usePopupsStore().toggleCartPopup()
+			popupStore.toggleCartPopup()
     }
 
 		cartStore.addToCart(props.productId, count.value)

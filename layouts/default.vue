@@ -1,8 +1,9 @@
 <script setup lang="ts">
   import { usePopupsStore } from "~/store/popups";
+	import { ComputedRef } from 'vue';
 
   const popupStore = usePopupsStore()
-  const isCartPopupShown = computed(() => popupStore.isCartPopupShown)
+  const isCartPopupShown: ComputedRef<boolean> = computed(() => popupStore.isCartPopupShown)
 </script>
 
 <template>

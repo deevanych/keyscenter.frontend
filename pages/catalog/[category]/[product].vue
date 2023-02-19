@@ -10,7 +10,7 @@
     slug: route.params.product
   })
 
-  let product: Ref<Product> = ref({} as Product)
+  const product: Ref<Product | undefined> = ref()
 
   if (data.value?.products && data.value?.products.data.length) {
     product.value = new Product(data.value?.products.data[0])
@@ -20,7 +20,7 @@
 </script>
 
 <template>
-  <div class="product-page">
+  <div v-if="product" class="product-page">
     <product-booking :product="product"/>
     <div class="col-span-2">
       <h1 class="product-page__title">{{ product.title }}</h1>

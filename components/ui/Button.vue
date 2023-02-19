@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 	interface IProps {
-		disabled: boolean
+		disabled?: boolean
 	}
 	
 	const props = withDefaults(defineProps<IProps>(), {
@@ -9,7 +9,9 @@
 </script>
 
 <template>
-	<button type="button" class="button" :disabled="props.disabled">
+	<button type="button"
+					class="button"
+					:disabled="props.disabled">
 		<slot />
 	</button>
 </template>

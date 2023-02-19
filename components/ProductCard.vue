@@ -6,7 +6,7 @@
 	}
 	
 	const props: IProps = defineProps<IProps>()
-	const product: Product = toRaw(props.product)
+	const product: Product = props.product
 </script>
 
 <template>

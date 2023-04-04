@@ -533,6 +533,43 @@ type UsersPermissionsUserRelationResponseCollection {
     data: [UsersPermissionsUserEntity!]!
 }
 
+input DeliveryMethodFiltersInput {
+    id: IDFilterInput
+    title: StringFilterInput
+    createdAt: DateTimeFilterInput
+    updatedAt: DateTimeFilterInput
+    publishedAt: DateTimeFilterInput
+    and: [DeliveryMethodFiltersInput]
+    or: [DeliveryMethodFiltersInput]
+    not: DeliveryMethodFiltersInput
+}
+
+input DeliveryMethodInput {
+    title: String
+    publishedAt: DateTime
+}
+
+type DeliveryMethod {
+    title: String!
+    createdAt: DateTime
+    updatedAt: DateTime
+    publishedAt: DateTime
+}
+
+type DeliveryMethodEntity {
+    id: ID
+    attributes: DeliveryMethod
+}
+
+type DeliveryMethodEntityResponse {
+    data: DeliveryMethodEntity
+}
+
+type DeliveryMethodEntityResponseCollection {
+    data: [DeliveryMethodEntity!]!
+    meta: ResponseCollectionMeta!
+}
+
 input PlatformFiltersInput {
     id: IDFilterInput
     title: StringFilterInput
@@ -574,31 +611,20 @@ type PlatformRelationResponseCollection {
     data: [PlatformEntity!]!
 }
 
-enum ENUM_PRODUCT_PRODUCT_TYPE {
-    Czifrovoj_klyuch
-    Login_parol
-    Ssylka
-}
-
-enum ENUM_PRODUCT_PRODUCT_DELIVERY {
-    Ruchnaya
-    Avtomaticheskaya
-}
-
 input ProductFiltersInput {
     id: IDFilterInput
     title: StringFilterInput
-    description: StringFilterInput
-    instruction: StringFilterInput
     price: IntFilterInput
     salePrice: IntFilterInput
     product_keys: ProductKeyFiltersInput
     product_category: ProductCategoryFiltersInput
     slug: StringFilterInput
     platforms: PlatformFiltersInput
-    product_type: StringFilterInput
-    product_delivery: StringFilterInput
     views: LongFilterInput
+    description: StringFilterInput
+    instruction: StringFilterInput
+    delivery_method: DeliveryMethodFiltersInput
+    product_type: ProductTypeFiltersInput
     createdAt: DateTimeFilterInput
     updatedAt: DateTimeFilterInput
     publishedAt: DateTimeFilterInput
@@ -610,17 +636,17 @@ input ProductFiltersInput {
 input ProductInput {
     title: String
     images: [ID]
-    description: String
-    instruction: String
     price: Int
     salePrice: Int
     product_keys: [ID]
     product_category: ID
     slug: String
     platforms: [ID]
-    product_type: ENUM_PRODUCT_PRODUCT_TYPE
-    product_delivery: ENUM_PRODUCT_PRODUCT_DELIVERY
     views: Long
+    description: String
+    instruction: String
+    delivery_method: ID
+    product_type: ID
     publishedAt: DateTime
 }
 
@@ -631,8 +657,6 @@ type Product {
         pagination: PaginationArg = {}
         sort: [String] = []
     ): UploadFileRelationResponseCollection
-    description: String
-    instruction: String
     price: Int
     salePrice: Int
     product_keys(
@@ -648,9 +672,11 @@ type Product {
         pagination: PaginationArg = {}
         sort: [String] = []
     ): PlatformRelationResponseCollection
-    product_type: ENUM_PRODUCT_PRODUCT_TYPE
-    product_delivery: ENUM_PRODUCT_PRODUCT_DELIVERY
     views: Long
+    description: String
+    instruction: String
+    delivery_method: DeliveryMethodEntityResponse
+    product_type: ProductTypeEntityResponse
     createdAt: DateTime
     updatedAt: DateTime
     publishedAt: DateTime
@@ -764,6 +790,43 @@ type ProductKeyRelationResponseCollection {
     data: [ProductKeyEntity!]!
 }
 
+input ProductTypeFiltersInput {
+    id: IDFilterInput
+    title: StringFilterInput
+    createdAt: DateTimeFilterInput
+    updatedAt: DateTimeFilterInput
+    publishedAt: DateTimeFilterInput
+    and: [ProductTypeFiltersInput]
+    or: [ProductTypeFiltersInput]
+    not: ProductTypeFiltersInput
+}
+
+input ProductTypeInput {
+    title: String
+    publishedAt: DateTime
+}
+
+type ProductType {
+    title: String!
+    createdAt: DateTime
+    updatedAt: DateTime
+    publishedAt: DateTime
+}
+
+type ProductTypeEntity {
+    id: ID
+    attributes: ProductType
+}
+
+type ProductTypeEntityResponse {
+    data: ProductTypeEntity
+}
+
+type ProductTypeEntityResponseCollection {
+    data: [ProductTypeEntity!]!
+    meta: ResponseCollectionMeta!
+}
+
 union GenericMorph =
     UploadFile
     | UploadFolder
@@ -771,10 +834,12 @@ union GenericMorph =
     | UsersPermissionsPermission
     | UsersPermissionsRole
     | UsersPermissionsUser
+    | DeliveryMethod
     | Platform
     | Product
     | ProductCategory
     | ProductKey
+    | ProductType
 
 input FileInfoInput {
     name: String
@@ -869,6 +934,13 @@ type Query {
         pagination: PaginationArg = {}
         sort: [String] = []
     ): UsersPermissionsUserEntityResponseCollection
+    deliveryMethod(id: ID): DeliveryMethodEntityResponse
+    deliveryMethods(
+        filters: DeliveryMethodFiltersInput
+        pagination: PaginationArg = {}
+        sort: [String] = []
+        publicationState: PublicationState = LIVE
+    ): DeliveryMethodEntityResponseCollection
     platform(id: ID): PlatformEntityResponse
     platforms(
         filters: PlatformFiltersInput
@@ -896,6 +968,13 @@ type Query {
         sort: [String] = []
         publicationState: PublicationState = LIVE
     ): ProductKeyEntityResponseCollection
+    productType(id: ID): ProductTypeEntityResponse
+    productTypes(
+        filters: ProductTypeFiltersInput
+        pagination: PaginationArg = {}
+        sort: [String] = []
+        publicationState: PublicationState = LIVE
+    ): ProductTypeEntityResponseCollection
     me: UsersPermissionsMe
 }
 
@@ -909,6 +988,12 @@ type Mutation {
         data: UploadFolderInput!
     ): UploadFolderEntityResponse
     deleteUploadFolder(id: ID!): UploadFolderEntityResponse
+    createDeliveryMethod(data: DeliveryMethodInput!): DeliveryMethodEntityResponse
+    updateDeliveryMethod(
+        id: ID!
+        data: DeliveryMethodInput!
+    ): DeliveryMethodEntityResponse
+    deleteDeliveryMethod(id: ID!): DeliveryMethodEntityResponse
     createPlatform(data: PlatformInput!): PlatformEntityResponse
     updatePlatform(id: ID!, data: PlatformInput!): PlatformEntityResponse
     deletePlatform(id: ID!): PlatformEntityResponse
@@ -926,6 +1011,9 @@ type Mutation {
     createProductKey(data: ProductKeyInput!): ProductKeyEntityResponse
     updateProductKey(id: ID!, data: ProductKeyInput!): ProductKeyEntityResponse
     deleteProductKey(id: ID!): ProductKeyEntityResponse
+    createProductType(data: ProductTypeInput!): ProductTypeEntityResponse
+    updateProductType(id: ID!, data: ProductTypeInput!): ProductTypeEntityResponse
+    deleteProductType(id: ID!): ProductTypeEntityResponse
     upload(
         refId: ID
         ref: String

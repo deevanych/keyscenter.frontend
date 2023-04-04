@@ -12,8 +12,20 @@ query GetProductBySlug ($slug: String) {
                         __typename
                     }
                 }
-                product_delivery
-                product_type
+                product_type {
+                    data {
+                        attributes {
+                            title
+                        }
+                    }
+                }
+                delivery_method {
+                    data {
+                        attributes {
+                            title
+                        }
+                    }
+                }
                 views
                 description
                 instruction

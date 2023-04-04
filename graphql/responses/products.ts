@@ -8,8 +8,20 @@ interface IGQLProductShowResponse {
 		updatedAt: Date,
 		slug: string,
 		views: number,
-		product_type: string,
-		product_delivery: string,
+		product_type: {
+			data: {
+				attributes: {
+					title: string
+				}
+			}
+		}
+		delivery_method: {
+			data: {
+				attributes: {
+					title: string
+				}
+			}
+		},
 		description: string,
 		instruction: string,
 		product_keys: {

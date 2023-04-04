@@ -94,8 +94,8 @@ export class Product extends ShortProduct implements IProduct {
 		super(data);
 		this.platforms = data.attributes.platforms.data.map(platform => platform.attributes.title)
 		this.views = data.attributes.views
-		this.productType = data.attributes.product_type
-		this.productDelivery = data.attributes.product_delivery
+		this.productType = data.attributes.product_type.data.attributes.title
+		this.productDelivery = data.attributes.delivery_method.data.attributes.title
 		this.description = data.attributes.description
 		this.instruction = data.attributes.instruction
 	}

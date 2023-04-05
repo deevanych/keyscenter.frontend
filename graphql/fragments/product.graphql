@@ -1,0 +1,20 @@
+fragment ShortProduct on Product {
+    title,
+    price,
+    salePrice,
+    createdAt,
+    updatedAt,
+    slug,
+    product_keys (filters: { publishedAt: { notNull: true }}) {
+        data {
+            __typename
+        }
+    }
+    images {
+        data {
+            attributes {
+                url
+            }
+        }
+    }
+}

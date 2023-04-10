@@ -66,7 +66,7 @@ export class ShortProduct extends Model implements IShortProduct {
 	}
 
 	get preview (): string {
-		return 'http://localhost:1337' + this.images[0]
+		return this.images[0]
 	}
 
 	get discountPercent (): string {

@@ -1,5 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    hooks: {
+        ready: () => {
+            if (process && typeof process.send !== 'undefined') {
+                process.send('ready')
+            }
+        }
+    },
     css: [
       '~/assets/scss/main.scss'
     ],

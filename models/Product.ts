@@ -1,5 +1,6 @@
 import { price } from '~/helpers/price';
 import { Model } from '~/models/Model';
+import { URLHelpers } from '~/helpers/URL';
 
 interface IShortProduct {
 	id: number;
@@ -66,7 +67,7 @@ export class ShortProduct extends Model implements IShortProduct {
 	}
 
 	get preview (): string {
-		return this.images[0]
+		return URLHelpers.getBackendURLHref(this.images[0])
 	}
 
 	get discountPercent (): string {

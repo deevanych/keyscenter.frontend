@@ -1,6 +1,23 @@
 import {$API} from "~/api/instance";
 
 export namespace ProductsAPI {
+   export interface IImage {
+        ext: '.webp',
+        url: string,
+        hash: string,
+        mime: string,
+        name: string,
+        path: null,
+        size: number,
+        width: number,
+        height: number
+    }
+    export interface IImageFormats {
+        large: IImage,
+        small: IImage,
+        medium: IImage,
+        thumbnail: IImage
+    }
     export interface IShortProductResponse {
         id: number,
         attributes: {
@@ -21,6 +38,7 @@ export namespace ProductsAPI {
                 data: [
                     {
                         attributes: {
+                            formats: IImageFormats
                             url: string
                         }
                     }
@@ -74,6 +92,7 @@ export namespace ProductsAPI {
                 data: [
                     {
                         attributes: {
+                            formats: IImageFormats
                             url: string
                         }
                     }

@@ -2,13 +2,15 @@ import { price } from '~/helpers/price';
 import { Model } from '~/models/Model';
 import { URLHelpers } from '~/helpers/URL';
 import {ProductsAPI} from "~/api/products";
+import IImage = ProductsAPI.IImage;
+import IImageFormats = ProductsAPI.IImageFormats;
 
 interface IShortProduct {
 	id: number;
 	title: string;
 	price: number;
 	salePrice: number;
-	images: string[];
+	images: IImageFormats[];
 	description?: string;
 	instruction?: string;
 	slug: string;
@@ -36,7 +38,7 @@ export class ShortProduct extends Model implements IShortProduct {
 	public readonly price: number;
 	public readonly salePrice: number;
 	public readonly slug: string;
-	public readonly images: string[];
+	public readonly images: IImageFormats[];
 	public readonly availableCount: number;
 
 	constructor (data: ProductsAPI.IShortProductResponse) {
@@ -45,8 +47,14 @@ export class ShortProduct extends Model implements IShortProduct {
 		this.price = data.attributes.price
 		this.salePrice = data.attributes.salePrice
 		this.slug = data.attributes.slug
-		this.images = data.attributes.images.data.map(images => images.attributes.url)
+		this.images = data.attributes.images.data.map(images => images.attributes.formats)
 		this.availableCount = data.attributes.product_keys.data.length
+	}
+
+	imagesByFormat (imageType: 'small' | 'large' | 'medium' | 'thumbnail' = 'small'): IImage[] {
+		return this.images.map((image: IImageFormats) => {
+			return image[imageType]
+		})
 	}
 
 	get isInStock (): boolean {
@@ -66,7 +74,7 @@ export class ShortProduct extends Model implements IShortProduct {
 	}
 
 	get preview (): string {
-		return URLHelpers.getBackendURLHref(this.images[0])
+		return URLHelpers.getBackendURLHref(this.imagesByFormat('small')[0].url)
 	}
 
 	get discountPercent (): string {

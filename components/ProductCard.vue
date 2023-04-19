@@ -17,7 +17,10 @@ import {ShortProduct} from '~/models/Product';
       </ui-tag>
       <nuxt-link :to="{name: 'catalog-category-product', params: { category: 'windows', product: product.slug } }">
         <img class="product-card__preview"
-             :src="product.preview" alt=""/>
+             :src="product.preview"
+             alt=""
+              width="224"
+              height="224"/>
 			</nuxt-link>
       <div class="product-card__meta">
 				<h5 class="product-card__title">{{ product.title }}</h5>

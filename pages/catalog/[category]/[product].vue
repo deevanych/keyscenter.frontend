@@ -12,6 +12,7 @@
 
   if (data.length > 0) {
     product.value = new Product(data[0])
+    useHead({ title: product.value?.title})
   } else {
     throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
   }

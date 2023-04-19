@@ -22,15 +22,7 @@ export default defineNuxtConfig({
         },
     },
     modules: [
-        '@nuxtjs/apollo',
         '@pinia/nuxt',
         '@pinia-plugin-persistedstate/nuxt'
-    ],
-    apollo: {
-        clients: {
-            default: {
-                httpEndpoint: process.env.GRAPHQL_ENDPOINT ?? process.env.BACKEND_URL + 'graphql'
-            }
-        },
-    },
+    ]
 })

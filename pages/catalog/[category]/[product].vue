@@ -7,11 +7,12 @@
   const route = useRoute()
 
   const { data } = await ProductsAPI.show(route.params.product as string)
+  console.log(data)
 
   const product: Ref<Product | undefined> = ref()
 
-  if (data.length > 0) {
-    product.value = new Product(data[0])
+  if (data) {
+    product.value = new Product(data)
     useHead({ title: product.value?.title})
   } else {
     throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })

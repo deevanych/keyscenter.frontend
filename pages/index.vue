@@ -5,7 +5,7 @@
 	
 	const { data } = await ProductsAPI.list()
 	const products: Ref<ShortProduct[]> = ref([])
-  useHead({ title: 'Главная'})
+  useHead({ title: 'Главная' })
 	
 	if (data) {
 		products.value = data.map((product: ProductsAPI.IShortProductResponse) => new ShortProduct(product))

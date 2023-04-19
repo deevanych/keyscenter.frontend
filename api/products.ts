@@ -116,9 +116,8 @@ export namespace ProductsAPI {
         })
     }
 
-    export const show = async (productSlug: string): Promise<{ data: IProductResponse[] }> => {
-        return $API('/products', {
-            'filters[slug][$eq]': productSlug,
+    export const show = async (productSlug: string): Promise<{ data: IProductResponse }> => {
+        return $API(`/products/${productSlug}`, {
             'fields': [
                 'title',
                 'price',

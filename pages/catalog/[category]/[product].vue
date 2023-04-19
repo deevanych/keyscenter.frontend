@@ -1,19 +1,17 @@
 <script lang="ts" setup async>
-  import GetProductBySlug from '~/graphql/queries/products/show.gql'
   import { Ref } from "vue";
   import { Product } from "~/models/Product";
   import ProductBooking from "~/components/ProductBooking.vue";
+  import {ProductsAPI} from "~/api/products";
 
   const route = useRoute()
 
-  const { data } = await useAsyncQuery<IGQLProductsListResponse>(GetProductBySlug, {
-    slug: route.params.product
-  })
+  const { data } = await ProductsAPI.show(route.params.product as string)
 
   const product: Ref<Product | undefined> = ref()
 
-  if (data.value?.products && data.value?.products.data.length) {
-    product.value = new Product(data.value?.products.data[0])
+  if (data.length > 0) {
+    product.value = new Product(data[0])
   } else {
     throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
   }

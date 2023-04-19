@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-	import {Product} from "~/models/Product";
+import {ShortProduct} from "~/models/Product";
 
   interface IProps {
-		products: Product[]
+		products: ShortProduct[]
 	}
 	
 	const props: IProps = defineProps<IProps>()

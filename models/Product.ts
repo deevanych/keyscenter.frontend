@@ -1,6 +1,7 @@
 import { price } from '~/helpers/price';
 import { Model } from '~/models/Model';
 import { URLHelpers } from '~/helpers/URL';
+import {ProductsAPI} from "~/api/products";
 
 interface IShortProduct {
 	id: number;
@@ -11,8 +12,6 @@ interface IShortProduct {
 	description?: string;
 	instruction?: string;
 	slug: string;
-	createdAt: Date;
-	updatedAt: Date;
 	publishedAt?: Date;
 	currentPrice: string;
 	oldPrice?: string;
@@ -40,8 +39,8 @@ export class ShortProduct extends Model implements IShortProduct {
 	public readonly images: string[];
 	public readonly availableCount: number;
 
-	constructor (data: IGQLProductShowResponse) {
-		super(data.id, data.attributes.createdAt, data.attributes.updatedAt);
+	constructor (data: ProductsAPI.IShortProductResponse) {
+		super(data.id);
 		this.title = data.attributes.title
 		this.price = data.attributes.price
 		this.salePrice = data.attributes.salePrice
@@ -91,7 +90,7 @@ export class Product extends ShortProduct implements IProduct {
 	public readonly description: string;
 	public readonly instruction: string;
 
-	constructor(data: IGQLProductShowResponse) {
+	constructor(data: ProductsAPI.IProductResponse) {
 		super(data);
 		this.platforms = data.attributes.platforms.data.map(platform => platform.attributes.title)
 		this.views = data.attributes.views

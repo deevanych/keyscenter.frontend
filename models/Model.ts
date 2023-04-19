@@ -9,7 +9,7 @@ export abstract class Model implements IModel {
 	readonly createdAt: Date;
 	readonly updatedAt: Date;
 
-	protected constructor(id: number, createdAt: Date, updatedAt: Date) {
+	protected constructor(id: number, createdAt: Date = new Date(), updatedAt: Date = new Date()) {
 		this.id = id
 		this.createdAt = createdAt
 		this.updatedAt = updatedAt

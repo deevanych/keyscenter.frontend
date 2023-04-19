@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-	import { Product } from '~/models/Product';
+import {ShortProduct} from '~/models/Product';
 	
 	interface IProps {
-		product: Product
+		product: ShortProduct
 	}
 	
 	const props: IProps = defineProps<IProps>()
-	const product: Product = props.product
+	const product: ShortProduct = props.product
 </script>
 
 <template>

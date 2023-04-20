@@ -2,14 +2,16 @@
 	import { Ref } from 'vue';
   import {ShortProduct} from '~/models/Product';
   import {ProductsAPI} from "~/api/products";
-	
-	const { data } = await ProductsAPI.list()
-	const products: Ref<ShortProduct[]> = ref([])
-  useHead({ title: 'Главная' })
-	
-	if (data) {
-		products.value = data.map((product: ProductsAPI.IShortProductResponse) => new ShortProduct(product))
-	}
+
+  useHead({title: 'Главная'})
+  const products: Ref<ShortProduct[]> = ref([])
+
+  try {
+      const {data} = await ProductsAPI.list()
+      products.value = data.map((product: ProductsAPI.IShortProductResponse) => new ShortProduct(product))
+  } catch (_) {
+      throw createError({ statusCode: 500, statusMessage: 'Server error' })
+  }
 </script>
 
 <template>

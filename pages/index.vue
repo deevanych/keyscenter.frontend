@@ -9,8 +9,8 @@
   try {
       const {data} = await ProductsAPI.list()
       products.value = data.map((product: ProductsAPI.IShortProductResponse) => new ShortProduct(product))
-  } catch (_) {
-      throw createError({ statusCode: 500, statusMessage: 'Server error' })
+  } catch (e) {
+      throw createError({ statusCode: 500, statusMessage: (e as Error).message })
   }
 </script>
 

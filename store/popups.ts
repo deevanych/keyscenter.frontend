@@ -3,7 +3,7 @@ import {defineStore} from 'pinia'
 export const usePopupsStore = defineStore('popups', {
 	state: () => {
 		return {
-			cartPopup: true
+			cartPopup: false
 		}
 	},
 	getters: {

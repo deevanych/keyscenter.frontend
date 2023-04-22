@@ -11,7 +11,7 @@ const props = defineProps<IProps>()
 
 <template>
     <div class="cart-item">
-        <img :src="props.item.preview" class="cart-item__preview"/>
+        <img :alt="props.item.title" :src="props.item.preview" class="cart-item__preview"/>
         <div class="cart-item__wrapper">
             <h3 class="cart-item__title">{{ props.item.title }}</h3>
             <AddToCart :product="props.item"/>

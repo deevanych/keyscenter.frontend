@@ -17,7 +17,10 @@ export const useCartStore: StoreDefinition<"cart", ICartStoreState> = defineStor
 			return (id: number): CartItem | undefined => state.items.find((item: CartItem) => item.id === id)
 		},
 		getItemsCount: (state: ICartStoreState): number => state.items.length,
-		getItems: (state: ICartStoreState): CartItem[] => state.items
+		getItems: (state: ICartStoreState): CartItem[] => state.items,
+		getTotalSum: (state: ICartStoreState): number => state.items.reduce((sum: number, item: CartItem) => {
+			return sum + item.quantity * item.price
+		}, 0)
 	},
 	actions: {
 		addToCart(productId: number, quantity: number = 1, product?: Product): void {

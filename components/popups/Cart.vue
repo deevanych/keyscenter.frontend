@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import {useCartStore} from "~/store/cart";
 import {usePopupsStore} from "~/store/popups";
+import {computed} from "vue";
+import Input from "~/components/ui/Input.vue";
 
 const {toggleCartPopup} = usePopupsStore()
 const {getItems: cartItems} = useCartStore()
+const cartTotalSum = computed(() => useCartStore().getTotalSum)
 
 const keypressHandler = (e: KeyboardEvent) => {
     if (e.isTrusted && e.key === 'Escape') {
@@ -38,6 +41,17 @@ onBeforeUnmount(() => {
                 </div>
                 <div class="cart-popup__content-section">
                     <h3 class="cart-popup__content-section-title">Оформление</h3>
+                    <Input/>
+                    <form action="https://yoomoney.ru/quickpay/confirm.xml" method="POST">
+                        <input :value="useRuntimeConfig().public.paymentReceiverAccountNumber" name="receiver"
+                               type="hidden"/>
+                        <input :value="useRuntimeConfig().public.paymentReceiverAccountNumber" name="label"
+                               type="hidden"/>
+                        <input name="quickpay-form" type="hidden" value="button"/>
+                        <input name="paymentType" type="hidden" value="AC"/>
+                        <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
+                        <input type="submit" value="Transfer"/>
+                    </form>
                 </div>
             </div>
         </div>
@@ -49,7 +63,7 @@ onBeforeUnmount(() => {
   @apply fixed flex w-full h-full top-0 left-0 z-10;
 
   &__background {
-    @apply fixed w-full h-full bg-black opacity-60 top-0 left-0 cursor-pointer hover:opacity-80 transition-opacity;
+      @apply fixed w-full h-full bg-black opacity-60 top-0 left-0 cursor-pointer;
   }
 
   &__wrapper {

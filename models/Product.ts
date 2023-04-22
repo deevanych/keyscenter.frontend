@@ -1,7 +1,10 @@
-import { price } from '~/helpers/price';
-import { Model } from '~/models/Model';
-import { URLHelpers } from '~/helpers/URL';
+import {price} from '~/helpers/price';
+import {Model} from '~/models/Model';
+import {URLHelpers} from '~/helpers/URL';
 import {ProductsAPI} from "~/api/products";
+import {useCartStore} from "~/store/cart";
+import {useRouter} from "#app";
+import {CartItem} from "~/models/CartItem";
 import IImage = ProductsAPI.IImage;
 import IImageFormats = ProductsAPI.IImageFormats;
 
@@ -10,6 +13,7 @@ interface IShortProduct {
 	title: string;
 	price: number;
 	salePrice: number;
+	categorySlug: string;
 	images: IImageFormats[];
 	description?: string;
 	instruction?: string;
@@ -22,6 +26,7 @@ interface IShortProduct {
 	isInStock: boolean;
 	isInStockHumanized: string;
 	isInStockWithCountHumanized: string;
+	url: string;
 }
 
 interface IProduct extends IShortProduct {
@@ -31,6 +36,7 @@ interface IProduct extends IShortProduct {
 	productDelivery: string;
 	description: string;
 	instruction: string;
+	cartItem: CartItem;
 }
 
 export class ShortProduct extends Model implements IShortProduct {
@@ -40,6 +46,7 @@ export class ShortProduct extends Model implements IShortProduct {
 	public readonly slug: string;
 	public readonly images: IImageFormats[];
 	public readonly availableCount: number;
+	public readonly categorySlug: string;
 
 	constructor (data: ProductsAPI.IShortProductResponse) {
 		super(data.id);
@@ -49,36 +56,44 @@ export class ShortProduct extends Model implements IShortProduct {
 		this.slug = data.attributes.slug
 		this.images = data.attributes.images.data.map(images => images.attributes.formats)
 		this.availableCount = data.attributes.product_keys.data.length
+		this.categorySlug = data.attributes.product_category.data.attributes.slug
 	}
 
-	imagesByFormat (imageType: 'small' | 'large' | 'medium' | 'thumbnail' = 'small'): IImage[] {
-		return this.images.map((image: IImageFormats) => {
-			return image[imageType]
-		})
+	get url(): string {
+		return useRouter().resolve({
+			name: 'catalog-category-product',
+			params: {category: this.categorySlug, product: this.slug}
+		}).href
 	}
 
-	get isInStock (): boolean {
+	get isInStock(): boolean {
 		return !!this.availableCount
 	}
 
-	get isInStockHumanized (): string {
+	get isInStockHumanized(): string {
 		return this.isInStock ? 'В наличии' : 'Нет в наличии'
 	}
 
-	get isInStockWithCountHumanized (): string {
+	get isInStockWithCountHumanized(): string {
 		return this.isInStock ? `${this.isInStockHumanized}: ${this.availableCount} шт` : this.isInStockHumanized
 	}
 
-	get currentPrice (): string {
+	get currentPrice(): string {
 		return price(this.salePrice ?? this.price)
 	}
 
-	get preview (): string {
+	get preview(): string {
 		return URLHelpers.getBackendURLHref(this.imagesByFormat('small')[0].url)
 	}
 
-	get discountPercent (): string {
+	get discountPercent(): string {
 		return ((this.salePrice - this.price) / (this.price / 100)).toFixed(0) + '%'
+	}
+
+	imagesByFormat(imageType: 'small' | 'large' | 'medium' | 'thumbnail' = 'small'): IImage[] {
+		return this.images.map((image: IImageFormats) => {
+			return image[imageType]
+		})
 	}
 
 	get oldPrice (): string | undefined {
@@ -106,5 +121,15 @@ export class Product extends ShortProduct implements IProduct {
 		this.productDelivery = data.attributes.delivery_method.data.attributes.title
 		this.description = data.attributes.description
 		this.instruction = data.attributes.instruction
+	}
+
+	get cartItem(): CartItem {
+		const cartItem = useCartStore().getItemById(this.id)
+
+		if (cartItem) {
+			return cartItem
+		}
+
+		return new CartItem(this, 0)
 	}
 }

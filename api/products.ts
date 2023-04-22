@@ -34,6 +34,18 @@ export namespace ProductsAPI {
                     }
                 ]
             }
+            product_category: {
+                data: {
+                    attributes: {
+                        createdAt: string
+                        publishedAt: string
+                        slug: string
+                        title: string
+                        updatedAt: string
+                    }
+                    id: number
+                }
+            }
             images: {
                 data: [
                     {
@@ -61,6 +73,18 @@ export namespace ProductsAPI {
                     attributes: {
                         title: string
                     }
+                }
+            }
+            product_category: {
+                data: {
+                    attributes: {
+                        createdAt: string
+                        publishedAt: string
+                        slug: string
+                        title: string
+                        updatedAt: string
+                    }
+                    id: number
                 }
             }
             delivery_method: {
@@ -111,7 +135,8 @@ export namespace ProductsAPI {
             ],
             'populate': [
                 'images',
-                'product_keys'
+                'product_keys',
+                'product_category'
             ]
         })
     }
@@ -133,7 +158,8 @@ export namespace ProductsAPI {
                 'product_keys',
                 'platforms',
                 'delivery_method',
-                'product_type'
+                'product_type',
+                'product_category'
             ]
         })
     }

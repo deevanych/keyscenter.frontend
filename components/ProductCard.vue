@@ -1,37 +1,39 @@
 <script lang="ts" setup>
 import {ShortProduct} from '~/models/Product';
-	
-	interface IProps {
-		product: ShortProduct
-	}
-	
-	const props: IProps = defineProps<IProps>()
-	const product: ShortProduct = props.product
+
+interface IProps {
+    product: ShortProduct
+}
+
+const props: IProps = defineProps<IProps>()
+const product: ShortProduct = props.product
 </script>
 
 <template>
   <div class="flex justify-center">
-    <div class="product-card">
-			<ui-tag v-if="product.isInStock" class="product-card__tag">
-        В наличии
-      </ui-tag>
-      <nuxt-link :to="{name: 'catalog-category-product', params: { category: 'windows', product: product.slug } }">
-        <img class="product-card__preview"
-             :src="product.preview"
-             alt=""
-              width="224"
-              height="224"/>
-			</nuxt-link>
-      <div class="product-card__meta">
-				<h5 class="product-card__title">{{ product.title }}</h5>
-				<rating-component />
-				<div class="product-card__prices">
-					<div class="product-card__price_current">{{ product.currentPrice }}</div>
-					<div v-if="product.oldPrice"
-							 class="product-card__price_old">{{ product.oldPrice }}</div>
-				</div>
-        <ui-button>Купить</ui-button>
-      </div>
+      <div class="product-card">
+          <ui-tag v-if="product.isInStock" class="product-card__tag">
+              В наличии
+          </ui-tag>
+          <nuxt-link
+                  :to="{name: 'catalog-category-product', params: { category: product.categorySlug, product: product.slug } }">
+              <img :src="product.preview"
+                   alt=""
+                   class="product-card__preview"
+                   height="224"
+                   width="224"/>
+          </nuxt-link>
+          <div class="product-card__meta">
+              <h5 class="product-card__title">{{ product.title }}</h5>
+              <rating-component/>
+              <div class="product-card__prices">
+                  <div class="product-card__price_current">{{ product.currentPrice }}</div>
+                  <div v-if="product.oldPrice"
+                       class="product-card__price_old">{{ product.oldPrice }}
+                  </div>
+              </div>
+              <ui-button>Купить</ui-button>
+          </div>
     </div>
   </div>
 </template>

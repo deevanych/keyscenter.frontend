@@ -1,32 +1,34 @@
-import { defineStore } from 'pinia'
+import {defineStore, StoreDefinition} from 'pinia'
+import {CartItem} from "~/models/CartItem";
+import {Product} from "~/models/Product";
 
-export interface ICartItem {
-	id: number;
-	count: number;
+interface ICartStoreState {
+	items: CartItem[]
 }
 
-export const useCartStore = defineStore('cart', {
-	state: () => {
+export const useCartStore: StoreDefinition<"cart", ICartStoreState> = defineStore('cart', {
+	state: (): ICartStoreState => {
 		return {
-			items: [] as ICartItem[]
+			items: [] as CartItem[]
 		}
 	},
 	getters: {
-		getItemById: (state) => {
-			return (id: number) => state.items.find((item: ICartItem) => item.id === id)
+		getItemById: (state: ICartStoreState): (id: number) => CartItem | undefined => {
+			return (id: number): CartItem | undefined => state.items.find((item: CartItem) => item.id === id)
 		},
-		getItemsCount: (state) => state.items.length
+		getItemsCount: (state: ICartStoreState): number => state.items.length,
+		getItems: (state: ICartStoreState): CartItem[] => state.items
 	},
 	actions: {
-		addToCart(id: number, count: number) {
-			const existsItem = this.items.find((item: ICartItem) => item.id === id)
+		addToCart(productId: number, quantity: number = 1, product?: Product): void {
+			const existsItem: CartItem | undefined = this.items.find((item: CartItem) => item.id === productId)
 
 			if (existsItem) {
-				if (existsItem.count !== count) {
-					existsItem.count = count
-				}
+				existsItem.quantity = quantity
 			} else {
-				this.items.push({id, count})
+				if (product) {
+					this.items.push(new CartItem(product, quantity))
+				}
 			}
 		}
 	},

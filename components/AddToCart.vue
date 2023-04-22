@@ -1,54 +1,60 @@
 <script lang="ts" setup>
-	import { Ref } from 'vue';
-  import { useCartStore } from '~/store/cart';
-  import {usePopupsStore} from "~/store/popups";
+import {computed, Ref, watch} from 'vue';
+import {usePopupsStore} from "~/store/popups";
+import {CartItem} from "~/models/CartItem";
+import {useCartStore} from "~/store/cart";
+import {Product} from "~/models/Product";
 
-	interface IProps {
-		max: number;
-		productId: number;
+interface IProps {
+	product: CartItem | Product
+}
+
+const popupStore = usePopupsStore()
+const props = defineProps<IProps>()
+const existsCartItem = computed(() => useCartStore().getItemById(props.product.id))
+const quantity: Ref<number> = ref(existsCartItem.value?.quantity ?? 1)
+
+watch(existsCartItem.value, () => {
+	if (existsCartItem.value.quantity !== quantity.value) {
+		quantity.value = existsCartItem.value.quantity
+	}
+})
+
+const changeValue = (increment = true): void => {
+	increment ? quantity.value++ : quantity.value--
+}
+
+const isButtonDisabled = (increment = true): boolean => {
+	return (increment && quantity.value >= props.product.availableCount) || !increment && quantity.value <= 0;
+}
+
+const isAddToCartButtonEnabled = computed(() => 0 < quantity.value && quantity.value <= props.product.availableCount)
+
+const addToCart = (): void => {
+	if (existsCartItem.value && existsCartItem.value.quantity == quantity.value) {
+		popupStore.toggleCartPopup()
+	} else {
+		useCartStore().addToCart(props.product.id, quantity.value, props.product)
+	}
+}
+
+const addToCartButtonText = computed((): string => {
+	if (existsCartItem.value && existsCartItem.value.quantity !== 0) {
+		return existsCartItem.value.quantity == quantity.value ? 'В корзине' : 'Обновить'
 	}
 
-	const cartStore = useCartStore()
-	const popupStore = usePopupsStore()
-	const props = defineProps<IProps>()
-	const existsCartItem = computed(() => cartStore.getItemById(props.productId))
-  const count: Ref<number> = ref(existsCartItem.value?.count ?? 1)
-	
-	const changeValue = (increment = true): void => {
-		increment ? count.value++ : count.value--
-	}
-	
-	const isButtonDisabled = (increment = true): boolean => {
-		return (increment && count.value >= props.max) || !increment && count.value <= 0;
-	}
-	
-	const isAddToCartButtonEnabled = computed(() => 0 < count.value && count.value <= props.max)
-	
-	const addToCart = (): void => {
-    if (existsCartItem.value && existsCartItem.value.count == count.value) {
-			popupStore.toggleCartPopup()
-    }
-
-		cartStore.addToCart(props.productId, count.value)
-	}
-	
-	const addToCartButtonText = computed((): string => {
-		if (existsCartItem.value) {
-			return existsCartItem.value.count == count.value ? 'В корзине' : 'Обновить'
-		}
-		
-		return 'Купить'
-	})
+	return 'Купить'
+})
 	
 	const addToCartButtonClass = computed((): string | void => {
-		if (count.value === 0) {
+		if (quantity.value === 0) {
 			return
 		}
-		
+
 		let buttonClass = '_buy'
 		
 		if (existsCartItem.value) {
-			buttonClass = existsCartItem.value.count == count.value ? '_exists' : '_update'
+			buttonClass = existsCartItem.value.quantity == quantity.value ? '_exists' : '_update'
 		}
 		
 		return `add-to-cart__cart-button${buttonClass}`
@@ -67,8 +73,8 @@
 			</button>
 			<input type="number"
 						 class="add-to-cart__input"
-						 :max="props.max"
-						 v-model="count"/>
+						 v-model="quantity"
+						 :max="props.product.availableCount"/>
 			<button class="add-to-cart__button"
 							@click="changeValue"
 							:disabled="isButtonDisabled()">

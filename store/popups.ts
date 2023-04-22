@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 
 export const usePopupsStore = defineStore('popups', {
 	state: () => {
 		return {
-			cartPopup: false
+			cartPopup: true
 		}
 	},
 	getters: {

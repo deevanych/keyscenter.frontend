@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-  import {Product} from "~/models/Product";
+import {Product} from "~/models/Product";
 
-  interface IProps {
+interface IProps {
     product: Product
   }
 
@@ -15,7 +15,7 @@
         Платформы
       </dt>
       <dd class="product-details__value">
-        <product-platforms :platforms="props.product.platforms" />
+        <ProductPlatforms :platforms="props.product.platforms"/>
       </dd>
     </dl>
     <dl class="product-details__line">

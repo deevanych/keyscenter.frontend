@@ -7,7 +7,7 @@
 </script>
 
 <template>
-  <platforms-sprite />
+  <PlatformsSprite/>
   <svg v-for="platform in props.platforms"
        :key="platform"
        class="product-platform__icon">

@@ -15,6 +15,6 @@ try {
 </script>
 
 <template>
-  <products-list v-if="products.length"
-								 :products="products"/>
+  <LazyProductsList v-if="products.length"
+                    :products="products"/>
 </template>

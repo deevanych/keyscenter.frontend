@@ -26,14 +26,14 @@ const props = defineProps<IProps>()
           {{ props.product.oldPrice }}
         </div>
         <div class="product-booking__discount">
-          <ui-tag>{{ props.product.discountPercent }}</ui-tag>
+          <LazyUiTag>{{ props.product.discountPercent }}</LazyUiTag>
         </div>
       </div>
     </div>
     <div class="product-booking__availability">
       {{ props.product.isInStockWithCountHumanized }}
     </div>
-      <add-to-cart :product="props.product"/>
+      <AddToCart :product="props.product"/>
   </div>
 </template>
 

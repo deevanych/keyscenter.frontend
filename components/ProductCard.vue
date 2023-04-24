@@ -12,27 +12,27 @@ const product: ShortProduct = props.product
 <template>
   <div class="flex justify-center">
       <div class="product-card">
-          <ui-tag v-if="product.isInStock" class="product-card__tag">
+          <LazyUiTag v-if="product.isInStock" class="product-card__tag">
               В наличии
-          </ui-tag>
-          <nuxt-link
-                  :to="{name: 'catalog-category-product', params: { category: product.categorySlug, product: product.slug } }">
+          </LazyUiTag>
+          <NuxtLink
+              :to="{name: 'catalog-category-product', params: { category: product.categorySlug, product: product.slug } }">
               <img :src="product.preview"
                    alt=""
                    class="product-card__preview"
                    height="224"
                    width="224"/>
-          </nuxt-link>
+          </NuxtLink>
           <div class="product-card__meta">
               <h5 class="product-card__title">{{ product.title }}</h5>
-              <rating-component/>
+              <RatingComponent/>
               <div class="product-card__prices">
                   <div class="product-card__price_current">{{ product.currentPrice }}</div>
                   <div v-if="product.oldPrice"
                        class="product-card__price_old">{{ product.oldPrice }}
                   </div>
               </div>
-              <ui-button>Купить</ui-button>
+              <UiButton>Купить</UiButton>
           </div>
     </div>
   </div>

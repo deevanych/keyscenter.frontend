@@ -1,19 +1,19 @@
 <script setup lang="ts">
-  import { usePopupsStore } from "~/store/popups";
-	import { ComputedRef } from 'vue';
+import {usePopupsStore} from "~/store/popups";
+import {ComputedRef} from 'vue';
 
-  const popupStore = usePopupsStore()
+const popupStore = usePopupsStore()
   const isCartPopupShown: ComputedRef<boolean> = computed(() => popupStore.isCartPopupShown)
 </script>
 
 <template>
-  <layout-header />
-  <transition>
-    <popups-cart v-if="isCartPopupShown"/>
-  </transition>
-  <div class="page-layout">
-    <nuxt-page />
-  </div>
+    <LayoutHeader/>
+    <Transition>
+        <LazyPopupsCart v-if="isCartPopupShown"/>
+    </Transition>
+    <div class="page-layout">
+        <NuxtPage/>
+    </div>
 </template>
 
 <style lang="scss" scoped>

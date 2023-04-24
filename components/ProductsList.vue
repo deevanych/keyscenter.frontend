@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {ShortProduct} from "~/models/Product";
 
-  interface IProps {
+interface IProps {
 		products: ShortProduct[]
 	}
 	
@@ -10,8 +10,8 @@ import {ShortProduct} from "~/models/Product";
 
 <template>
   <div class="grid grid-cols-4 gap-10">
-    <product-card v-for="product in props.products"
-											 :key="product.id"
-											 :product="product"/>
+    <ProductCard v-for="product in props.products"
+                 :key="product.id"
+                 :product="product"/>
   </div>
 </template>

@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-  import IconCart from "~/components/IconCart.vue";
 </script>
 
 <template>
   <header class="header">
     <div class="header__wrapper">
-      <nuxt-link :to="{ name: 'index' }">Главная</nuxt-link>
-      <icon-cart />
+        <NuxtLink :to="{ name: 'index' }">Главная</NuxtLink>
+        <IconCart/>
     </div>
   </header>
 </template>

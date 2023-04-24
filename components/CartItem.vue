@@ -11,10 +11,10 @@ const props = defineProps<IProps>()
 
 <template>
     <div class="cart-item">
-        <img :alt="props.item.title" :src="props.item.preview" class="cart-item__preview"/>
+        <img :alt="props.item.title" :src="props.item.preview" class="cart-item__preview" height="156" width="127"/>
         <div class="cart-item__wrapper">
             <h3 class="cart-item__title">{{ props.item.title }}</h3>
-            <AddToCart :product="props.item"/>
+            <LazyAddToCart :product="props.item"/>
             <div class="cart-item__sum">
                 Итого: {{ price(props.item.price) }} * {{ props.item.quantity }} =
                 {{ price(props.item.price * props.item.quantity) }}
@@ -25,7 +25,7 @@ const props = defineProps<IProps>()
 
 <style lang="scss" scoped>
 .cart-item {
-  @apply flex gap-10;
+    @apply flex gap-10 py-5;
 
   &__title {
     @apply mt-0 mb-2;

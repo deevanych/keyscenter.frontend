@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import {useCartStore} from "~/store/cart";
 import {usePopupsStore} from "~/store/popups";
-import {computed} from "vue";
-import Input from "~/components/ui/Input.vue";
+import {email, required} from "@vuelidate/validators";
+import useVuelidate from "@vuelidate/core";
 
 const {toggleCartPopup} = usePopupsStore()
-const {getItems: cartItems} = useCartStore()
-const cartTotalSum = computed(() => useCartStore().getTotalSum)
+const cartStore = useCartStore()
+const cartTotalSum = ref(0)
+const cartItems = cartStore.getItems
+const cartOrder = ref(0)
 
 const keypressHandler = (e: KeyboardEvent) => {
     if (e.isTrusted && e.key === 'Escape') {
@@ -18,6 +20,18 @@ const closePopup = (): void => {
     toggleCartPopup(false)
 }
 
+const state = reactive({
+    email: ''
+})
+
+const form = ref('')
+
+const rules = {
+    email: {required, email}
+}
+
+const vuelidate = useVuelidate(rules, state)
+
 onMounted(() => {
     window.addEventListener('keydown', keypressHandler)
 })
@@ -25,6 +39,19 @@ onMounted(() => {
 onBeforeUnmount(() => {
     window.removeEventListener('keydown', keypressHandler)
 })
+
+const formSubmit = async () => {
+    try {
+        const data = await cartStore.createOrder(state.email)
+        console.log(data)
+        cartTotalSum.value = data.sum
+        cartOrder.value = data.order_uuid
+        await nextTick()
+        form.value.submit()
+    } catch (_) {
+
+    }
+}
 </script>
 
 <template>
@@ -36,22 +63,29 @@ onBeforeUnmount(() => {
                 <div class="cart-popup__content-section">
                     <h3 class="cart-popup__content-section-title">Товары</h3>
                     <div class="cart-popup__content-section-content">
-                        <CartItem v-for="cartItem in cartItems" :item="cartItem"/>
+                        <LazyCartItem v-for="cartItem in cartItems" :item="cartItem"/>
                     </div>
                 </div>
                 <div class="cart-popup__content-section">
                     <h3 class="cart-popup__content-section-title">Оформление</h3>
-                    <Input/>
-                    <form action="https://yoomoney.ru/quickpay/confirm.xml" method="POST">
-                        <input :value="useRuntimeConfig().public.paymentReceiverAccountNumber" name="receiver"
-                               type="hidden"/>
-                        <input :value="useRuntimeConfig().public.paymentReceiverAccountNumber" name="label"
-                               type="hidden"/>
-                        <input name="quickpay-form" type="hidden" value="button"/>
-                        <input name="paymentType" type="hidden" value="AC"/>
-                        <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
-                        <input type="submit" value="Transfer"/>
-                    </form>
+                    <div class="cart-popup__payment">
+                        <i>Внимание! Проверьте правильность ввода email. На этот адрес придут купленные товары.</i>
+                        <div class="cart-popup__payment-action">
+                            <UiInput v-model="state.email" placeholder="Введите адрес электроной почты"/>
+                            <form ref="form" action="https://yoomoney.ru/quickpay/confirm.xml"
+                                  method="POST" @submit.prevent="formSubmit">
+                                <input :value="useRuntimeConfig().public.paymentReceiverAccountNumber" name="receiver"
+                                       type="hidden"/>
+                                <input :value="cartOrder" name="label"
+                                       type="hidden"/>
+                                <input name="quickpay-form" type="hidden" value="button"/>
+                                <input name="paymentType" type="hidden" value="AC"/>
+                                <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
+                                <LazyUiButton :disabled="vuelidate.$invalid" type="submit">Перейти к оплате
+                                </LazyUiButton>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -60,17 +94,25 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .cart-popup {
-  @apply fixed flex w-full h-full top-0 left-0 z-10;
+    @apply fixed flex w-full h-full top-0 left-0 z-10;
 
-  &__background {
-      @apply fixed w-full h-full bg-black opacity-60 top-0 left-0 cursor-pointer;
-  }
+    &__payment {
+        @apply flex gap-4 flex-col;
 
-  &__wrapper {
-    @apply bg-white m-auto z-10 overflow-hidden rounded;
-  }
+        &-action {
+            @apply flex gap-5 items-center;
+        }
+    }
 
-  &__content {
+    &__background {
+        @apply fixed w-full h-full bg-black opacity-60 top-0 left-0 cursor-pointer;
+    }
+
+    &__wrapper {
+        @apply bg-white m-auto z-10 overflow-hidden rounded;
+    }
+
+    &__content {
     @apply flex flex-row divide-x py-12;
 
     &-section {

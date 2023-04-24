@@ -83,12 +83,12 @@ const addToCartButtonText = computed((): string => {
 				</svg>
 			</button>
 		</div>
-		<ui-button :disabled="!isAddToCartButtonEnabled"
-							 @click="addToCart"
-							 class="add-to-cart__cart-button"
+		<UiButton :disabled="!isAddToCartButtonEnabled"
+							class="add-to-cart__cart-button"
+							@click="addToCart"
 							:class="addToCartButtonClass">
 			{{ addToCartButtonText }}
-		</ui-button>
+		</UiButton>
 	</div>
 </template>
 

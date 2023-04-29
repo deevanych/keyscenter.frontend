@@ -9,7 +9,7 @@ const popupStore = usePopupsStore()
 <template>
     <LayoutHeader/>
     <Transition>
-        <LazyPopupsCart v-if="isCartPopupShown"/>
+        <PopupsCart v-if="isCartPopupShown"/>
     </Transition>
     <div class="page-layout">
         <NuxtPage/>

@@ -3,6 +3,7 @@ interface IProps {
     label?: string
     placeholder?: string
     modelValue: string
+    name?: string
 }
 
 const props = defineProps<IProps>()
@@ -19,6 +20,7 @@ const emits = defineEmits<{
                for="success">{{ props.label }}</label>
         <input :model-value="props.modelValue"
                :placeholder="props.placeholder"
+               :name="props.name"
                class="input"
                @input="emits('update:modelValue', $event.target.value)"/>
     </div>

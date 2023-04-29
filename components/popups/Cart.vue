@@ -3,6 +3,7 @@ import {useCartStore} from "~/store/cart";
 import {usePopupsStore} from "~/store/popups";
 import {email, required} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
+import {Ref} from "vue";
 
 const {toggleCartPopup} = usePopupsStore()
 const cartStore = useCartStore()
@@ -24,16 +25,18 @@ const state = reactive({
     email: ''
 })
 
-const form = ref('')
+const form: Ref<HTMLFormElement | undefined> = ref()
 
 const rules = {
     email: {required, email}
 }
 
+const buttonIsLoading: Ref<boolean> = ref(false)
+
 const vuelidate = useVuelidate(rules, state)
 
 onMounted(() => {
-    window.addEventListener('keydown', keypressHandler)
+    window.addEventListener('keydown', keypressHandler, {passive: true})
 })
 
 onBeforeUnmount(() => {
@@ -42,14 +45,14 @@ onBeforeUnmount(() => {
 
 const formSubmit = async () => {
     try {
+        buttonIsLoading.value = true
         const data = await cartStore.createOrder(state.email)
-        console.log(data)
         cartTotalSum.value = data.sum
         cartOrder.value = data.order_uuid
         await nextTick()
-        form.value.submit()
+        form.value?.submit()
     } catch (_) {
-
+        buttonIsLoading.value = false
     }
 }
 </script>
@@ -63,28 +66,28 @@ const formSubmit = async () => {
                 <div class="cart-popup__content-section">
                     <h3 class="cart-popup__content-section-title">Товары</h3>
                     <div class="cart-popup__content-section-content">
-                        <LazyCartItem v-for="cartItem in cartItems" :item="cartItem"/>
+                        <CartItem v-for="cartItem in cartItems" :item="cartItem"/>
                     </div>
                 </div>
                 <div class="cart-popup__content-section">
                     <h3 class="cart-popup__content-section-title">Оформление</h3>
                     <div class="cart-popup__payment">
                         <i>Внимание! Проверьте правильность ввода email. На этот адрес придут купленные товары.</i>
-                        <div class="cart-popup__payment-action">
-                            <UiInput v-model="state.email" placeholder="Введите адрес электроной почты"/>
-                            <form ref="form" action="https://yoomoney.ru/quickpay/confirm.xml"
-                                  method="POST" @submit.prevent="formSubmit">
-                                <input :value="useRuntimeConfig().public.paymentReceiverAccountNumber" name="receiver"
-                                       type="hidden"/>
-                                <input :value="cartOrder" name="label"
-                                       type="hidden"/>
-                                <input name="quickpay-form" type="hidden" value="button"/>
-                                <input name="paymentType" type="hidden" value="AC"/>
-                                <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
-                                <LazyUiButton :disabled="vuelidate.$invalid" type="submit">Перейти к оплате
-                                </LazyUiButton>
-                            </form>
-                        </div>
+                        <form ref="form" action="https://yoomoney.ru/quickpay/confirm.xml"
+                              method="POST" @submit.prevent="formSubmit"
+                              class="cart-popup__payment-action">
+                            <UiInput v-model="state.email" name="email" placeholder="Введите адрес электроной почты"/>
+                            <input :value="useRuntimeConfig().public.paymentReceiverAccountNumber" name="receiver"
+                                   type="hidden"/>
+                            <input :value="cartOrder" name="label"
+                                   type="hidden"/>
+                            <input name="quickpay-form" type="hidden" value="button"/>
+                            <input name="paymentType" type="hidden" value="AC"/>
+                            <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
+                            <LazyUiButton :disabled="vuelidate.$invalid" :loading="buttonIsLoading" type="submit">
+                                Перейти к оплате
+                            </LazyUiButton>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -113,16 +116,16 @@ const formSubmit = async () => {
     }
 
     &__content {
-    @apply flex flex-row divide-x py-12;
+        @apply flex flex-row divide-x py-12;
 
-    &-section {
-      @apply px-10 max-w-xl;
+        &-section {
+            @apply px-10 max-w-xl;
 
-      &-title {
-        @apply font-bold leading-tight text-2xl mt-0 mb-10;
-      }
+            &-title {
+                @apply font-bold leading-tight text-2xl mt-0 mb-10;
+            }
 
-      &-content {
+            &-content {
         @apply divide-y;
       }
     }

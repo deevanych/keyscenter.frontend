@@ -23,25 +23,20 @@ export namespace ProductsAPI {
         attributes: {
             title: string,
             price: number,
-            createdAt: Date,
-            updatedAt: Date,
             salePrice: number,
             slug: string,
             product_keys: {
                 data: [
                     {
-                        '__typename': "ProductKeyEntity"
+                        id: number
                     }
                 ]
             }
             product_category: {
                 data: {
                     attributes: {
-                        createdAt: string
-                        publishedAt: string
                         slug: string
                         title: string
-                        updatedAt: string
                     }
                     id: number
                 }
@@ -51,7 +46,6 @@ export namespace ProductsAPI {
                     {
                         attributes: {
                             formats: IImageFormats
-                            url: string
                         }
                     }
                 ]
@@ -64,8 +58,6 @@ export namespace ProductsAPI {
             title: string,
             price: number,
             salePrice: number,
-            createdAt: Date,
-            updatedAt: Date,
             slug: string,
             views: number,
             product_type: {
@@ -78,11 +70,8 @@ export namespace ProductsAPI {
             product_category: {
                 data: {
                     attributes: {
-                        createdAt: string
-                        publishedAt: string
                         slug: string
                         title: string
-                        updatedAt: string
                     }
                     id: number
                 }
@@ -99,7 +88,7 @@ export namespace ProductsAPI {
             product_keys: {
                 data: [
                     {
-                        '__typename': "ProductKeyEntity"
+                        id: number
                     }
                 ]
             }
@@ -117,7 +106,6 @@ export namespace ProductsAPI {
                     {
                         attributes: {
                             formats: IImageFormats
-                            url: string
                         }
                     }
                 ]
@@ -126,41 +114,10 @@ export namespace ProductsAPI {
     }
 
     export const list = async (): Promise<{ data: IShortProductResponse[] }> => {
-        return $API('/products', {
-            'fields': [
-                'title',
-                'price',
-                'salePrice',
-                'slug',
-            ],
-            'populate': [
-                'images',
-                'product_keys',
-                'product_category'
-            ]
-        })
+        return $API('/products')
     }
 
     export const show = async (productSlug: string): Promise<{ data: IProductResponse }> => {
-        return $API(`/products/${productSlug}`, {
-            'fields': [
-                'title',
-                'price',
-                'salePrice',
-                'slug',
-                'description',
-                'instruction',
-                'views'
-            ],
-            'pagination[limit]': 1,
-            'populate': [
-                'images',
-                'product_keys',
-                'platforms',
-                'delivery_method',
-                'product_type',
-                'product_category'
-            ]
-        })
+        return $API(`/products/${productSlug}`)
     }
 }

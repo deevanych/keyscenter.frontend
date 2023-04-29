@@ -70,7 +70,7 @@ const product: ShortProduct = props.product
 		}
 		
 		&__preview {
-			@apply rounded-t-lg aspect-square object-center object-contain;
+			@apply rounded-t-lg aspect-square object-center object-scale-down;
 		}
 	}
 </style>

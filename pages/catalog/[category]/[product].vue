@@ -5,16 +5,16 @@ import {ProductsAPI} from "~/api/products";
 
 const route = useRoute()
 
-  const { data } = await ProductsAPI.show(route.params.product as string)
+const {data} = await useAsyncData('product', async () => (await ProductsAPI.show(route.params.product as string)).data)
 
-  const product: Ref<Product | undefined> = ref()
+const product: Ref<Product | undefined> = ref()
 
-  if (data) {
-    product.value = new Product(data)
-    useHead({ title: product.value?.title})
-  } else {
-    throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
-  }
+if (data.value) {
+    product.value = new Product(data.value)
+    useHead({title: product.value?.title})
+} else {
+    throw createError({statusCode: 404, statusMessage: 'Page Not Found'})
+}
 </script>
 
 <template>

@@ -7,8 +7,10 @@ useHead({title: 'Главная'})
 const products: Ref<ShortProduct[]> = ref([])
 
 try {
-    const {data}: { data: ProductsAPI.IShortProductResponse[] } = await ProductsAPI.list()
-    products.value = data.map((product: ProductsAPI.IShortProductResponse) => new ShortProduct(product))
+    const {data} = await useAsyncData('products', async () => (await ProductsAPI.list()).data)
+    if (data.value) {
+        products.value = data.value.map((product: ProductsAPI.IShortProductResponse) => new ShortProduct(product))
+    }
 } catch (e) {
     throw createError({statusCode: 500, statusMessage: (e as Error).message})
 }

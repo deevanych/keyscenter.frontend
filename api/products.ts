@@ -114,10 +114,10 @@ export namespace ProductsAPI {
     }
 
     export const list = async (): Promise<{ data: IShortProductResponse[] }> => {
-        return $API('/products')
+        return await $API('/products')
     }
 
     export const show = async (productSlug: string): Promise<{ data: IProductResponse }> => {
-        return $API(`/products/${productSlug}`)
+        return await $API(`/products/${productSlug}`)
     }
 }

@@ -11,7 +11,3 @@ export const $API = async (url = '', params = {}, method: HTTPMethod = "GET", bo
         params
     })
 }
-
-export namespace API {
-    export const products = ProductsAPI
-}

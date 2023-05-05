@@ -1,20 +1,41 @@
 import {defineStore, StoreDefinition} from 'pinia'
-import {CartItem} from "~/models/CartItem";
-import {Product} from "~/models/Product";
-import {OrdersAPI} from "~/api/orders";
-import IOrderItem = OrdersAPI.IOrderItem;
+import {OrdersAPI} from "~/api/orders"
+import IOrderItem = OrdersAPI.IOrderItem
+import {CartAPI} from "~/api/cart"
+
+export interface ICartItem {
+	id: number
+	quantity: number
+	availableCount: number
+	product: {
+		id: number
+		price: number
+		salePrice: number
+		slug: string
+		title: string
+		category: string
+		thumbnail: string
+	}
+}
 
 interface ICartStoreState {
-	items: CartItem[]
+	id: number
+	items: ICartItem[]
+	sum: number
+	uuid: string
 }
 
 export const useCartStore: StoreDefinition<"cart", ICartStoreState> = defineStore('cart', {
 	state: (): ICartStoreState => {
 		return {
-			items: [] as CartItem[]
+			id: 0,
+			items: [],
+			sum: 0,
+			uuid: ''
 		}
 	},
 	getters: {
+		isCartExists: (state): boolean => !!state.uuid,
 		getItemById: (state: ICartStoreState): (id: number) => CartItem | undefined => {
 			return (id: number): CartItem | undefined => state.items.find((item: CartItem) => item.id === id)
 		},
@@ -28,16 +49,33 @@ export const useCartStore: StoreDefinition<"cart", ICartStoreState> = defineStor
 		})
 	},
 	actions: {
-		addToCart(productId: number, quantity: number = 1, product?: Product): void {
-			const existsItem: CartItem | undefined = this.items.find((item: CartItem) => item.id === productId)
-
-			if (existsItem) {
-				existsItem.quantity = quantity
+		async updateCart(): void {
+			if (this.isCartExists) {
+				this.getCart(this.uuid)
 			} else {
-				if (product) {
-					this.items.push(new CartItem(product, quantity))
-				}
+				this.createNewCart()
 			}
+		},
+		async getCart(cartId: string): void {
+			const cart = await CartAPI.getCart(cartId)
+
+			await this.setCart(cart)
+		},
+		async createNewCart(): void {
+			const cart = await CartAPI.create()
+
+			await this.setCart(cart)
+		},
+		async setCart(cart: ICartStoreState) {
+			const { id, items, uuid, sum } = cart
+
+			this.id = id
+			this.items = items
+			this.uuid = uuid
+			this.sum = sum
+		},
+		async addToCart(productId: number, quantity: number = 1): void {
+			await CartAPI.addItemToCart(this.uuid, productId, quantity)
 		},
 		async createOrder(email: string): Promise<void> {
 			return await OrdersAPI.create({

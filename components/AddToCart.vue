@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import {computed, Ref, watch} from 'vue';
 import {usePopupsStore} from "~/store/popups";
-import {CartItem} from "~/models/CartItem";
-import {useCartStore} from "~/store/cart";
-import {Product} from "~/models/Product";
+import {ICartItem, useCartStore} from "~/store/cart";
+
+const cartStore = useCartStore()
 
 interface IProps {
-	product: CartItem | Product
+	product: ICartItem
 }
 
 const popupStore = usePopupsStore()
@@ -34,7 +34,7 @@ const addToCart = (): void => {
 	if (existsCartItem.value && existsCartItem.value.quantity == quantity.value) {
 		popupStore.toggleCartPopup()
 	} else {
-		useCartStore().addToCart(props.product.id, quantity.value, props.product)
+		cartStore.addToCart(props.product.product.id, quantity.value)
 	}
 }
 

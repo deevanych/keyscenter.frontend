@@ -2,9 +2,7 @@ import {price} from '~/helpers/price';
 import {Model} from '~/models/Model';
 import {URLHelpers} from '~/helpers/URL';
 import {ProductsAPI} from "~/api/products";
-import {useCartStore} from "~/store/cart";
 import {useRouter} from "#app";
-import {CartItem} from "~/models/CartItem";
 import IImage = ProductsAPI.IImage;
 import IImageFormats = ProductsAPI.IImageFormats;
 
@@ -36,7 +34,6 @@ interface IProduct extends IShortProduct {
 	productDelivery: string;
 	description: string;
 	instruction: string;
-	cartItem: CartItem;
 }
 
 export class ShortProduct extends Model implements IShortProduct {
@@ -121,15 +118,5 @@ export class Product extends ShortProduct implements IProduct {
 		this.productDelivery = data.attributes.delivery_method.data.attributes.title
 		this.description = data.attributes.description
 		this.instruction = data.attributes.instruction
-	}
-
-	get cartItem(): CartItem {
-		const cartItem = useCartStore().getItemById(this.id)
-
-		if (cartItem) {
-			return cartItem
-		}
-
-		return new CartItem(this, 0)
 	}
 }

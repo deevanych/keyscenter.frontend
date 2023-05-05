@@ -1,23 +1,26 @@
 <script lang="ts" setup>
-import type {CartItem} from "~/models/CartItem";
 import {price} from "~/helpers/price";
+import {ICartItem} from "~/store/cart";
+import {URLHelpers} from "~/helpers/URL";
 
 interface IProps {
-    item: CartItem
+    item: ICartItem
 }
 
 const props = defineProps<IProps>()
+const productPrice = props.item.product.salePrice ?? props.item.product.price
 </script>
 
 <template>
     <div class="cart-item">
-        <img :alt="props.item.title" :src="props.item.preview" class="cart-item__preview" height="156" width="127"/>
+        <img :alt="props.item.product.title" :src="URLHelpers.getBackendURLHref(props.item.product.thumbnail)"
+             class="cart-item__preview" height="156" width="127"/>
         <div class="cart-item__wrapper">
-            <h3 class="cart-item__title">{{ props.item.title }}</h3>
+            <h3 class="cart-item__title">{{ props.item.product.title }}</h3>
             <LazyAddToCart :product="props.item"/>
             <div class="cart-item__sum">
-                Итого: {{ price(props.item.price) }} * {{ props.item.quantity }} =
-                {{ price(props.item.price * props.item.quantity) }}
+                Итого: {{ price(productPrice) }} * {{ props.item.quantity }} =
+                {{ price(productPrice * props.item.quantity) }}
             </div>
         </div>
     </div>
@@ -25,7 +28,7 @@ const props = defineProps<IProps>()
 
 <style lang="scss" scoped>
 .cart-item {
-    @apply flex gap-10 py-5;
+  @apply flex gap-10 py-5;
 
   &__title {
     @apply mt-0 mb-2;

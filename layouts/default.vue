@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import {usePopupsStore} from "~/store/popups";
 import {ComputedRef} from 'vue';
+import {useCartStore} from "~/store/cart";
 
+const cartStore = useCartStore()
 const popupStore = usePopupsStore()
-  const isCartPopupShown: ComputedRef<boolean> = computed(() => popupStore.isCartPopupShown)
+const isCartPopupShown: ComputedRef<boolean> = computed(() => popupStore.isCartPopupShown)
+
+onMounted(async () => {
+    await cartStore.updateCart()
+})
 </script>
 
 <template>

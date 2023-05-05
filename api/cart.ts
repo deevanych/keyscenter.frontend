@@ -2,21 +2,23 @@ import {$API} from "~/api/instance";
 
 export namespace CartAPI {
     export const create = async () => {
-        return await $API('/cart', {}, 'POST')
+        return await $API('/carts', {}, 'POST')
     }
 
     export const getCart = async (cartID: string) => {
-        return await $API(`/cart/${cartID}`, {})
+        return await $API(`/carts/${cartID}`, {})
     }
 
-    export const addItemToCart = async (cartID: string, productID: number, quantity = 1) => {
-        return await $API(`/cart/${cartID}`, {}, 'POST', {
-            productID,
-            quantity
+    export const addItemToCart = async (cartID: string, productId: number, quantity = 1) => {
+        return await $API(`/carts/${cartID}/items`, {}, 'POST', {
+            data: {
+                productId,
+                quantity
+            }
         })
     }
 
-    export const removeItemFromCart = async (cartID: string, productID: number) => {
-        return await $API(`/cart/${cartID}/${productID}`, {}, 'DELETE')
+    export const removeItemFromCart = async (cartID: string, productId: number) => {
+        return await $API(`/carts/${cartID}/items/${productId}`, {}, 'DELETE')
     }
 }

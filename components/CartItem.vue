@@ -13,11 +13,15 @@ const productPrice = props.item.product.salePrice ?? props.item.product.price
 
 <template>
     <div class="cart-item">
-        <img :alt="props.item.product.title" :src="URLHelpers.getBackendURLHref(props.item.product.thumbnail)"
+        <img :alt="props.item.product.title"
+             :src="URLHelpers.getBackendURLHref(props.item.product.thumbnail)"
              class="cart-item__preview" height="156" width="127"/>
         <div class="cart-item__wrapper">
             <h3 class="cart-item__title">{{ props.item.product.title }}</h3>
-            <LazyAddToCart :product="props.item"/>
+            <AddToCart :product-id="props.item.product.id"
+                       :max-count="props.item.availableCount"
+                       :quantity="props.item.quantity"
+                       :item-id="props.item.id"/>
             <div class="cart-item__sum">
                 Итого: {{ price(productPrice) }} * {{ props.item.quantity }} =
                 {{ price(productPrice * props.item.quantity) }}

@@ -1,46 +1,49 @@
 <script lang="ts" setup>
-import {computed, Ref, watch} from 'vue';
-import {usePopupsStore} from "~/store/popups";
-import {ICartItem, useCartStore} from "~/store/cart";
+import {computed, Ref} from 'vue';
+import {useCartStore} from "~/store/cart";
 
 const cartStore = useCartStore()
 
 interface IProps {
-	product: ICartItem
+	maxCount: number
+	productId: number
+	itemId?: number
+	quantity?: number
 }
 
-const popupStore = usePopupsStore()
-const props = defineProps<IProps>()
-const existsCartItem = computed(() => useCartStore().getItemById(props.product.id))
-const quantity: Ref<number> = ref(existsCartItem.value?.quantity ?? 1)
-
-watch(existsCartItem.value, () => {
-	if (existsCartItem.value.quantity !== quantity.value) {
-		quantity.value = existsCartItem.value.quantity
-	}
+const props = withDefaults(defineProps<IProps>(), {
+	quantity: 1
 })
+const quantity: Ref<number> = ref(props.quantity)
+const isLoading: Ref<boolean> = ref(false)
 
 const changeValue = (increment = true): void => {
 	increment ? quantity.value++ : quantity.value--
 }
 
 const isButtonDisabled = (increment = true): boolean => {
-	return (increment && quantity.value >= props.product.availableCount) || !increment && quantity.value <= 0;
+	return (increment && quantity.value >= props.maxCount) || !increment && quantity.value <= 0;
 }
+const isExistsInCart = ref(typeof props.itemId !== 'undefined' && quantity.value === props.quantity)
+const isAddToCartButtonEnabled = computed(() => 0 < quantity.value && quantity.value <= props.maxCount)
 
-const isAddToCartButtonEnabled = computed(() => 0 < quantity.value && quantity.value <= props.product.availableCount)
-
-const addToCart = (): void => {
-	if (existsCartItem.value && existsCartItem.value.quantity == quantity.value) {
-		popupStore.toggleCartPopup()
-	} else {
-		cartStore.addToCart(props.product.product.id, quantity.value)
+const cartAction = async (): Promise<void> => {
+	try {
+		isLoading.value = true
+		if (quantity.value === props.quantity) {
+			await cartStore.removeFromCart(props.itemId)
+		} else {
+			await cartStore.addToCart(props.productId, quantity.value)
+		}
+	} catch (e) {
+	} finally {
+		isLoading.value = false
 	}
 }
 
 const addToCartButtonText = computed((): string => {
-	if (existsCartItem.value && existsCartItem.value.quantity !== 0) {
-		return existsCartItem.value.quantity == quantity.value ? 'В корзине' : 'Обновить'
+	if (isExistsInCart.value) {
+		return quantity.value === props.quantity ? 'Удалить' : 'Обновить'
 	}
 
 	return 'Купить'
@@ -52,9 +55,9 @@ const addToCartButtonText = computed((): string => {
 		}
 
 		let buttonClass = '_buy'
-		
-		if (existsCartItem.value) {
-			buttonClass = existsCartItem.value.quantity == quantity.value ? '_exists' : '_update'
+
+		if (isExistsInCart.value) {
+			buttonClass = quantity.value === props.quantity ? '_exists' : '_update'
 		}
 		
 		return `add-to-cart__cart-button${buttonClass}`
@@ -74,7 +77,7 @@ const addToCartButtonText = computed((): string => {
 			<input type="number"
 						 class="add-to-cart__input"
 						 v-model="quantity"
-						 :max="props.product.availableCount"/>
+						 :max="props.maxCount"/>
 			<button class="add-to-cart__button"
 							@click="changeValue"
 							:disabled="isButtonDisabled()">
@@ -85,7 +88,8 @@ const addToCartButtonText = computed((): string => {
 		</div>
 		<UiButton :disabled="!isAddToCartButtonEnabled"
 							class="add-to-cart__cart-button"
-							@click="addToCart"
+							:loading="isLoading"
+							@click="cartAction"
 							:class="addToCartButtonClass">
 			{{ addToCartButtonText }}
 		</UiButton>
@@ -115,7 +119,7 @@ const addToCartButtonText = computed((): string => {
 			}
 			
 			&_exists {
-				@apply bg-green-400 hover:bg-green-500;
+				@apply bg-red-400 hover:bg-red-500;
 			}
 		}
 		

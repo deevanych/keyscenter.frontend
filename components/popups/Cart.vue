@@ -8,7 +8,7 @@ import {Ref} from "vue";
 const {toggleCartPopup} = usePopupsStore()
 const cartStore = useCartStore()
 const cartTotalSum = ref(0)
-const cartItems = cartStore.getItems
+const cartItems = computed(() => cartStore.getItems)
 const cartOrder = ref(0)
 
 const keypressHandler = (e: KeyboardEvent) => {
@@ -46,12 +46,13 @@ onBeforeUnmount(() => {
 const formSubmit = async () => {
     try {
         buttonIsLoading.value = true
-        const data = await cartStore.createOrder(state.email)
+        const data = await cartStore.checkAvailability(state.email)
         cartTotalSum.value = data.sum
-        cartOrder.value = data.order_uuid
+        cartOrder.value = data.cartId
         await nextTick()
         form.value?.submit()
     } catch (_) {
+    } finally {
         buttonIsLoading.value = false
     }
 }
@@ -66,7 +67,9 @@ const formSubmit = async () => {
                 <div class="cart-popup__content-section">
                     <h3 class="cart-popup__content-section-title">Товары</h3>
                     <div class="cart-popup__content-section-content">
-                        <CartItem v-for="cartItem in cartItems" :item="cartItem"/>
+                        <CartItem v-for="cartItem in cartItems"
+                                  :item="cartItem"
+                                  :key="cartItem.id"/>
                     </div>
                 </div>
                 <div class="cart-popup__content-section">
@@ -84,7 +87,9 @@ const formSubmit = async () => {
                             <input name="quickpay-form" type="hidden" value="button"/>
                             <input name="paymentType" type="hidden" value="AC"/>
                             <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
-                            <LazyUiButton :disabled="vuelidate.$invalid" :loading="buttonIsLoading" type="submit">
+                            <LazyUiButton :disabled="vuelidate.$invalid"
+                                          :loading="buttonIsLoading"
+                                          type="submit">
                                 Перейти к оплате
                             </LazyUiButton>
                         </form>
@@ -97,35 +102,35 @@ const formSubmit = async () => {
 
 <style lang="scss" scoped>
 .cart-popup {
-    @apply fixed flex w-full h-full top-0 left-0 z-10;
+  @apply fixed flex w-full h-full top-0 left-0 z-10;
 
-    &__payment {
-        @apply flex gap-4 flex-col;
+  &__payment {
+    @apply flex gap-4 flex-col;
 
-        &-action {
-            @apply flex gap-5 items-center;
-        }
+    &-action {
+      @apply flex gap-5 items-center;
     }
+  }
 
-    &__background {
-        @apply fixed w-full h-full bg-black opacity-60 top-0 left-0 cursor-pointer;
-    }
+  &__background {
+    @apply fixed w-full h-full bg-black opacity-60 top-0 left-0 cursor-pointer;
+  }
 
-    &__wrapper {
-        @apply bg-white m-auto z-10 overflow-hidden rounded;
-    }
+  &__wrapper {
+    @apply bg-white m-auto z-10 overflow-hidden rounded;
+  }
 
-    &__content {
-        @apply flex flex-row divide-x py-12;
+  &__content {
+    @apply flex flex-row divide-x py-12;
 
-        &-section {
-            @apply px-10 max-w-xl;
+    &-section {
+      @apply px-10 max-w-xl;
 
-            &-title {
-                @apply font-bold leading-tight text-2xl mt-0 mb-10;
-            }
+      &-title {
+        @apply font-bold leading-tight text-2xl mt-0 mb-10;
+      }
 
-            &-content {
+      &-content {
         @apply divide-y;
       }
     }

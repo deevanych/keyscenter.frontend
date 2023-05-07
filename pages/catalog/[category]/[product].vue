@@ -10,7 +10,7 @@ const {data} = await useAsyncData('product', async () => (await ProductsAPI.show
 const product: Ref<Product | undefined> = ref()
 
 if (data.value) {
-    product.value = new Product(data.value)
+    product.value = new Product(data.value as ProductsAPI.IProductResponse)
     useHead({title: product.value?.title})
 } else {
     throw createError({statusCode: 404, statusMessage: 'Page Not Found'})

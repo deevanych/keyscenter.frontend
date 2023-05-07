@@ -117,7 +117,7 @@ export namespace ProductsAPI {
         return await $API('/products')
     }
 
-    export const show = async (productSlug: string): Promise<{ data: IProductResponse }> => {
+    export const show = async (productSlug: string): Promise<{ data: ProductsAPI.IProductResponse }> => {
         return await $API(`/products/${productSlug}`)
     }
 }

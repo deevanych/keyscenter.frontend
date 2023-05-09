@@ -81,9 +81,6 @@ export const useCartStore: StoreDefinition<"cart", ICartStoreState> = defineStor
 			const cart = await CartAPI.removeItemFromCart(this.uuid, itemId)
 
 			await this.setCart(cart)
-		},
-		async checkAvailability(email: string): Promise<void> {
-			return await CartAPI.checkAvailability(this.uuid, email)
 		}
 	},
 	persist: true

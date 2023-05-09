@@ -21,10 +21,4 @@ export namespace CartAPI {
     export const removeItemFromCart = async (cartID: string, itemId: number) => {
         return await $API(`/carts/${cartID}/items/${itemId}`, {}, 'DELETE')
     }
-
-    export const checkAvailability = async (cartID: string, email: string) => {
-        return await $API(`/carts/${cartID}/check-availability`, {}, 'POST', {
-            email
-        })
-    }
 }

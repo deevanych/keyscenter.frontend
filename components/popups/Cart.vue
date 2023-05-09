@@ -4,6 +4,7 @@ import {usePopupsStore} from "~/store/popups";
 import {email, required} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import {Ref} from "vue";
+import {OrderAPI} from "~/api/order";
 
 const {toggleCartPopup} = usePopupsStore()
 const cartStore = useCartStore()
@@ -46,9 +47,9 @@ onBeforeUnmount(() => {
 const formSubmit = async () => {
     try {
         buttonIsLoading.value = true
-        const data = await cartStore.checkAvailability(state.email)
-        cartTotalSum.value = data.sum
-        cartOrder.value = data.cartId
+        const { data } = await OrderAPI.create(cartStore.uuid, state.email)
+        cartTotalSum.value = data.attributes.sum
+        cartOrder.value = data.attributes.uuid
         await nextTick()
         form.value?.submit()
     } catch (_) {

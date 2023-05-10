@@ -3,7 +3,15 @@ import {Ref} from 'vue';
 import {ShortProduct} from '~/models/Product';
 import {ProductsAPI} from "~/api/products";
 
-useHead({title: 'Главная'})
+useHead({
+    title: 'Главная',
+    meta: [
+        {
+            name: "description",
+            content: "Оригинальные и лицензионные ключи активации продуктов Microsoft, Adobe, Office купить дешево"
+        },
+    ]
+})
 const products: Ref<ShortProduct[]> = ref([])
 
 try {
@@ -17,6 +25,6 @@ try {
 </script>
 
 <template>
-  <LazyProductsList v-if="products.length"
-                    :products="products"/>
+    <LazyProductsList v-if="products.length"
+                      :products="products"/>
 </template>

@@ -25,6 +25,7 @@ interface IShortProduct {
 	isInStockHumanized: string;
 	isInStockWithCountHumanized: string;
 	url: string;
+	currentPriceNonFormatted: number;
 }
 
 interface IProduct extends IShortProduct {
@@ -76,7 +77,11 @@ export class ShortProduct extends Model implements IShortProduct {
 	}
 
 	get currentPrice(): string {
-		return price(this.salePrice ?? this.price)
+		return price(this.currentPriceNonFormatted)
+	}
+
+	get currentPriceNonFormatted(): number {
+		return this.salePrice ?? this.price
 	}
 
 	get preview(): string {

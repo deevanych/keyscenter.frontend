@@ -11,21 +11,44 @@ const product: Ref<Product | undefined> = ref()
 
 if (data.value) {
     product.value = new Product(data.value as ProductsAPI.IProductResponse)
-    useHead({title: product.value?.title})
+    useHead({
+        title: product.value?.title,
+        meta: [
+            {
+                name: "description",
+                content: (product.value?.description.replace(/<[^>]*>/g, '') as string)
+            },
+            {
+                property: "og:title",
+                content: product.value?.title
+            },
+            {
+                property: "og:image",
+                content: product.value?.preview
+            },
+            {
+                property: "og:url",
+                content: product.value?.url
+            }
+        ]
+    })
 } else {
     throw createError({statusCode: 404, statusMessage: 'Page Not Found'})
 }
 </script>
 
 <template>
-    <div v-if="product" class="product-page">
+    <div v-if="product" class="product-page" itemscope itemtype="https://schema.org/Product">
+        <meta itemprop="url" :content="product.url">
+        <meta itemprop="image" :content="product.preview">
         <ProductBooking :product="product"/>
         <div class="col-span-2">
-            <h1 class="product-page__title">{{ product.title }}</h1>
+            <h1 class="product-page__title" itemprop="name">{{ product.title }}</h1>
             <LazyRatingComponent/>
             <LazyProductDetails :product="product"
                                 class="product-page__details"/>
             <div v-if="product.description"
+                 itemprop="description"
                  class="product-page__description">
                 <h3 class="product-page__description-title">Описание</h3>
                 <div class="product-page__description-content"
@@ -43,28 +66,28 @@ if (data.value) {
 
 <style lang="scss" scoped>
 .product-page {
-    @apply grid grid-cols-3 gap-12 items-start;
+  @apply grid grid-cols-3 gap-12 items-start;
 
-    &__description {
-        @apply mt-6 border p-8 pt-6 rounded;
+  &__description {
+    @apply mt-6 border p-8 pt-6 rounded;
 
-        &-content {
-            :deep(a) {
-                @apply text-purple-500 underline hover:text-purple-700 transition-colors;
-            }
-        }
-
-        &-title {
-            @apply font-bold leading-tight text-xl mt-0 mb-4;
-        }
+    &-content {
+      :deep(a) {
+        @apply text-purple-500 underline hover:text-purple-700 transition-colors;
+      }
     }
 
-    &__title {
-        @apply font-bold leading-tight text-3xl mt-0 mb-2;
+    &-title {
+      @apply font-bold leading-tight text-xl mt-0 mb-4;
     }
+  }
 
-    &__details {
-        @apply mt-8;
-    }
+  &__title {
+    @apply font-bold leading-tight text-3xl mt-0 mb-2;
+  }
+
+  &__details {
+    @apply mt-8;
+  }
 }
 </style>

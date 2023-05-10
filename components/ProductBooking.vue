@@ -21,7 +21,10 @@ const quantity = computed(() => typeof existsItem.value !== 'undefined' ? exists
              height="300"
              width="245"
              class="product-booking__image"/>
-        <div class="product-booking__prices">
+        <div class="product-booking__prices" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+            <meta itemprop="price" :content="props.product.currentPriceNonFormatted.toString()">
+            <meta itemprop="priceCurrency" content="RUB">
+            <meta itemprop="availability" href="https://schema.org/InStock" v-if="props.product.isInStock"/>
             <div class="product-booking__price-wrapper">
                 <div class="product-booking__price product-booking__price_current">
                     {{ props.product.currentPrice }}

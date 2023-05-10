@@ -39,7 +39,8 @@ export default defineNuxtConfig({
     robots: {
         rules: {
                 UserAgent: '*',
-                Disallow: '/'
+                Allow: '/',
+                Host: process.env.BASE_URL
             }
     }
 })

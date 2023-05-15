@@ -41,6 +41,7 @@ const addToCart = async () => {
             </NuxtLink>
             <div class="product-card__meta">
                 <NuxtLink
+                        class="product-card__link"
                         :to="{name: 'catalog-category-product', params: { category: product.categorySlug, product: product.slug } }">
                     <h5 class="product-card__title">{{ product.title }}</h5>
                 </NuxtLink>
@@ -74,6 +75,10 @@ const addToCart = async () => {
 
   &__title {
     @apply text-gray-900;
+  }
+
+  &__link {
+    @apply no-underline;
   }
 
   &__prices {

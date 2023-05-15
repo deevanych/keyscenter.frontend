@@ -2,17 +2,21 @@
 import { PageAPI } from '~/api/page';
 
 const route = useRoute()
-const {data} = await useAsyncData('page', async () => await PageAPI.get(route.params.page as string))
+const {data} = await useAsyncData('page', async () => await PageAPI.show(route.params.page as string))
 
-useHead({
-	title: data.value.title,
-	meta: [
-		{
-			name: 'description',
-			content: data.value.description
-		}
-	]
-})
+if (data.value) {
+    useHead({
+        title: data.value.title,
+        meta: [
+            {
+                name: 'description',
+                content: data.value.description
+            }
+        ]
+    })
+} else {
+    throw createError({statusCode: 404, statusMessage: 'Page Not Found'})
+}
 </script>
 
 <template>
@@ -26,12 +30,6 @@ useHead({
 .page {
   &-header {
     @apply font-bold leading-tight text-3xl mt-0 mb-4;
-  }
-
-  &-content {
-    :deep(a) {
-      @apply text-purple-500 underline hover:text-purple-700 transition-colors;
-    }
   }
 }
 </style>

@@ -20,11 +20,12 @@ onMounted(async () => {
     <div class="page-layout">
         <NuxtPage/>
     </div>
+    <LayoutFooter />
 </template>
 
 <style lang="scss" scoped>
   .page-layout {
-    @apply container mx-auto mt-36;
+    @apply container mx-auto mt-36 min-h-fit;
   }
 
   .v-enter-active,

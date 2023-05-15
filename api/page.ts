@@ -1,7 +1,11 @@
 import {$API} from "~/api/instance";
 
 export namespace PageAPI {
-    export const get = async (pageSlug: string) => {
+    export const show = async (pageSlug: string) => {
         return await $API(`/pages/${pageSlug}`, {}, 'GET')
+    }
+
+    export const list = async () => {
+        return await $API('/pages', {}, 'GET')
     }
 }

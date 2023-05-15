@@ -71,12 +71,6 @@ if (data.value) {
   &__description {
     @apply mt-6 border p-8 pt-6 rounded;
 
-    &-content {
-      :deep(a) {
-        @apply text-purple-500 underline hover:text-purple-700 transition-colors;
-      }
-    }
-
     &-title {
       @apply font-bold leading-tight text-xl mt-0 mb-4;
     }

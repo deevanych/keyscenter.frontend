@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import {PageAPI} from "~/api/page";
+import { URLHelpers } from '~/helpers/URL';
 
 const pages = ref([])
 const {data} = await useAsyncData('pages', async () => await PageAPI.list())
+const { getBackendURLHref } = URLHelpers
 
 pages.value = data.value.data
 </script>
@@ -21,7 +23,7 @@ pages.value = data.value.data
             </nav>
             <div class="footer__block">
                 <h4 class="footer__block-heading">Платежные методы</h4>
-                <img src="http://localhost:1337/uploads/logo3h_e0ff0b90df.png" alt="Платежные методы"/>
+                <img :src="`${getBackendURLHref('/uploads/logo3h_e0ff0b90df.png')}`" alt="Платежные методы"/>
             </div>
             <div class="footer__block">
                 <h4 class="footer__block-heading">Контакты</h4>

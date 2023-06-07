@@ -4,7 +4,9 @@
 <template>
   <header class="header">
     <div class="header__wrapper">
-        <NuxtLink :to="{ name: 'index' }">Главная</NuxtLink>
+        <NuxtLink :to="{ name: 'index' }" title="Главная">
+					<img src="/logo.svg" class="header__logo" alt="Keyscenter"/>
+				</NuxtLink>
         <IconCart/>
     </div>
   </header>
@@ -17,5 +19,9 @@
     &__wrapper {
       @apply flex justify-between container mx-auto h-full items-center;
     }
+		
+		&__logo {
+			height: 50px;
+		}
   }
 </style>

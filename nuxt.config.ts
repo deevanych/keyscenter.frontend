@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+import { faviconLinks } from './helpers/favicon';
+
 export default defineNuxtConfig({
 // @ts-ignore
 	app: {
@@ -6,10 +9,25 @@ export default defineNuxtConfig({
 			charset: 'utf-8',
 			viewport: 'width=device-width, initial-scale=1',
 			titleTemplate: '🗝️ %s - Магазин цифровых ключей',
+			link: [
+				...faviconLinks()
+			],
 			meta: [
 				{
 					name: 'yandex-verification',
 					content: '499b3cbff2687c7b'
+				},
+				{
+					name: 'msapplication-TileColor',
+					content: '#ffffff'
+				},
+				{
+					name: 'msapplication-TileImage',
+					content: '/ms-icon-144x144.png'
+				},
+				{
+					name: 'theme-color',
+					content: '#ffffff'
 				}
 			],
 			script: [
@@ -74,6 +92,6 @@ export default defineNuxtConfig({
 			UserAgent: '*',
 			Allow: '/',
 			Host: process.env.BASE_URL
-		}
+		} as {}
 	}
 })

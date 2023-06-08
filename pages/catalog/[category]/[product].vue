@@ -66,7 +66,7 @@ if (data.value) {
 
 <style lang="scss" scoped>
 .product-page {
-  @apply grid grid-cols-3 gap-12 items-start;
+  @apply flex flex-col md:grid grid-cols-3 gap-12 items-start;
 
   &__description {
     @apply mt-6 border p-8 pt-6 rounded;

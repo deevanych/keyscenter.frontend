@@ -24,13 +24,12 @@ const changeValue = (increment = true): void => {
 const isButtonDisabled = (increment = true): boolean => {
 	return (increment && quantity.value >= props.maxCount) || !increment && quantity.value <= 0;
 }
-const isExistsInCart = ref(typeof props.itemId !== 'undefined' && quantity.value === props.quantity)
 const isAddToCartButtonEnabled = computed(() => 0 < quantity.value && quantity.value <= props.maxCount)
 
 const cartAction = async (): Promise<void> => {
 	try {
 		isLoading.value = true
-		if (quantity.value === props.quantity) {
+		if (typeof props.itemId !== 'undefined' && quantity.value === props.quantity) {
 			await cartStore.removeFromCart(props.itemId)
 		} else {
 			await cartStore.addToCart(props.productId, quantity.value)
@@ -42,7 +41,7 @@ const cartAction = async (): Promise<void> => {
 }
 
 const addToCartButtonText = computed((): string => {
-	if (isExistsInCart.value) {
+	if (typeof props.itemId !== 'undefined') {
 		return quantity.value === props.quantity ? 'Удалить' : 'Обновить'
 	}
 
@@ -56,7 +55,7 @@ const addToCartButtonText = computed((): string => {
 
 		let buttonClass = '_buy'
 
-		if (isExistsInCart.value) {
+		if (typeof props.itemId !== 'undefined') {
 			buttonClass = quantity.value === props.quantity ? '_exists' : '_update'
 		}
 		
@@ -112,7 +111,7 @@ const addToCartButtonText = computed((): string => {
 		}
 		
 		&__cart-button {
-			@apply w-32 shrink-0;
+			@apply w-auto md:w-32 shrink-0;
 			
 			&_update {
 				@apply bg-yellow-400 hover:bg-yellow-500;

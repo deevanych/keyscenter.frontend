@@ -90,6 +90,7 @@ const formSubmit = async () => {
                             <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
                             <LazyUiButton :disabled="vuelidate.$invalid"
                                           :loading="buttonIsLoading"
+																					class="cart-popup__payment-button"
                                           type="submit">
                                 Перейти к оплате
                             </LazyUiButton>
@@ -109,8 +110,12 @@ const formSubmit = async () => {
     @apply flex gap-4 flex-col;
 
     &-action {
-      @apply flex gap-5 items-center;
+      @apply flex gap-5 items-center flex-col md:flex-row;
     }
+		
+		&-button {
+			@apply w-full md:w-auto;
+		}
   }
 
   &__background {
@@ -118,14 +123,14 @@ const formSubmit = async () => {
   }
 
   &__wrapper {
-    @apply bg-white m-auto z-10 overflow-hidden rounded;
+    @apply bg-white mx-10 md:mx-auto m-auto z-10 overflow-hidden rounded;
   }
 
   &__content {
-    @apply flex flex-row divide-x py-12;
+    @apply flex flex-col md:flex-row divide-y md:divide-x md:divide-y-0 md:py-12 px-10 md:px-0;
 
     &-section {
-      @apply px-10 max-w-xl;
+      @apply py-10 md:py-0 md:px-10 max-w-xl;
 
       &-title {
         @apply font-bold leading-tight text-2xl mt-0 mb-10;

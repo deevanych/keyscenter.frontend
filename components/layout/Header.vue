@@ -14,7 +14,7 @@
 
 <style lang="scss" scoped>
   .header {
-    @apply shadow z-10 fixed w-full bg-white top-0 h-24 flex items-center;
+    @apply shadow z-10 fixed w-full bg-white top-0 h-24 flex items-center px-10 md:px-0;
 
     &__wrapper {
       @apply flex justify-between container mx-auto h-full items-center;

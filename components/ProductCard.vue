@@ -62,7 +62,7 @@ const addToCart = async () => {
 
 <style scoped lang="scss">
 .product-card {
-  @apply border border-slate-100 rounded-lg bg-white max-w-sm duration-300 hover:shadow hover:border-transparent
+  @apply border border-slate-100 rounded-lg bg-white max-w-none duration-300 hover:shadow hover:border-transparent
   relative;
 
   &__tag {
@@ -96,7 +96,7 @@ const addToCart = async () => {
   }
 
   &__preview {
-    @apply rounded-t-lg aspect-square object-center object-scale-down;
+    @apply rounded-t-lg aspect-square object-center object-scale-down m-auto;
   }
 }
 </style>

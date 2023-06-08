@@ -22,9 +22,6 @@ const quantity = computed(() => typeof existsItem.value !== 'undefined' ? exists
              width="245"
              class="product-booking__image"/>
         <div class="product-booking__prices" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-            <meta itemprop="price" :content="props.product.currentPriceNonFormatted.toString()">
-            <meta itemprop="priceCurrency" content="RUB">
-            <meta itemprop="availability" href="https://schema.org/InStock" v-if="props.product.isInStock"/>
             <div class="product-booking__price-wrapper">
                 <div class="product-booking__price product-booking__price_current">
                     {{ props.product.currentPrice }}
@@ -38,6 +35,9 @@ const quantity = computed(() => typeof existsItem.value !== 'undefined' ? exists
                     <LazyUiTag>{{ props.product.discountPercent }}</LazyUiTag>
                 </div>
             </div>
+					<meta itemprop="price" :content="props.product.currentPriceNonFormatted.toString()">
+					<meta itemprop="priceCurrency" content="RUB">
+					<meta itemprop="availability" href="https://schema.org/InStock" v-if="props.product.isInStock"/>
         </div>
         <div class="product-booking__availability">
             {{ props.product.isInStockWithCountHumanized }}
@@ -52,10 +52,10 @@ const quantity = computed(() => typeof existsItem.value !== 'undefined' ? exists
 
 <style lang="scss" scoped>
 .product-booking {
-  @apply p-8 shadow rounded-md flex flex-col gap-6;
+  @apply max-w-full md:p-8 md:shadow md:rounded-md flex flex-col gap-6;
 
   &__image {
-    @apply rounded border;
+    @apply rounded border m-auto;
   }
 
   &__prices {

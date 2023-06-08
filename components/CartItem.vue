@@ -33,6 +33,14 @@ const productPrice = props.item.product.salePrice ?? props.item.product.price
 <style lang="scss" scoped>
 .cart-item {
   @apply flex gap-10 py-5;
+	
+	&__wrapper {
+		@apply w-full md:w-auto;
+	}
+	
+	&__preview {
+		@apply hidden md:block
+	}
 
   &__title {
     @apply mt-0 mb-2;

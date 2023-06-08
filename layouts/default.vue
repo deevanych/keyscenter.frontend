@@ -25,7 +25,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
   .page-layout {
-    @apply container mx-auto mt-36 min-h-fit;
+    @apply container mx-auto mt-36 min-h-fit px-10 md:px-0;
   }
 
   .v-enter-active,

@@ -57,7 +57,7 @@ pages.value = data.value.data
 
 <style lang="scss" scoped>
 .footer {
-  @apply w-full flex flex-col py-20 gap-12;
+  @apply w-full flex flex-col py-20 gap-12 px-10 md:px-0;
 
   &__contact-link {
     @apply flex gap-2 items-center;
@@ -69,7 +69,7 @@ pages.value = data.value.data
 
   &__wrapper,
   &__copyright {
-    @apply container mx-auto flex flex-row justify-between;
+    @apply container mx-auto flex flex-col md:flex-row gap-10 md:gap-0 justify-between;
   }
 
     &__copyright {

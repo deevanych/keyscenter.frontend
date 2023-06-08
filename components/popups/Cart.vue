@@ -51,6 +51,7 @@ const formSubmit = async () => {
         cartTotalSum.value = data.attributes.sum
         cartOrder.value = data.attributes.uuid
         await nextTick()
+				window.ym(93533001,'reachGoal','goToPayment')
         form.value?.submit()
     } catch (_) {
     } finally {

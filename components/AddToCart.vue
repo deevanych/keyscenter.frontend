@@ -31,7 +31,9 @@ const cartAction = async (): Promise<void> => {
 		isLoading.value = true
 		if (typeof props.itemId !== 'undefined' && quantity.value === props.quantity) {
 			await cartStore.removeFromCart(props.itemId)
+			window.ym(93533001,'reachGoal','removeFromCart')
 		} else {
+			window.ym(93533001,'reachGoal','addToCart')
 			await cartStore.addToCart(props.productId, quantity.value)
 		}
 	} catch (e) {

@@ -78,16 +78,12 @@ const formSubmit = async () => {
                     <h3 class="cart-popup__content-section-title">Оформление</h3>
                     <div class="cart-popup__payment">
                         <i>Внимание! Проверьте правильность ввода email. На этот адрес придут купленные товары.</i>
-                        <form ref="form" action="https://yoomoney.ru/quickpay/confirm.xml"
+                        <form ref="form" :action="useRuntimeConfig().public.paymentFormUrl"
                               method="POST" @submit.prevent="formSubmit"
                               class="cart-popup__payment-action">
-                            <UiInput v-model="state.email" name="email" placeholder="Введите адрес электроной почты"/>
-                            <input :value="useRuntimeConfig().public.paymentReceiverAccountNumber" name="receiver"
+                            <UiInput v-model="state.email" name="client_email" placeholder="Введите адрес электроной почты"/>
+                            <input :value="cartOrder" name="orderid"
                                    type="hidden"/>
-                            <input :value="cartOrder" name="label"
-                                   type="hidden"/>
-                            <input name="quickpay-form" type="hidden" value="button"/>
-                            <input name="paymentType" type="hidden" value="AC"/>
                             <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
                             <LazyUiButton :disabled="vuelidate.$invalid"
                                           :loading="buttonIsLoading"

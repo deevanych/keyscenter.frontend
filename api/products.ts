@@ -1,4 +1,4 @@
-import {$API} from "~/api/instance";
+import {$API} from "./instance";
 
 export namespace ProductsAPI {
    export interface IImage {
@@ -25,6 +25,7 @@ export namespace ProductsAPI {
             price: number,
             salePrice: number,
             slug: string,
+            description: string,
             product_keys: {
                 data: [
                     {

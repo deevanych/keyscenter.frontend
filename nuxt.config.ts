@@ -63,7 +63,8 @@ export default defineNuxtConfig({
 		public: {
 			backendUrl: process.env.BACKEND_URL || '',
 			paymentReceiverAccountNumber: process.env.PAYMENT_RECEIVER_ACCOUNT_NUMBER,
-			paymentFormUrl: process.env.PAYMENT_FORM_URL
+			paymentFormUrl: process.env.PAYMENT_FORM_URL,
+			baseUrl: process.env.BASE_URL
 		}
 	},
 	hooks: {

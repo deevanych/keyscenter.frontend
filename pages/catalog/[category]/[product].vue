@@ -16,7 +16,7 @@ if (data.value) {
         meta: [
             {
                 name: "description",
-                content: (product.value?.description.replace(/<[^>]*>/g, '') as string)
+                content: product.value?.metaDescription
             },
             {
                 property: "og:title",

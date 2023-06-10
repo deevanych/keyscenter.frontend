@@ -1,5 +1,3 @@
-import {useRuntimeConfig} from "#app";
-
 export namespace URLHelpers {
     export const getURLHref = (baseURL: string, path: string) => {
         try {

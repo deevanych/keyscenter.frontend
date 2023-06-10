@@ -2,7 +2,7 @@ import {price} from '~/helpers/price';
 import {Model} from '~/models/Model';
 import {URLHelpers} from '~/helpers/URL';
 import {ProductsAPI} from "~/api/products";
-import {useRouter} from "#app";
+import {useRouter} from 'vue-router'
 import IImage = ProductsAPI.IImage;
 import IImageFormats = ProductsAPI.IImageFormats;
 
@@ -26,6 +26,7 @@ interface IShortProduct {
 	isInStockWithCountHumanized: string;
 	url: string;
 	currentPriceNonFormatted: number;
+	metaDescription: string;
 }
 
 interface IProduct extends IShortProduct {
@@ -45,6 +46,7 @@ export class ShortProduct extends Model implements IShortProduct {
 	public readonly images: IImageFormats[];
 	public readonly availableCount: number;
 	public readonly categorySlug: string;
+	public readonly description: string;
 
 	constructor (data: ProductsAPI.IShortProductResponse) {
 		super(data.id);
@@ -55,6 +57,11 @@ export class ShortProduct extends Model implements IShortProduct {
 		this.images = data.attributes.images.data.map(images => images.attributes.formats)
 		this.availableCount = data.attributes.product_keys.data.length
 		this.categorySlug = data.attributes.product_category.data.attributes.slug
+		this.description = data.attributes.description
+	}
+
+	get metaDescription(): string {
+		return (this.description.replace(/<[^>]*>/g, '') as string)
 	}
 
 	get url(): string {
@@ -112,7 +119,6 @@ export class Product extends ShortProduct implements IProduct {
 	public readonly views: number;
 	public readonly productType: string;
 	public readonly productDelivery: string;
-	public readonly description: string;
 	public readonly instruction: string;
 
 	constructor(data: ProductsAPI.IProductResponse) {
@@ -121,7 +127,6 @@ export class Product extends ShortProduct implements IProduct {
 		this.views = data.attributes.views
 		this.productType = data.attributes.product_type.data.attributes.title
 		this.productDelivery = data.attributes.delivery_method.data.attributes.title
-		this.description = data.attributes.description
 		this.instruction = data.attributes.instruction
 	}
 }

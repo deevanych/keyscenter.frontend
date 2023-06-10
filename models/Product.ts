@@ -12,6 +12,7 @@ interface IShortProduct {
 	price: number;
 	salePrice: number;
 	categorySlug: string;
+	categoryId: number;
 	images: IImageFormats[];
 	description?: string;
 	instruction?: string;
@@ -46,6 +47,7 @@ export class ShortProduct extends Model implements IShortProduct {
 	public readonly images: IImageFormats[];
 	public readonly availableCount: number;
 	public readonly categorySlug: string;
+	public readonly categoryId: number;
 	public readonly description: string;
 
 	constructor (data: ProductsAPI.IShortProductResponse) {
@@ -57,6 +59,7 @@ export class ShortProduct extends Model implements IShortProduct {
 		this.images = data.attributes.images.data.map(images => images.attributes.formats)
 		this.availableCount = data.attributes.product_keys.data.length
 		this.categorySlug = data.attributes.product_category.data.attributes.slug
+		this.categoryId = data.attributes.product_category.data.id
 		this.description = data.attributes.description
 	}
 

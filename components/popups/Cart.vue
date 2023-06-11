@@ -5,6 +5,7 @@ import {email, required} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import {Ref} from "vue";
 import {OrderAPI} from "~/api/order";
+import {useRouter} from "vue-router";
 
 const {toggleCartPopup} = usePopupsStore()
 const cartStore = useCartStore()
@@ -43,6 +44,13 @@ onMounted(() => {
 onBeforeUnmount(() => {
     window.removeEventListener('keydown', keypressHandler)
 })
+
+const successURL = new URL(useRouter().resolve({
+  name: 'order-status',
+  query: {
+    status: 'success'
+  }
+}).href, useRuntimeConfig().public.baseUrl).href
 
 const formSubmit = async () => {
     try {
@@ -89,6 +97,8 @@ const formSubmit = async () => {
                             <input name="quickpay-form" type="hidden" value="button"/>
                             <input name="paymentType" type="hidden" value="AC"/>
                             <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
+                            <input name="successURL" type="hidden"
+                                   :value="successURL"/>
                             <LazyUiButton :disabled="vuelidate.$invalid"
                                           :loading="buttonIsLoading"
 																					class="cart-popup__payment-button"

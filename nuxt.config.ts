@@ -1,9 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
+// @ts-nocheck
+
 import { faviconLinks } from './helpers/favicon';
 
 export default defineNuxtConfig({
-// @ts-ignore
 	app: {
 		head: {
 			charset: 'utf-8',
@@ -86,6 +87,7 @@ export default defineNuxtConfig({
 	modules: [
 		'@pinia/nuxt',
 		'@pinia-plugin-persistedstate/nuxt',
+		'nuxt-simple-sitemap',
 		'@nuxtjs/robots'
 	],
 	robots: {
@@ -94,5 +96,9 @@ export default defineNuxtConfig({
 			Allow: '/',
 			Host: process.env.BASE_URL
 		} as {}
+	},
+	sitemap: {
+		inferStaticPagesAsRoutes: false,
+		siteUrl: process.env.BASE_URL,
 	}
 })

@@ -27,5 +27,8 @@
   },
   "overrides": {
     "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "nuxt-simple-sitemap": "^2.6.2"
   }
 }

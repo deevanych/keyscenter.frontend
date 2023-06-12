@@ -5,13 +5,10 @@ import {email, required} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
 import {Ref} from "vue";
 import {OrderAPI} from "~/api/order";
-import {useRouter} from "vue-router";
 
 const {toggleCartPopup} = usePopupsStore()
 const cartStore = useCartStore()
-const cartTotalSum = ref(0)
 const cartItems = computed(() => cartStore.getItems)
-const cartOrder = ref(0)
 
 const keypressHandler = (e: KeyboardEvent) => {
     if (e.isTrusted && e.key === 'Escape') {
@@ -45,22 +42,13 @@ onBeforeUnmount(() => {
     window.removeEventListener('keydown', keypressHandler)
 })
 
-const successURL = new URL(useRouter().resolve({
-  name: 'order-status',
-  query: {
-    status: 'success'
-  }
-}).href, useRuntimeConfig().public.baseUrl).href
-
 const formSubmit = async () => {
     try {
+				window.ym(93533001,'reachGoal','goToPayment')
         buttonIsLoading.value = true
         const { data } = await OrderAPI.create(cartStore.uuid, state.email)
-        cartTotalSum.value = data.attributes.sum
-        cartOrder.value = data.attributes.uuid
         await nextTick()
-				window.ym(93533001,'reachGoal','goToPayment')
-        form.value?.submit()
+        window.location.href = data.attributes.confirmation.confirmation_url
     } catch (_) {
     } finally {
         buttonIsLoading.value = false
@@ -90,15 +78,6 @@ const formSubmit = async () => {
                               method="POST" @submit.prevent="formSubmit"
                               class="cart-popup__payment-action">
                             <UiInput v-model="state.email" name="email" placeholder="Введите адрес электроной почты"/>
-                            <input :value="useRuntimeConfig().public.paymentReceiverAccountNumber" name="receiver"
-                                   type="hidden"/>
-                            <input :value="cartOrder" name="label"
-                                   type="hidden"/>
-                            <input name="quickpay-form" type="hidden" value="button"/>
-                            <input name="paymentType" type="hidden" value="AC"/>
-                            <input :value="cartTotalSum" data-type="number" name="sum" type="hidden"/>
-                            <input name="successURL" type="hidden"
-                                   :value="successURL"/>
                             <LazyUiButton :disabled="vuelidate.$invalid"
                                           :loading="buttonIsLoading"
 																					class="cart-popup__payment-button"

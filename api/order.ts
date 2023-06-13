@@ -50,4 +50,8 @@ export namespace OrderAPI {
 			}
 		})
 	}
+
+	export const get = async (orderId: string) => {
+		return await $API(`/orders/${orderId}`)
+	}
 }

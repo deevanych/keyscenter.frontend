@@ -1,15 +1,27 @@
 <script lang="ts" async setup>
-  const isSuccess = !!useRoute().query.status
-  const statusHeader = isSuccess ? 'Платеж совершен' : 'Произошла ошибка'
-  const statusText = isSuccess ? 'Спасибо за заказ! Инструкции и ключи отправлены на электронную почту, указанную при заказе.'
-      : 'Произошла ошибка. Попробуйте заново или напишите нам на почту или в чат.'
+  import { computed } from 'vue';
+	import { OrderAPI } from '~/api/order';
+	
+	const orderId = useRoute().query.orderId
+	const isSuccess = ref(false)
+  const statusHeader = computed(() => isSuccess.value ? 'Платеж совершен' : 'Произошла ошибка')
+  const statusText =  computed(() => isSuccess.value ? 'Спасибо за заказ! Инструкции и ключи отправлены на электронную почту, указанную при заказе.'
+      : 'Произошла ошибка. Попробуйте заново или напишите нам на почту или в чат.')
 
   useHead({
     title: statusHeader
   })
+	
+	try {
+		const {data: order} = await useAsyncData('order', async () => (await OrderAPI.get(orderId as string)).data)
+		
+		isSuccess.value = order.value.attributes.paid_at
+	} catch (_) {
+		
+	}
 
   onMounted(() => {
-    if (isSuccess) {
+    if (isSuccess.value) {
       window.ym(93533001,'reachGoal','successfulPayment')
     }
   })

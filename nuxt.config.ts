@@ -94,7 +94,9 @@ export default defineNuxtConfig({
 		rules: {
 			UserAgent: '*',
 			Allow: '/',
-			Host: process.env.BASE_URL
+			Disallow: ['/*?*', '/order/*'],
+			Host: process.env.BASE_URL,
+			Sitemap: process.env.BASE_URL + 'sitemap.xml'
 		} as {}
 	},
 	sitemap: {

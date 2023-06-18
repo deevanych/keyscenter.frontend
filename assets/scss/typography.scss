@@ -1,3 +1,11 @@
 a {
   @apply text-purple-500 underline hover:text-purple-700 transition-colors;
 }
+
+ul, menu {
+  list-style: initial;
+}
+
+ol {
+  list-style: decimal;
+}

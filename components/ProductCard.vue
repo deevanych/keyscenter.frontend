@@ -53,7 +53,9 @@ const addToCart = async () => {
                     </div>
                 </div>
                 <UiButton @click="addToCart"
-                          :loading="isLoading">Купить
+													:disabled="!product.isInStock"
+                          :loading="isLoading">
+									{{ product.isInStock ? 'Купить' : 'Нет в наличии' }}
                 </UiButton>
             </div>
         </div>

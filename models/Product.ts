@@ -5,6 +5,7 @@ import {ProductsAPI} from "~/api/products";
 import {useRouter} from 'vue-router'
 import IImage = ProductsAPI.IImage;
 import IImageFormats = ProductsAPI.IImageFormats;
+import IReview = ProductsAPI.IReview;
 
 interface IShortProduct {
 	id: number;
@@ -28,6 +29,10 @@ interface IShortProduct {
 	url: string;
 	currentPriceNonFormatted: number;
 	metaDescription: string;
+	reviews: IReview[];
+	get reviewsCount(): number;
+	get positiveReviewsPercent(): number;
+	get reviewsHumanize(): string;
 }
 
 interface IProduct extends IShortProduct {
@@ -49,6 +54,7 @@ export class ShortProduct extends Model implements IShortProduct {
 	public readonly categorySlug: string;
 	public readonly categoryId: number;
 	public readonly description: string;
+	public readonly reviews: IReview[];
 
 	constructor (data: ProductsAPI.IShortProductResponse) {
 		super(data.id);
@@ -61,6 +67,42 @@ export class ShortProduct extends Model implements IShortProduct {
 		this.categorySlug = data.attributes.product_category.data.attributes.slug
 		this.categoryId = data.attributes.product_category.data.id
 		this.description = data.attributes.description
+		this.reviews = data.attributes.reviews.data
+		console.log(this.reviews)
+	}
+
+	private get reviewPluralWord(): string {
+		const reviewsPluralize = new Intl.PluralRules('ru-RU').select(this.reviewsCount)
+
+		switch (reviewsPluralize) {
+			case 'few':
+				return 'отзыва'
+
+			case 'one':
+				return 'отзыв'
+
+			default:
+				return 'отзывов'
+		}
+	}
+
+	get reviewsCount (): number {
+		return this.reviews.length
+	}
+
+	get reviewsHumanize (): string {
+		return this.reviewsCount + ' ' + this.reviewPluralWord
+	}
+
+	get positiveReviewsPercent (): number {
+		const reviewsCount = this.reviewsCount
+		const positiveReviewsCount = this.reviews.filter((review) => review.attributes.is_positive).length
+
+		if (positiveReviewsCount === 0) {
+			return 0
+		}
+
+		return Math.floor(positiveReviewsCount / reviewsCount * 100)
 	}
 
 	get metaDescription(): string {

@@ -45,7 +45,7 @@ const addToCart = async () => {
                         :to="{name: 'catalog-category-product', params: { category: product.categorySlug, product: product.slug } }">
                     <h5 class="product-card__title">{{ product.title }}</h5>
                 </NuxtLink>
-                <RatingComponent/>
+                <LazyRatingComponent v-if="product.reviewsCount" :product="product"/>
                 <div class="product-card__prices">
                     <div class="product-card__price_current">{{ product.currentPrice }}</div>
                     <div v-if="product.oldPrice"

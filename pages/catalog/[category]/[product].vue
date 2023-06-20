@@ -44,7 +44,7 @@ if (data.value) {
         <ProductBooking :product="product"/>
         <div class="col-span-2">
             <h1 class="product-page__title" itemprop="name">{{ product.title }}</h1>
-            <LazyRatingComponent/>
+						<LazyRatingComponent v-if="product.reviewsCount" :product="product"/>
             <LazyProductDetails :product="product"
                                 class="product-page__details"/>
             <div v-if="product.description"
@@ -60,6 +60,15 @@ if (data.value) {
                 <div class="product-page__description-content"
                      v-html="product.instruction"></div>
             </div>
+					<div v-if="product.reviewsCount"
+							 class="product-page__description">
+						<h3 class="product-page__description-title">Отзывы ({{ product.reviewsHumanize }}, {{ product.positiveReviewsPercent }}% положительных)</h3>
+						<div class="product-page__description-content product-page__reviews">
+							<ProductReview v-for="review in product.reviews"
+														 :key="review.attributes.createdAt"
+														 :review="review"/>
+						</div>
+					</div>
         </div>
     </div>
 </template>
@@ -67,6 +76,10 @@ if (data.value) {
 <style lang="scss" scoped>
 .product-page {
   @apply flex flex-col md:grid grid-cols-3 gap-12 items-start;
+	
+	&__reviews {
+		@apply flex gap-5 flex-col divide-y;
+	}
 
   &__description {
     @apply mt-6 border p-8 pt-6 rounded;

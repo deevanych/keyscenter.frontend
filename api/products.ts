@@ -18,6 +18,13 @@ export namespace ProductsAPI {
         medium: IImage,
         thumbnail: IImage
     }
+    export interface IReview {
+        attributes: {
+            text: string,
+            is_positive: boolean,
+            createdAt: string
+        }
+    }
     export interface IShortProductResponse {
         id: number,
         attributes: {
@@ -32,7 +39,10 @@ export namespace ProductsAPI {
                         id: number
                     }
                 ]
-            }
+            },
+            reviews: {
+                data: IReview[]
+            },
             product_category: {
                 data: {
                     attributes: {
@@ -41,7 +51,7 @@ export namespace ProductsAPI {
                     }
                     id: number
                 }
-            }
+            },
             images: {
                 data: [
                     {
@@ -67,7 +77,17 @@ export namespace ProductsAPI {
                         title: string
                     }
                 }
-            }
+            },
+            reviews: {
+                data: [
+                    {
+                        attributes: {
+                            text: string,
+                            is_positive: boolean
+                        }
+                    }
+                ]
+            },
             product_category: {
                 data: {
                     attributes: {
@@ -76,7 +96,7 @@ export namespace ProductsAPI {
                     }
                     id: number
                 }
-            }
+            },
             delivery_method: {
                 data: {
                     attributes: {
@@ -92,7 +112,7 @@ export namespace ProductsAPI {
                         id: number
                     }
                 ]
-            }
+            },
             platforms: {
                 data: [
                     {
@@ -101,7 +121,7 @@ export namespace ProductsAPI {
                         }
                     }
                 ]
-            }
+            },
             images: {
                 data: [
                     {

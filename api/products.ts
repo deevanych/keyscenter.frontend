@@ -79,14 +79,7 @@ export namespace ProductsAPI {
                 }
             },
             reviews: {
-                data: [
-                    {
-                        attributes: {
-                            text: string,
-                            is_positive: boolean
-                        }
-                    }
-                ]
+                data: IReview[]
             },
             product_category: {
                 data: {

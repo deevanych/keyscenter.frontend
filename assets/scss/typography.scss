@@ -4,8 +4,10 @@ a {
 
 ul, menu {
   list-style: initial;
+
+  @apply list-inside;
 }
 
 ol {
-  list-style: decimal;
+  @apply list-decimal list-inside;
 }

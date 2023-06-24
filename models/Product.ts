@@ -68,7 +68,6 @@ export class ShortProduct extends Model implements IShortProduct {
 		this.categoryId = data.attributes.product_category.data.id
 		this.description = data.attributes.description
 		this.reviews = data.attributes.reviews.data
-		console.log(this.reviews)
 	}
 
 	private get reviewPluralWord(): string {

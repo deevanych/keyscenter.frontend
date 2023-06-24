@@ -14,6 +14,7 @@ onMounted(async () => {
 
 <template>
     <LayoutHeader/>
+		<PopupsToasts />
     <Transition>
         <PopupsCart v-if="isCartPopupShown"/>
     </Transition>

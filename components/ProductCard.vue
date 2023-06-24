@@ -2,9 +2,11 @@
 import {ShortProduct} from '~/models/Product';
 import {useCartStore} from "~/store/cart";
 import {usePopupsStore} from "~/store/popups";
+import { useToastsStore } from '~/store/toasts';
 
 const cartStore = useCartStore()
 const popupsStore = usePopupsStore()
+const toastStore = useToastsStore()
 
 interface IProps {
     product: ShortProduct
@@ -19,6 +21,7 @@ const addToCart = async () => {
         isLoading.value = true
         await cartStore.addToCart(props.product.id)
         popupsStore.cartPopup = true
+				toastStore.showToast('Товар добавлен в корзину')
     } finally {
         isLoading.value = false
     }

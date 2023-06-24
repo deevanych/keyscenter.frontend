@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import {computed, Ref} from 'vue';
 import {useCartStore} from "~/store/cart";
+import { useToastsStore } from '~/store/toasts';
+import { usePopupsStore } from '~/store/popups';
 
 const cartStore = useCartStore()
+const toastStore = useToastsStore()
+const popupsStore = usePopupsStore()
 
 interface IProps {
 	maxCount: number
@@ -32,11 +36,15 @@ const cartAction = async (): Promise<void> => {
 		if (typeof props.itemId !== 'undefined' && quantity.value === props.quantity) {
 			await cartStore.removeFromCart(props.itemId)
 			window.ym(93533001,'reachGoal','removeFromCart')
+			toastStore.showToast('Товар удален из корзины')
 		} else {
 			window.ym(93533001,'reachGoal','addToCart')
 			await cartStore.addToCart(props.productId, quantity.value)
+			popupsStore.cartPopup = true
+			toastStore.showToast('Товар добавлен в корзину')
 		}
 	} catch (e) {
+		toastStore.showToast(e.response._data.error.message, 'error')
 	} finally {
 		isLoading.value = false
 	}

@@ -23,7 +23,7 @@ pages.value = data.value.data
             </nav>
             <div class="footer__block">
                 <h4 class="footer__block-heading">Платежные методы</h4>
-                <img :src="`${getBackendURLHref('/uploads/logo3h_e0ff0b90df.png')}`" alt="Платежные методы"/>
+                <img class="footer__payment-methods" src="/payment_methods-min.png" alt="Платежные методы"/>
             </div>
             <div class="footer__block">
                 <h4 class="footer__block-heading">Контакты</h4>
@@ -71,10 +71,18 @@ pages.value = data.value.data
   &__copyright {
     @apply container mx-auto flex flex-col md:flex-row gap-10 md:gap-0 justify-between;
   }
+	
+	&__payment-methods {
+		@apply max-w-sm;
+	}
+	
+	&__wrapper {
+		@apply gap-10;
+	}
 
-    &__copyright {
-        @apply text-gray-500;
-    }
+	&__copyright {
+			@apply text-gray-500;
+	}
 
   &__block {
     @apply flex flex-col gap-1;

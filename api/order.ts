@@ -1,6 +1,8 @@
 import { $API } from "~/api/instance";
 import IPaymentResponse = OrderAPI.IPaymentResponse;
 
+// todo create order type
+
 export namespace OrderAPI {
 	export interface IPaymentResponse {
 		data: {
@@ -42,7 +44,7 @@ export namespace OrderAPI {
 	}
 
 
-	export const create = async (cartId: string, email: string): Promise< IPaymentResponse > => {
+	export const create = async (cartId: string, email: string): Promise<IPaymentResponse > => {
 		return await $API('/orders', {}, 'POST', {
 			data: {
 				cartId,
@@ -53,5 +55,12 @@ export namespace OrderAPI {
 
 	export const get = async (orderId: string) => {
 		return await $API(`/orders/${orderId}`)
+	}
+
+	// todo create order type
+	export const update = async (orderId: string, body = {}) => {
+		return await $API(`/orders/${orderId}`, {}, 'PUT', {
+			data: body
+		})
 	}
 }

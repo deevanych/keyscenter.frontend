@@ -4,6 +4,7 @@
 	
 	const orderId = useRoute().query.orderId
 	const isSuccess = ref(false)
+	const isGoalSent = ref(true)
   const statusHeader = computed(() => isSuccess.value ? 'Платеж совершен' : 'Произошла ошибка')
   const statusText =  computed(() => isSuccess.value ? 'Спасибо за заказ! Инструкции и ключи отправлены на электронную почту, указанную при заказе.'
       : 'Произошла ошибка. Попробуйте заново или напишите нам на почту или в чат.')
@@ -16,13 +17,17 @@
 		const {data: order} = await useAsyncData('order', async () => (await OrderAPI.get(orderId as string)).data)
 		
 		isSuccess.value = order.value.attributes.paid_at
+		isGoalSent.value = order.value.attributes.is_goal_sent
 	} catch (_) {
-		
+	
 	}
-
+	
   onMounted(() => {
-    if (isSuccess.value) {
+    if (isSuccess.value && !isGoalSent.value) {
       window.ym(93533001,'reachGoal','successfulPayment')
+			OrderAPI.update(orderId, {
+				is_goal_sent: true
+			})
     }
   })
 </script>

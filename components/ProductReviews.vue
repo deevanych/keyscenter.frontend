@@ -37,7 +37,7 @@ const submitForm = async () => {
 		isLoading.value = true
 		const { data } = await ReviewsAPI.create({...state, is_positive: isPositive.value, product_id: props.productId})
 		reviews.value = data
-		toastsStore.showToast('Отзыв добавлен')
+		toastsStore.showToast('Отзыв отправлен на модерацию')
 	} catch (e) {
 		console.log(e)
 		toastsStore.showToast(e, 'error')

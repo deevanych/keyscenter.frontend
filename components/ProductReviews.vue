@@ -8,7 +8,8 @@ import { ReviewsAPI } from '~/api/reviews';
 
 
 interface IProps {
-	reviews: IReview[]
+	reviews: IReview[],
+	productId: number
 }
 
 const toastsStore = useToastsStore()
@@ -33,11 +34,10 @@ const vuelidate = useVuelidate(vuelidateRules, state)
 const submitForm = async () => {
 	try {
 		isLoading.value = true
-		await ReviewsAPI.create({ ...state, is_positive: isPositive.value })
+		await ReviewsAPI.create({...state, is_positive: isPositive.value, product_id: props.productId})
 		toastsStore.showToast('Отзыв добавлен')
 	} catch (e) {
-		console.log(e)
-		toastsStore.showToast('Произошла ошибка', 'error')
+		toastsStore.showToast(e.response, 'error')
 	} finally {
 		isLoading.value = false
 	}

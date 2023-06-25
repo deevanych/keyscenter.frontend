@@ -2,6 +2,7 @@
 import {Ref} from "vue";
 import {Product} from "~/models/Product";
 import {ProductsAPI} from "~/api/products";
+import ProductReviews from '~/components/ProductReviews.vue';
 
 const route = useRoute()
 
@@ -64,9 +65,7 @@ if (data.value) {
 							 class="product-page__description">
 						<h3 class="product-page__description-title">Отзывы ({{ product.reviewsHumanize }}, {{ product.positiveReviewsPercent }}% положительных)</h3>
 						<div class="product-page__description-content product-page__reviews">
-							<ProductReview v-for="review in product.reviews"
-														 :key="review.attributes.createdAt"
-														 :review="review"/>
+							<ProductReviews :reviews="product.reviews"/>
 						</div>
 					</div>
         </div>

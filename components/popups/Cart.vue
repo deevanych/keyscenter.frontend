@@ -74,8 +74,9 @@ const formSubmit = async () => {
                     <h3 class="cart-popup__content-section-title">Оформление</h3>
                     <div class="cart-popup__payment">
                         <i>Внимание! Проверьте правильность ввода email. На этот адрес придут купленные товары.</i>
-                        <form ref="form" action="https://yoomoney.ru/quickpay/confirm.xml"
-                              method="POST" @submit.prevent="formSubmit"
+                        <form ref="form"
+                              method="POST"
+															@submit.prevent="formSubmit"
                               class="cart-popup__payment-action">
                             <UiInput v-model="state.email" name="email" placeholder="Введите адрес электроной почты"/>
                             <LazyUiButton :disabled="vuelidate.$invalid"
@@ -100,7 +101,7 @@ const formSubmit = async () => {
     @apply flex gap-4 flex-col;
 
     &-action {
-      @apply flex gap-5 items-center flex-col md:flex-row;
+      @apply flex gap-5 items-stretch flex-col md:flex-row;
     }
 		
 		&-button {

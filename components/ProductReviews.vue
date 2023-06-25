@@ -68,9 +68,11 @@ const submitForm = async () => {
 			</UiButton>
 		</div>
 	</form>
-	<ProductReview v-for="review in reviews"
-								 :key="review.attributes.createdAt"
-								 :review="review"/>
+	<transition-group name="fade-top">
+		<ProductReview v-for="review in reviews"
+									 :key="review.attributes.createdAt"
+									 :review="review"/>
+	</transition-group>
 </template>
 
 <style scoped lang="scss">

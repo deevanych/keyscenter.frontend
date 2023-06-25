@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { ProductsAPI } from '~/api/products';
 import IReview = ProductsAPI.IReview;
-import {email, required} from "@vuelidate/validators";
+import { email, required } from "@vuelidate/validators";
 import useVuelidate from '@vuelidate/core';
+import { useToastsStore } from '~/store/toasts';
+import { ReviewsAPI } from '~/api/reviews';
+
 
 interface IProps {
 	reviews: IReview[]
 }
 
+const toastsStore = useToastsStore()
 const props = defineProps<IProps>()
 const isPositive = ref(true)
+const isLoading = ref(false)
 const state = reactive({
 	email: '',
 	comment: ''
@@ -25,8 +30,17 @@ const vuelidateRules = {
 
 const vuelidate = useVuelidate(vuelidateRules, state)
 
-const submitForm = () => {
-	console.log(isPositive.value)
+const submitForm = async () => {
+	try {
+		isLoading.value = true
+		await ReviewsAPI.create({ ...state, is_positive: isPositive.value })
+		toastsStore.showToast('Отзыв добавлен')
+	} catch (e) {
+		console.log(e)
+		toastsStore.showToast('Произошла ошибка', 'error')
+	} finally {
+		isLoading.value = false
+	}
 	
 	return false
 }
@@ -41,9 +55,14 @@ const submitForm = () => {
 								placeholder="Введите ваш комментарий ..."
 								required></textarea>
 		<div class="review-form__footer">
-			<UiInput placeholder="Почта, с которой был совершен заказ" v-model="state.email"/>
+			<UiInput placeholder="Почта, с которой был совершен заказ"
+							 v-model="state.email"/>
 			<UiCheckbox v-model="isPositive">Положительный</UiCheckbox>
-			<UiButton type="submit" :disabled="vuelidate.$invalid">Отправить</UiButton>
+			<UiButton type="submit"
+								:disabled="vuelidate.$invalid"
+								:loading="isLoading">
+				Отправить
+			</UiButton>
 		</div>
 	</form>
 	<ProductReview v-for="review in reviews"

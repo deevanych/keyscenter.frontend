@@ -14,6 +14,7 @@ interface IProps {
 
 const toastsStore = useToastsStore()
 const props = defineProps<IProps>()
+const reviews = ref(props.reviews)
 const isPositive = ref(true)
 const isLoading = ref(false)
 const state = reactive({
@@ -34,7 +35,8 @@ const vuelidate = useVuelidate(vuelidateRules, state)
 const submitForm = async () => {
 	try {
 		isLoading.value = true
-		await ReviewsAPI.create({...state, is_positive: isPositive.value, product_id: props.productId})
+		const { data } = await ReviewsAPI.create({...state, is_positive: isPositive.value, product_id: props.productId})
+		reviews.value = data
 		toastsStore.showToast('Отзыв добавлен')
 	} catch (e) {
 		console.log(e)

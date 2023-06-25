@@ -39,8 +39,7 @@ const submitForm = async () => {
 		reviews.value = data
 		toastsStore.showToast('Отзыв отправлен на модерацию')
 	} catch (e) {
-		console.log(e)
-		toastsStore.showToast(e, 'error')
+		toastsStore.showToast(e.data.error.message, 'error')
 	} finally {
 		isLoading.value = false
 	}

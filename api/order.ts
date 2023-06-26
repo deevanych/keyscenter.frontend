@@ -44,7 +44,7 @@ export namespace OrderAPI {
 	}
 
 
-	export const create = async (cartId: string, email: string): Promise<IPaymentResponse > => {
+	export const create = async (cartId: string, email: string): Promise<IPaymentResponse> => {
 		return await $API('/orders', {}, 'POST', {
 			data: {
 				cartId,

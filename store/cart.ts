@@ -1,6 +1,9 @@
 import {defineStore} from 'pinia'
 import {CartAPI} from "~/api/cart"
 import { usePopupsStore } from '~/store/popups';
+import { CouponAPI } from '~/api/coupon';
+
+// todo create cart response interface
 
 export interface ICartItem {
 	id: number
@@ -86,6 +89,16 @@ export const useCartStore = defineStore('cart', {
 			if (this.getItemsCount === 0) {
 				usePopupsStore().toggleCartPopup(false)
 			}
+		},
+		async applyCoupon(coupon: string): Promise<unknown> {
+			const cart = await CouponAPI.apply(coupon, this.uuid)
+
+			await this.setCart(cart)
+		},
+		async cancelCoupon(coupon: string): Promise<unknown> {
+			const cart = await CouponAPI.cancel(coupon, this.uuid)
+
+			await this.setCart(cart)
 		}
 	},
 	persist: true

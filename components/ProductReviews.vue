@@ -5,6 +5,7 @@ import { email, required } from "@vuelidate/validators";
 import useVuelidate from '@vuelidate/core';
 import { useToastsStore } from '~/store/toasts';
 import { ReviewsAPI } from '~/api/reviews';
+import { FetchError } from 'ofetch';
 
 
 interface IProps {
@@ -38,7 +39,7 @@ const submitForm = async () => {
 		const { data } = await ReviewsAPI.create({...state, is_positive: isPositive.value, product_id: props.productId})
 		reviews.value = data
 		toastsStore.showToast('Отзыв отправлен на модерацию')
-	} catch (e) {
+	} catch (e: FetchError) {
 		toastsStore.showToast(e.data.error.message, 'error')
 	} finally {
 		isLoading.value = false

@@ -8,6 +8,7 @@ import { OrderAPI } from "~/api/order";
 import IPaymentResponse = OrderAPI.IPaymentResponse;
 import { useToastsStore } from '~/store/toasts';
 import { FetchError } from 'ofetch';
+import { price } from '~/helpers/price';
 
 const {toggleCartPopup} = usePopupsStore()
 const cartStore = useCartStore()
@@ -103,7 +104,7 @@ const applyCoupon = async (): Promise<void> => {
 							Применить
 						</LazyUiButton>
 					</form>
-					<h3 class="cart-popup__content-section-title">Оформление</h3>
+					<h3 class="cart-popup__content-section-title">Оформление - {{ price(cartStore.sum) }}</h3>
 					<div class="cart-popup__payment">
 						<i>Внимание! Проверьте правильность ввода email. На этот адрес придут купленные товары.</i>
 						<form ref="form"

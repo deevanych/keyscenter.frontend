@@ -18,7 +18,7 @@ const couponFormattedDiscount = () => {
 
 <template>
 	<div class="coupon__wrapper">
-		<div class="coupon">{{ props.coupon.coupon }}</div>
+		<div class="coupon">{{ props.coupon.code }}</div>
 		<div class="coupon__discount">{{ couponFormattedDiscount() }}</div>
 	</div>
 </template>

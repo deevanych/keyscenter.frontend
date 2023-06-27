@@ -1,18 +1,18 @@
 import {$API} from "~/api/instance";
 
 export namespace CouponAPI {
-    export const apply = async (coupon: string, cartId: string) => {
+    export const apply = async (code: string, cartId: string) => {
         return await $API(`/carts/${cartId}/coupons/`, {}, 'POST', {
             data: {
-                coupon
+                code
             }
         })
     }
 
-    export const cancel = async (coupon: string, cartId: string) => {
+    export const cancel = async (code: string, cartId: string) => {
         return await $API(`/carts/${cartId}/coupons/`, {}, 'DELETE', {
             data: {
-                coupon
+                code
             }
         })
     }

@@ -1,12 +1,12 @@
 import {defineStore} from 'pinia'
 import {CartAPI} from "~/api/cart"
 import { usePopupsStore } from '~/store/popups';
-import { CouponAPI } from '~/api/coupon';
+import { apply, CouponAPI } from '~/api/coupon';
 
 // todo create cart response interface
 
 export interface ICartCoupon {
-	coupon: string;
+	code: string;
 	discount: number;
 	discount_type: string;
 }
@@ -99,13 +99,13 @@ export const useCartStore = defineStore('cart', {
 				usePopupsStore().toggleCartPopup(false)
 			}
 		},
-		async applyCoupon(coupon: string): Promise<unknown> {
-			const cart = await CouponAPI.apply(coupon, this.uuid)
+		async applyCoupon(code: string): Promise<unknown> {
+			const cart = await CouponAPI.apply(code, this.uuid)
 
 			await this.setCart(cart)
 		},
-		async cancelCoupon(coupon: string): Promise<unknown> {
-			const cart = await CouponAPI.cancel(coupon, this.uuid)
+		async cancelCoupon(code: string): Promise<unknown> {
+			const cart = await CouponAPI.cancel(code, this.uuid)
 
 			await this.setCart(cart)
 		}

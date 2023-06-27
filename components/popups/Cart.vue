@@ -9,11 +9,13 @@ import IPaymentResponse = OrderAPI.IPaymentResponse;
 import { useToastsStore } from '~/store/toasts';
 import { FetchError } from 'ofetch';
 import { price } from '~/helpers/price';
+import CouponComponent from '~/components/CouponComponent.vue';
 
 const {toggleCartPopup} = usePopupsStore()
 const cartStore = useCartStore()
 const toastsStore = useToastsStore()
 const cartItems = computed(() => cartStore.getItems)
+const cartCoupons = computed(() => cartStore.getCoupons)
 
 const keypressHandler = (e: KeyboardEvent) => {
 	if (e.isTrusted && e.key === 'Escape') {
@@ -66,7 +68,7 @@ const applyCoupon = async (): Promise<void> => {
 	try {
 		buttonIsLoading.value = true
 		await cartStore.applyCoupon(coupon.value)
-		ym(93533001,'reachGoal','couponHasBeenApplied')
+		ym(93533001, 'reachGoal', 'couponHasBeenApplied')
 		toastsStore.showToast('Промокод применен')
 	} catch (e: FetchError) {
 		toastsStore.showToast(e.data.error.message, 'error')
@@ -92,6 +94,11 @@ const applyCoupon = async (): Promise<void> => {
 				</div>
 				<div class="cart-popup__content-section">
 					<h3 class="cart-popup__content-section-title">Промокод</h3>
+					<div class="cart-popup__coupons">
+						<CouponComponent v-for="coupon in cartCoupons"
+													 :key="coupon.coupon"
+													 :coupon="coupon"/>
+					</div>
 					<form ref="form"
 								method="POST"
 								@submit.prevent="applyCoupon"
@@ -152,6 +159,10 @@ const applyCoupon = async (): Promise<void> => {
 	
 	&__wrapper {
 		@apply bg-white mx-auto m-auto z-10 h-full md:my-20 md:h-auto overflow-auto md:overflow-hidden md:rounded;
+	}
+	
+	&__coupons {
+		@apply flex gap-4 mb-4 w-full;
 	}
 	
 	&__content {

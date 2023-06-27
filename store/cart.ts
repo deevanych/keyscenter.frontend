@@ -5,6 +5,12 @@ import { CouponAPI } from '~/api/coupon';
 
 // todo create cart response interface
 
+export interface ICartCoupon {
+	coupon: string;
+	discount: number;
+	discountType: string;
+}
+
 export interface ICartItem {
 	id: number
 	quantity: number
@@ -21,10 +27,11 @@ export interface ICartItem {
 }
 
 interface ICartStoreState {
-	id: number
-	items: ICartItem[]
-	sum: number
-	uuid: string
+	id: number;
+	items: ICartItem[];
+	coupons: ICartCoupon[];
+	sum: number;
+	uuid: string;
 }
 
 export const useCartStore = defineStore('cart', {
@@ -48,7 +55,8 @@ export const useCartStore = defineStore('cart', {
 		}, 0),
 		getOrderItems: (state: ICartStoreState): {id: number, quantity: number}[] => state.items.map(({id, quantity}: ICartItem) => {
 			return {id, quantity}
-		})
+		}),
+		getCoupons: (state: ICartStoreState) => state.coupons
 	},
 	actions: {
 		async updateCart(): Promise<void> {
@@ -69,12 +77,13 @@ export const useCartStore = defineStore('cart', {
 			await this.setCart(cart)
 		},
 		async setCart(cart: ICartStoreState) {
-			const { id, items, uuid, sum } = cart
+			const { id, items, uuid, sum, coupons } = cart
 
 			this.id = id
 			this.items = items
 			this.uuid = uuid
 			this.sum = sum
+			this.coupons = coupons
 		},
 		async addToCart(productId: number, quantity: number = 1): Promise<void> {
 			const cart = await CartAPI.addItemToCart(this.uuid, productId, quantity)

@@ -56,7 +56,7 @@ export const useCartStore = defineStore('cart', {
 		getOrderItems: (state: ICartStoreState): {id: number, quantity: number}[] => state.items.map(({id, quantity}: ICartItem) => {
 			return {id, quantity}
 		}),
-		getCoupons: (state: ICartStoreState) => state.coupons
+		getCoupons: (state: ICartStoreState): ICartCoupon[] => state.coupons
 	},
 	actions: {
 		async updateCart(): Promise<void> {

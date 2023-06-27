@@ -162,7 +162,7 @@ const applyCoupon = async (): Promise<void> => {
 	}
 	
 	&__coupons {
-		@apply flex gap-4 mb-4 w-full;
+		@apply flex gap-4 mb-6 w-full flex-col;
 	}
 	
 	&__content {
@@ -172,7 +172,7 @@ const applyCoupon = async (): Promise<void> => {
 			@apply py-10 md:py-0 md:px-10 max-w-xl md:overflow-auto md:h-full;
 			
 			&-title {
-				@apply font-bold leading-tight text-2xl mt-0 mb-2 md:mb-10;
+				@apply font-bold leading-tight text-2xl mt-0 mb-4 md:mb-10;
 			}
 			
 			&-content {

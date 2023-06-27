@@ -8,7 +8,7 @@ import { CouponAPI } from '~/api/coupon';
 export interface ICartCoupon {
 	coupon: string;
 	discount: number;
-	discountType: string;
+	discount_type: string;
 }
 
 export interface ICartItem {

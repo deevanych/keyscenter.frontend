@@ -8,7 +8,7 @@ interface IProps {
 
 const props = defineProps<IProps>()
 const couponFormattedDiscount = () => {
-	if (props.coupon.discountType === 'amount') {
+	if (props.coupon.discount_type === 'amount') {
 		return price(props.coupon.discount)
 	}
 	

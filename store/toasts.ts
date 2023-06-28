@@ -27,7 +27,7 @@ export const useToastsStore = defineStore('toasts', {
 	},
 	actions: {
 		showErrorToast(error: FetchError): void {
-			this.showToast(e.data.error.message, 'error')
+			this.showToast(error.data.error.message, 'error')
 		},
 		showToast(text, type: Toast.TType = 'success', showDuration = 2000): void {
 			const timestamp = Date.now()

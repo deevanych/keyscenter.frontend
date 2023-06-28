@@ -50,11 +50,11 @@ onBeforeUnmount(() => {
 	window.removeEventListener('keydown', keypressHandler)
 })
 
-const formSubmit = async (): Promise<void> => {
+const formSubmit = async (): Promise<void> => {``
 	try {
 		window.ym(93533001, 'reachGoal', 'goToPayment')
 		buttonIsLoading.value = true
-		const {data}: Promise<IPaymentResponse> = await OrderAPI.create(uuid, state.email)
+		const {data}: Promise<IPaymentResponse> = await OrderAPI.create(uuid.value, state.email)
 		await nextTick()
 		window.location.href = data.attributes.confirmation.confirmation_url
 	} catch (error: FetchError) {

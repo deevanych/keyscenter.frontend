@@ -39,6 +39,7 @@ export const useCartStore = defineStore('cart', {
 		return {
 			id: 0,
 			items: [],
+			coupons: [],
 			sum: 0,
 			uuid: ''
 		}

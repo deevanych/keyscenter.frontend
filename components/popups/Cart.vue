@@ -10,12 +10,12 @@ import { useToastsStore } from '~/store/toasts';
 import { FetchError } from 'ofetch';
 import { price } from '~/helpers/price';
 import CouponComponent from '~/components/CouponComponent.vue';
+import { storeToRefs } from 'pinia'
 
-const {toggleCartPopup} = usePopupsStore()
 const cartStore = useCartStore()
+const {toggleCartPopup} = usePopupsStore()
+const { getItems, getCoupons, sum, uuid } = storeToRefs(cartStore)
 const toastsStore = useToastsStore()
-const cartItems = computed(() => cartStore.getItems)
-const cartCoupons = computed(() => cartStore.getCoupons)
 
 const keypressHandler = (e: KeyboardEvent) => {
 	if (e.isTrusted && e.key === 'Escape') {
@@ -54,7 +54,7 @@ const formSubmit = async (): Promise<void> => {
 	try {
 		window.ym(93533001, 'reachGoal', 'goToPayment')
 		buttonIsLoading.value = true
-		const {data}: Promise<IPaymentResponse> = await OrderAPI.create(cartStore.uuid, state.email)
+		const {data}: Promise<IPaymentResponse> = await OrderAPI.create(uuid, state.email)
 		await nextTick()
 		window.location.href = data.attributes.confirmation.confirmation_url
 	} catch (e: FetchError) {
@@ -87,7 +87,7 @@ const applyCoupon = async (): Promise<void> => {
 				<div class="cart-popup__content-section">
 					<h3 class="cart-popup__content-section-title">Товары</h3>
 					<div class="cart-popup__content-section-content">
-						<CartItem v-for="cartItem in cartItems"
+						<CartItem v-for="cartItem in getItems"
 											:item="cartItem"
 											:key="cartItem.id"/>
 					</div>
@@ -95,7 +95,7 @@ const applyCoupon = async (): Promise<void> => {
 				<div class="cart-popup__content-section">
 					<h3 class="cart-popup__content-section-title">Промокод</h3>
 					<div class="cart-popup__coupons">
-						<CouponComponent v-for="coupon in cartCoupons"
+						<CouponComponent v-for="coupon in getCoupons"
 													 :key="coupon.coupon"
 													 :coupon="coupon"/>
 					</div>
@@ -111,7 +111,7 @@ const applyCoupon = async (): Promise<void> => {
 							Применить
 						</LazyUiButton>
 					</form>
-					<h3 class="cart-popup__content-section-title">Оформление - {{ price(cartStore.sum) }}</h3>
+					<h3 class="cart-popup__content-section-title">Оформление - {{ price(sum) }}</h3>
 					<div class="cart-popup__payment">
 						<i>Внимание! Проверьте правильность ввода email. На этот адрес придут купленные товары.</i>
 						<form ref="form"

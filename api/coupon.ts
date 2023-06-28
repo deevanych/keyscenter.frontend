@@ -10,10 +10,6 @@ export namespace CouponAPI {
     }
 
     export const cancel = async (code: string, cartId: string) => {
-        return await $API(`/carts/${cartId}/coupons/`, {}, 'DELETE', {
-            data: {
-                code
-            }
-        })
+        return await $API(`/carts/${cartId}/coupons/${code}`, {}, 'DELETE')
     }
 }

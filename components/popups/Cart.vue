@@ -118,7 +118,7 @@ const applyCoupon = async (): Promise<void> => {
 									method="POST"
 									@submit.prevent="formSubmit"
 									class="cart-popup__payment-action">
-							<UiInput v-model="state.email" name="email" placeholder="Введите адрес электроной почты"/>
+							<UiInput v-model="state.email" name="email" placeholder="Введите адрес электронной почты"/>
 							<LazyUiButton :disabled="vuelidate.$invalid"
 														:loading="buttonIsLoading"
 														class="cart-popup__payment-button"

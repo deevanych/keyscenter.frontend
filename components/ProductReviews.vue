@@ -13,7 +13,7 @@ interface IProps {
 	productId: number
 }
 
-const toastsStore = useToastsStore()
+const { showToast, showErrorToast } = useToastsStore()
 const props = defineProps<IProps>()
 const reviews = ref(props.reviews)
 const isPositive = ref(true)
@@ -38,9 +38,9 @@ const submitForm = async () => {
 		isLoading.value = true
 		const { data } = await ReviewsAPI.create({...state, is_positive: isPositive.value, product_id: props.productId})
 		reviews.value = data
-		toastsStore.showToast('Отзыв отправлен на модерацию')
-	} catch (e: FetchError) {
-		toastsStore.showToast(e.data.error.message, 'error')
+		showToast('Отзыв отправлен на модерацию')
+	} catch (error: FetchError) {
+		showErrorToast(error)
 	} finally {
 		isLoading.value = false
 	}

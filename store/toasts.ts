@@ -1,4 +1,5 @@
 import {defineStore} from 'pinia'
+import { FetchError } from 'ofetch';
 
 export namespace Toast {
 	export type TType = 'success' | 'warning' | 'error' | 'info'
@@ -25,6 +26,9 @@ export const useToastsStore = defineStore('toasts', {
 		getToasts: (state): Toast.IToast[] => state.toasts.reverse()
 	},
 	actions: {
+		showErrorToast(error: FetchError): void {
+			this.showToast(e.data.error.message, 'error')
+		},
 		showToast(text, type: Toast.TType = 'success', showDuration = 2000): void {
 			const timestamp = Date.now()
 			this.toasts.push({

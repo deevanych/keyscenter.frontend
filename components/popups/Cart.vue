@@ -15,7 +15,7 @@ import { storeToRefs } from 'pinia'
 const cartStore = useCartStore()
 const {toggleCartPopup} = usePopupsStore()
 const { getItems, getCoupons, sum, uuid } = storeToRefs(cartStore)
-const toastsStore = useToastsStore()
+const { showToast, showErrorToast } = useToastsStore()
 
 const keypressHandler = (e: KeyboardEvent) => {
 	if (e.isTrusted && e.key === 'Escape') {
@@ -57,8 +57,8 @@ const formSubmit = async (): Promise<void> => {
 		const {data}: Promise<IPaymentResponse> = await OrderAPI.create(uuid, state.email)
 		await nextTick()
 		window.location.href = data.attributes.confirmation.confirmation_url
-	} catch (e: FetchError) {
-		toastsStore.showToast(e.data.error.message, 'error')
+	} catch (error: FetchError) {
+		showErrorToast(error)
 	} finally {
 		buttonIsLoading.value = false
 	}
@@ -69,9 +69,10 @@ const applyCoupon = async (): Promise<void> => {
 		buttonIsLoading.value = true
 		await cartStore.applyCoupon(coupon.value)
 		ym(93533001, 'reachGoal', 'couponHasBeenApplied')
-		toastsStore.showToast('Промокод применен')
-	} catch (e: FetchError) {
-		toastsStore.showToast(e.data.error.message, 'error')
+		showToast('Промокод применен')
+		coupon.value = ''
+	} catch (error: FetchError) {
+		showErrorToast(error)
 	} finally {
 		buttonIsLoading.value = false
 	}

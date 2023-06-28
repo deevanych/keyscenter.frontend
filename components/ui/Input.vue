@@ -19,6 +19,7 @@ const emits = defineEmits<{
                class="input__label"
                for="success">{{ props.label }}</label>
         <input :model-value="props.modelValue"
+							 :value="props.modelValue"
                :placeholder="props.placeholder"
                :name="props.name"
                class="input"

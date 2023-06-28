@@ -173,7 +173,7 @@ const applyCoupon = async (): Promise<void> => {
 			@apply py-10 md:py-0 md:px-10 max-w-xl md:overflow-auto md:h-full;
 			
 			&-title {
-				@apply font-bold leading-tight text-2xl mt-0 mb-4 md:mb-10;
+				@apply font-bold leading-tight text-2xl mt-0 mb-4 md:mb-5;
 			}
 			
 			&-content {

@@ -7,17 +7,23 @@
 </script>
 
 <template>
-  <PlatformsSprite/>
-  <svg v-for="platform in props.platforms"
-       :key="platform"
-       class="product-platform__icon">
-    <use :xlink:href="`#${platform.toLowerCase()}`"></use>
-  </svg>
+	<div class="product-platform">
+		<PlatformsSprite/>
+		<svg v-for="platform in props.platforms"
+				 :key="platform"
+				 class="product-platform__icon">
+			<use :xlink:href="`#${platform.toLowerCase()}`"></use>
+		</svg>
+	</div>
 </template>
 
 <style lang="scss" scoped>
-  .product-platform__icon {
-    width: 16px;
-    height: 16px;
-  }
+  .product-platform {
+		@apply flex gap-2;
+		
+		&__icon {
+			width: 16px;
+			height: 16px;
+		}
+	}
 </style>

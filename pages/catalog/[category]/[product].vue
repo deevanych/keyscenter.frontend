@@ -61,7 +61,8 @@ if (data.value) {
 				<div class="product-page__description-content"
 						 v-html="product.instruction"></div>
 			</div>
-			<div class="product-page__description">
+			<div v-if="false"
+					 class="product-page__description">
 				<h3 class="product-page__description-title">Отзывы ({{ product.reviewsHumanize }}<span
 						v-if="product.reviewsCount">, {{ product.positiveReviewsPercent }}% положительных</span>)
 				</h3>

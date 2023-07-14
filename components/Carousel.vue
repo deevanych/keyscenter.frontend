@@ -1,42 +1,60 @@
 <script lang="ts" setup>
 import {Splide, SplideSlide, SplideTrack} from "@splidejs/vue-splide";
 import GlassButton from "./ui/GlassButton.vue";
+import {CarouselAPI} from "../api/carousel";
+import {URLHelpers} from "../helpers/URL";
+import ICarouselItem = CarouselAPI.ICarouselItem;
+
+interface IProps {
+  carousel: CarouselAPI.ICarousel
+}
+
+const props = defineProps<IProps>()
 
 const options = {
   rewind: true,
   autoWidth: true,
   gap: '40px',
-  // autoplay: true,
+  autoplay: true,
   interval: 10000,
   type: 'loop',
   pagination: false
 }
+
+const carouselItemLink = (carouselItem: ICarouselItem) => {
+  if (carouselItem.product) {
+    return {
+      name: 'catalog-category-product', params: {
+        category: carouselItem.product.product_category.slug,
+        product: carouselItem.product.slug
+      }
+    }
+  }
+
+  return {
+    name: 'page', params: {
+      page: carouselItem.page?.slug,
+    }
+  }
+}
+
 </script>
 
 <template>
   <Splide :has-track="false" :options="options" class="splide">
     <SplideTrack>
-      <SplideSlide class="splide-slide">
-        <div class="splide-slide__background"
-             style="background-image: url(https://forrit-one-msedu-p1-consumables.azureedge.net/media/28611a66-fcaa-44d6-a2f2-4a88c01044fb/m365-panel12-tools_1600x600.jpg)"></div>
-        <NuxtLink :to="{ name: 'catalog-category-product', params: { category: 'windows', product: 'ew' } }"
+      <SplideSlide v-for="carouselItem in props.carousel.carousel_items"
+                   :key="carouselItem.id"
+                   class="splide-slide">
+        <div :style="{backgroundImage: `url(${URLHelpers.getBackendURLHref(carouselItem.image.url)})`}"
+             class="splide-slide__background"></div>
+        <NuxtLink :to="carouselItemLink(carouselItem)"
                   class="splide-slide__content">
-          <h2 class="splide-slide__title">Windows 10/11 PRO лицензионный ключ</h2>
-          <span class="splide-slide__subtitle">Купил ключ, а он не работает</span>
-          <GlassButton class="splide-slide__button">Купить за 999Р</GlassButton>
+          <h2 class="splide-slide__title">{{ carouselItem.header }}</h2>
+          <span class="splide-slide__subtitle">{{ carouselItem.subheader }}</span>
+          <GlassButton class="splide-slide__button">{{ carouselItem.button_text }}</GlassButton>
         </NuxtLink>
       </SplideSlide>
-      <SplideSlide class="splide-slide">
-        <div class="splide-slide__background"></div>
-        <NuxtLink :to="{ name: 'catalog-category-product', params: { category: 'windows', product: 'ew' } }"
-                  class="splide-slide__content">
-          <h2 class="splide-slide__title">Windows 10/11 PRO лицензионный ключ</h2>
-          <span class="splide-slide__subtitle">Купил ключ, а он не работает</span>
-          <GlassButton class="splide-slide__button">Купить за 999Р</GlassButton>
-        </NuxtLink>
-      </SplideSlide>
-      <SplideSlide class="splide-slide">sd</SplideSlide>
-      <SplideSlide class="splide-slide">sd</SplideSlide>
     </SplideTrack>
     <div class="splide__arrows">
       <button class="splide__arrow splide__arrow--prev">
@@ -51,6 +69,14 @@ const options = {
 
 <style lang="scss" scoped>
 .splide {
+  @apply visible;
+
+  &:not(.is-active) {
+    :deep .splide__list {
+      @apply flex flex-row gap-10;
+    }
+  }
+
   &-slide {
     @apply w-full md:w-4/5 h-96 rounded-3xl overflow-hidden;
 
@@ -68,8 +94,6 @@ const options = {
 
     &__background {
       @apply w-full h-full absolute top-0 left-0 bg-center bg-cover;
-
-      background-image: url("/slider/RWKKc5-Home-Page-Banner-1600x900-Eleven-Crop-A-Hero.png");
     }
 
     &__title {

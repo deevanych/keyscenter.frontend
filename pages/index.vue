@@ -3,6 +3,7 @@ import {Ref} from 'vue';
 import {ShortProduct} from '~/models/Product';
 import {ProductsAPI} from "~/api/products";
 import Carousel from "../components/Carousel.vue";
+import {CarouselAPI} from "../api/carousel";
 
 useHead({
   title: 'Главная',
@@ -14,11 +15,20 @@ useHead({
   ]
 })
 const products: Ref<ShortProduct[]> = ref([])
+const carousel: Ref<CarouselAPI.ICarousel | null> = ref(null)
 
 try {
-  const {data} = await useAsyncData('products', async () => (await ProductsAPI.list()).data)
-  if (data.value) {
-    products.value = data.value.map((product: ProductsAPI.IShortProductResponse) => new ShortProduct(product))
+  const [productsResult, carouselResult] = await Promise.allSettled([
+    await useAsyncData('products', async () => await ProductsAPI.list()),
+    await useAsyncData('carousel', async () => await CarouselAPI.get('homepage'))
+  ])
+
+  if (productsResult.status === 'fulfilled') {
+    products.value = productsResult.value.data.value.data.map((product: ProductsAPI.IShortProductResponse) => new ShortProduct(product))
+  }
+
+  if (carouselResult.status === 'fulfilled') {
+    carousel.value = carouselResult.value.data.value
   }
 } catch (e) {
   throw createError({statusCode: 500, statusMessage: (e as Error).message})
@@ -27,10 +37,10 @@ try {
 
 <template>
   <section class="page">
-    <section class="page-section">
+    <section v-if="carousel" class="page-section">
       <h1 class="page-section__title">Главная</h1>
       <div class="page-section__content">
-        <Carousel/>
+        <Carousel :carousel="carousel"/>
       </div>
     </section>
     <section class="page-section">

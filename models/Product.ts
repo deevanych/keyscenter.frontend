@@ -8,169 +8,175 @@ import IImageFormats = ProductsAPI.IImageFormats;
 import IReview = ProductsAPI.IReview;
 
 interface IShortProduct {
-	id: number;
-	title: string;
-	price: number;
-	salePrice: number;
-	categorySlug: string;
-	categoryId: number;
-	images: IImageFormats[];
-	description?: string;
-	instruction?: string;
-	slug: string;
-	publishedAt?: Date;
-	currentPrice: string;
-	oldPrice?: string;
-	preview: string;
-	availableCount: number;
-	isInStock: boolean;
-	isInStockHumanized: string;
-	isInStockWithCountHumanized: string;
-	url: string;
-	currentPriceNonFormatted: number;
-	metaDescription: string;
-	reviews: IReview[];
-	get reviewsCount(): number;
-	get positiveReviewsPercent(): number;
-	get reviewsHumanize(): string;
+    id: number;
+    title: string;
+    price: number;
+    salePrice: number;
+    categorySlug: string;
+    categoryTitle: string;
+    categoryId: number;
+    images: IImageFormats[];
+    description?: string;
+    instruction?: string;
+    slug: string;
+    publishedAt?: Date;
+    currentPrice: string;
+    oldPrice?: string;
+    preview: string;
+    availableCount: number;
+    isInStock: boolean;
+    isInStockHumanized: string;
+    isInStockWithCountHumanized: string;
+    url: string;
+    currentPriceNonFormatted: number;
+    metaDescription: string;
+    reviews: IReview[];
+
+    get reviewsCount(): number;
+
+    get positiveReviewsPercent(): number;
+
+    get reviewsHumanize(): string;
 }
 
 interface IProduct extends IShortProduct {
-	platforms: string[];
-	views: number;
-	productType: string;
-	productDelivery: string;
-	description: string;
-	instruction: string;
+    platforms: string[];
+    views: number;
+    productType: string;
+    productDelivery: string;
+    description: string;
+    instruction: string;
 }
 
 export class ShortProduct extends Model implements IShortProduct {
-	public readonly title: string;
-	public readonly price: number;
-	public readonly salePrice: number;
-	public readonly slug: string;
-	public readonly images: IImageFormats[];
-	public readonly availableCount: number;
-	public readonly categorySlug: string;
-	public readonly categoryId: number;
-	public readonly description: string;
-	public readonly reviews: IReview[];
+    public readonly title: string;
+    public readonly price: number;
+    public readonly salePrice: number;
+    public readonly slug: string;
+    public readonly images: IImageFormats[];
+    public readonly availableCount: number;
+    public readonly categorySlug: string;
+    public readonly categoryTitle: string;
+    public readonly categoryId: number;
+    public readonly description: string;
+    public readonly reviews: IReview[];
 
-	constructor (data: ProductsAPI.IShortProductResponse) {
-		super(data.id);
-		this.title = data.attributes.title
-		this.price = data.attributes.price
-		this.salePrice = data.attributes.salePrice
-		this.slug = data.attributes.slug
-		this.images = data.attributes.images.data.map(images => images.attributes.formats)
-		this.availableCount = data.attributes.product_keys.data.length
-		this.categorySlug = data.attributes.product_category.data.attributes.slug
-		this.categoryId = data.attributes.product_category.data.id
-		this.description = data.attributes.description
-		this.reviews = data.attributes.reviews?.data ?? []
-	}
+    constructor(data: ProductsAPI.IShortProductResponse) {
+        super(data.id);
+        this.title = data.attributes.title
+        this.price = data.attributes.price
+        this.salePrice = data.attributes.salePrice
+        this.slug = data.attributes.slug
+        this.images = data.attributes.images.data.map(images => images.attributes.formats)
+        this.availableCount = data.attributes.product_keys.data.length
+        this.categorySlug = data.attributes.product_category.data.attributes.slug
+        this.categoryTitle = data.attributes.product_category.data.attributes.title
+        this.categoryId = data.attributes.product_category.data.id
+        this.description = data.attributes.description
+        this.reviews = data.attributes.reviews?.data ?? []
+    }
 
-	private get reviewPluralWord(): string {
-		const reviewsPluralize = new Intl.PluralRules('ru-RU').select(this.reviewsCount)
+    get reviewsCount(): number {
+        return this.reviews.length
+    }
 
-		switch (reviewsPluralize) {
-			case 'few':
-				return 'отзыва'
+    get reviewsHumanize(): string {
+        return this.reviewsCount + ' ' + this.reviewPluralWord
+    }
 
-			case 'one':
-				return 'отзыв'
+    get positiveReviewsPercent(): number {
+        const reviewsCount = this.reviewsCount
+        const positiveReviewsCount = this.reviews.filter((review) => review.attributes.is_positive).length
 
-			default:
-				return 'отзывов'
-		}
-	}
+        if (positiveReviewsCount === 0) {
+            return 0
+        }
 
-	get reviewsCount (): number {
-		return this.reviews.length
-	}
+        return Math.floor(positiveReviewsCount / reviewsCount * 100)
+    }
 
-	get reviewsHumanize (): string {
-		return this.reviewsCount + ' ' + this.reviewPluralWord
-	}
+    get metaDescription(): string {
+        return (this.description.replace(/<[^>]*>/g, '') as string)
+    }
 
-	get positiveReviewsPercent (): number {
-		const reviewsCount = this.reviewsCount
-		const positiveReviewsCount = this.reviews.filter((review) => review.attributes.is_positive).length
+    get url(): string {
+        return useRouter().resolve({
+            name: 'catalog-category-product',
+            params: {category: this.categorySlug, product: this.slug}
+        }).href
+    }
 
-		if (positiveReviewsCount === 0) {
-			return 0
-		}
+    get isInStock(): boolean {
+        return !!this.availableCount
+    }
 
-		return Math.floor(positiveReviewsCount / reviewsCount * 100)
-	}
+    get isInStockHumanized(): string {
+        return this.isInStock ? 'В наличии' : 'Нет в наличии'
+    }
 
-	get metaDescription(): string {
-		return (this.description.replace(/<[^>]*>/g, '') as string)
-	}
+    get isInStockWithCountHumanized(): string {
+        return this.isInStock ? `${this.isInStockHumanized}: ${this.availableCount} шт` : this.isInStockHumanized
+    }
 
-	get url(): string {
-		return useRouter().resolve({
-			name: 'catalog-category-product',
-			params: {category: this.categorySlug, product: this.slug}
-		}).href
-	}
+    get currentPrice(): string {
+        return price(this.currentPriceNonFormatted)
+    }
 
-	get isInStock(): boolean {
-		return !!this.availableCount
-	}
+    get currentPriceNonFormatted(): number {
+        return this.salePrice ?? this.price
+    }
 
-	get isInStockHumanized(): string {
-		return this.isInStock ? 'В наличии' : 'Нет в наличии'
-	}
+    get preview(): string {
+        return URLHelpers.getBackendURLHref(this.imagesByFormat('small')[0].url)
+    }
 
-	get isInStockWithCountHumanized(): string {
-		return this.isInStock ? `${this.isInStockHumanized}: ${this.availableCount} шт` : this.isInStockHumanized
-	}
+    get discountPercent(): string {
+        return ((this.salePrice - this.price) / (this.price / 100)).toFixed(0) + '%'
+    }
 
-	get currentPrice(): string {
-		return price(this.currentPriceNonFormatted)
-	}
+    get oldPrice(): string | undefined {
+        if (this.salePrice) {
+            return price(this.price)
+        }
 
-	get currentPriceNonFormatted(): number {
-		return this.salePrice ?? this.price
-	}
+        return
+    }
 
-	get preview(): string {
-		return URLHelpers.getBackendURLHref(this.imagesByFormat('small')[0].url)
-	}
+    private get reviewPluralWord(): string {
+        const reviewsPluralize = new Intl.PluralRules('ru-RU').select(this.reviewsCount)
 
-	get discountPercent(): string {
-		return ((this.salePrice - this.price) / (this.price / 100)).toFixed(0) + '%'
-	}
+        switch (reviewsPluralize) {
+            case 'few':
+                return 'отзыва'
 
-	imagesByFormat(imageType: 'small' | 'large' | 'medium' | 'thumbnail' = 'small'): IImage[] {
-		return this.images.map((image: IImageFormats) => {
-			return image[imageType]
-		})
-	}
+            case 'one':
+                return 'отзыв'
 
-	get oldPrice (): string | undefined {
-		if (this.salePrice) {
-			return price(this.price)
-		}
+            default:
+                return 'отзывов'
+        }
+    }
 
-		return
-	}
+    imagesByFormat(imageType: 'small' | 'large' | 'medium' | 'thumbnail' = 'small'): IImage[] {
+        return this.images.map((image: IImageFormats) => {
+            return image[imageType]
+        })
+    }
 }
 
 export class Product extends ShortProduct implements IProduct {
-	public readonly platforms: string[];
-	public readonly views: number;
-	public readonly productType: string;
-	public readonly productDelivery: string;
-	public readonly instruction: string;
+    public readonly platforms: string[];
+    public readonly views: number;
+    public readonly productType: string;
+    public readonly productDelivery: string;
+    public readonly instruction: string;
 
-	constructor(data: ProductsAPI.IProductResponse) {
-		super(data);
-		this.platforms = data.attributes.platforms.data.map(platform => platform.attributes.title)
-		this.views = data.attributes.views
-		this.productType = data.attributes.product_type.data.attributes.title
-		this.productDelivery = data.attributes.delivery_method.data.attributes.title
-		this.instruction = data.attributes.instruction
-	}
+    constructor(data: ProductsAPI.IProductResponse) {
+        super(data);
+        this.platforms = data.attributes.platforms.data.map(platform => platform.attributes.title)
+        this.views = data.attributes.views
+        this.productType = data.attributes.product_type.data.attributes.title
+        this.productDelivery = data.attributes.delivery_method.data.attributes.title
+        this.instruction = data.attributes.instruction
+    }
 }

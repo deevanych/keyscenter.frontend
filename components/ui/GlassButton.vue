@@ -16,14 +16,13 @@
   @apply relative w-full md:w-auto;
 
   &__content {
-    @apply rounded-full p-4 px-7 text-white backdrop-blur mt-auto backdrop-blur -z-10 bg-white/40
+    @apply rounded-full p-4 px-7 text-white backdrop-blur mt-auto -z-10 bg-white/40
     shadow hover:shadow-md border-white/60 border transition-shadow w-full md:w-auto;
   }
 
   &__bg {
-    @apply rounded-full w-full h-full block absolute transition-transform origin-bottom-right rotate-3 transition-transform;
-
-    background: linear-gradient(135deg, #4682eb -20%, #01beff 120%);
+    @apply rounded-full w-full h-full block absolute transition-transform origin-bottom-right rotate-3
+    transition-transform bg-gradient-to-r from-cyan-500 to-blue-500;
   }
 
   &:hover {

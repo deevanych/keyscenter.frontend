@@ -38,6 +38,7 @@ const carouselItemLink = (carouselItem: ICarouselItem) => {
   }
 }
 
+console.log(props.carousel)
 </script>
 
 <template>
@@ -72,7 +73,7 @@ const carouselItemLink = (carouselItem: ICarouselItem) => {
   @apply visible;
 
   &:not(.is-active) {
-    :deep .splide__list {
+    :deep(.splide__list) {
       @apply flex flex-row gap-10;
     }
   }

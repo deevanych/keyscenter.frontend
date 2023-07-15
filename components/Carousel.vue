@@ -32,11 +32,15 @@ const carouselItemLink = (carouselItem: ICarouselItem) => {
     }
   }
 
-  return {
-    name: 'page', params: {
-      page: carouselItem.page?.slug,
+  if (carouselItem.page) {
+    return {
+      name: 'page', params: {
+        page: carouselItem.page.slug,
+      }
     }
   }
+
+  return {name: 'index'}
 }
 
 const getters = (carouselItem: ICarouselItem) => {
@@ -45,12 +49,20 @@ const getters = (carouselItem: ICarouselItem) => {
   }
 }
 
-const templateParser = (text: string, carouselItem: ICarouselItem) => {
-  const matches = text.replaceAll(/%(.*)%/gi, (match: string, matchValue: string) => {
+const templateParser = (text: string, carouselItem: ICarouselItem): string => {
+  return text.replaceAll(/%(.*)%/gi, (match: string, matchValue: string) => {
     return price(getters(carouselItem)[matchValue])
   })
+}
 
-  return matches
+const carouselAction = (carouselItem: ICarouselItem): boolean => {
+  if (carouselItem.action) {
+    eval(`window.${carouselItem.action}`)
+
+    return false
+  }
+
+  return true
 }
 </script>
 
@@ -63,7 +75,8 @@ const templateParser = (text: string, carouselItem: ICarouselItem) => {
         <div :style="{backgroundImage: `url(${URLHelpers.getBackendURLHref(carouselItem.image.url)})`}"
              class="splide-slide__background"></div>
         <NuxtLink :to="carouselItemLink(carouselItem)"
-                  class="splide-slide__content">
+                  class="splide-slide__content"
+                  @click.prevent="carouselAction(carouselItem)">
           <h2 class="splide-slide__title">{{ carouselItem.header }}</h2>
           <span class="splide-slide__subtitle">{{ carouselItem.subheader }}</span>
           <GlassButton class="splide-slide__button">{{

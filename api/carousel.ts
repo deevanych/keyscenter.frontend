@@ -21,7 +21,8 @@ export namespace CarouselAPI {
         } | null,
         page: {
             slug: string
-        } | null
+        } | null,
+        action: string | null
     }
 
     export interface ICarousel {

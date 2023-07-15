@@ -68,7 +68,7 @@ const addToCart = async () => {
   }
 
   &__title {
-    @apply text-gray-900 font-bold text-sm;
+    @apply text-gray-900 font-bold text-sm transition;
   }
 
   &__category {
@@ -107,11 +107,17 @@ const addToCart = async () => {
   }
 
   &:hover {
-    .product-card__preview {
-      @apply -translate-y-2 drop-shadow-2xl;
+    .product-card {
+      &__preview {
+        @apply -translate-y-2 drop-shadow-2xl;
 
-      &-bg {
-        @apply h-[120px] w-[80%];
+        &-bg {
+          @apply h-[120px] w-[80%];
+        }
+      }
+
+      &__title {
+        @apply text-sky-900;
       }
     }
   }

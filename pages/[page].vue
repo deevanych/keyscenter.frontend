@@ -1,29 +1,29 @@
 <script async lang="ts" setup>
-import { PageAPI } from '~/api/page';
+import {PageAPI} from '~/api/page';
 
 const route = useRoute()
 const {data} = await useAsyncData('page', async () => await PageAPI.show(route.params.page as string))
 
-if (data.value) {
-    useHead({
-        title: data.value.title,
-        meta: [
-            {
-                name: 'description',
-                content: data.value.description
-            }
-        ]
-    })
+if (data.value.data) {
+  useHead({
+    title: data.value.title,
+    meta: [
+      {
+        name: 'description',
+        content: data.value.description
+      }
+    ]
+  })
 } else {
-    throw createError({statusCode: 404, statusMessage: 'Page Not Found'})
+  throw createError({statusCode: 404, statusMessage: 'Page Not Found'})
 }
 </script>
 
 <template>
-    <div class="page">
-        <h1 class="page-header">{{ data.title }}</h1>
-        <div class="page-content" v-html="data.content"></div>
-    </div>
+  <div class="page">
+    <h1 class="page-header">{{ data.title }}</h1>
+    <div class="page-content" v-html="data.content"></div>
+  </div>
 </template>
 
 <style lang="scss" scoped>

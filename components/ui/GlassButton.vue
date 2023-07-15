@@ -17,7 +17,7 @@
 
   &__content {
     @apply rounded-full p-4 px-7 text-white backdrop-blur mt-auto -z-10 bg-white/40
-    shadow hover:shadow-md border-white/60 border transition-shadow w-full md:w-auto;
+    shadow hover:shadow-md active:shadow-xl border-white/60 border transition-shadow w-full md:w-auto block;
   }
 
   &__bg {

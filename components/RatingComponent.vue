@@ -20,13 +20,13 @@ const ratingValue = (props.product.positiveReviewsPercent / 20).toFixed(2)
           fill="currentColor"></path>
     </svg>
 		<span class="rating">{{ props.product.reviewsHumanize }}, {{ props.product.positiveReviewsPercent }}%</span>
-		<meta :content="ratingValue" itemprop="ratingValue">
-		<meta :content="props.product.reviewsCount.toString()" itemprop="reviewCount">
+		<meta :content="ratingValue" class="rating-text" itemprop="ratingValue">
+		<meta :content="props.product.reviewsCount.toString()" class="rating-text" itemprop="reviewCount">
 	</span>
 </template>
 
 <style lang="scss" scoped>
 .rating {
-  @apply ml-1;
+  @apply ml-1 text-gray-500 mt-[2px];
 }
 </style>

@@ -100,7 +100,7 @@ const addToCart = async () => {
     &-bg {
       @apply w-[70%] h-[70px] bg-black absolute bg-gradient-to-r from-cyan-500 to-blue-500 will-change-transform
       transition-all
-      absolute opacity-20 h-[120px] w-[80%];
+      absolute opacity-20 h-[70px] w-[70%];
 
       border-radius: 51% 49% 70% 30% / 30% 30% 70% 70%;
     }

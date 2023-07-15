@@ -1,28 +1,10 @@
 import {$API} from "./instance";
+import {CtaAPI} from "./cta";
 
 export namespace CarouselAPI {
     type TCarouselHandler = 'homepage'
 
-    export interface ICarouselItem {
-        id: number,
-        header: string,
-        subheader: string,
-        button_text: string,
-        image: {
-            url: string
-        },
-        product: {
-            slug: string,
-            price: number,
-            salePrice: number,
-            product_category: {
-                slug: string
-            }
-        } | null,
-        page: {
-            slug: string
-        } | null,
-        action: string | null
+    export interface ICarouselItem extends CtaAPI.ICTA {
     }
 
     export interface ICarousel {

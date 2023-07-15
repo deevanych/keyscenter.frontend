@@ -37,8 +37,6 @@ const carouselItemLink = (carouselItem: ICarouselItem) => {
     }
   }
 }
-
-console.log(props.carousel)
 </script>
 
 <template>

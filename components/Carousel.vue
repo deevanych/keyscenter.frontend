@@ -3,6 +3,7 @@ import {Splide, SplideSlide, SplideTrack} from "@splidejs/vue-splide";
 import GlassButton from "./ui/GlassButton.vue";
 import {CarouselAPI} from "../api/carousel";
 import {URLHelpers} from "../helpers/URL";
+import {price} from "../helpers/price";
 import ICarouselItem = CarouselAPI.ICarouselItem;
 
 interface IProps {
@@ -37,6 +38,20 @@ const carouselItemLink = (carouselItem: ICarouselItem) => {
     }
   }
 }
+
+const getters = (carouselItem: ICarouselItem) => {
+  return {
+    price: carouselItem.product?.price
+  }
+}
+
+const templateParser = (text: string, carouselItem: ICarouselItem) => {
+  const matches = text.replaceAll(/%(.*)%/gi, (match: string, matchValue: string) => {
+    return price(getters(carouselItem)[matchValue])
+  })
+
+  return matches
+}
 </script>
 
 <template>
@@ -51,7 +66,10 @@ const carouselItemLink = (carouselItem: ICarouselItem) => {
                   class="splide-slide__content">
           <h2 class="splide-slide__title">{{ carouselItem.header }}</h2>
           <span class="splide-slide__subtitle">{{ carouselItem.subheader }}</span>
-          <GlassButton class="splide-slide__button">{{ carouselItem.button_text }}</GlassButton>
+          <GlassButton class="splide-slide__button">{{
+              templateParser(carouselItem.button_text, carouselItem)
+            }}
+          </GlassButton>
         </NuxtLink>
       </SplideSlide>
     </SplideTrack>

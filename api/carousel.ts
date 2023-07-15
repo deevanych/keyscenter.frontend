@@ -13,6 +13,8 @@ export namespace CarouselAPI {
         },
         product: {
             slug: string,
+            price: number,
+            salePrice: number,
             product_category: {
                 slug: string
             }

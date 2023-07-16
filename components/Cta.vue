@@ -31,15 +31,24 @@ const CTALink = () => {
   return {name: 'index'}
 }
 
-const CTAAction = () => {
-  if (props.cta.action) {
-    eval(`window.${props.cta.action}`)
+const actions = () => {
+  let actions = ''
 
-    return false
+  if (props.cta.action) {
+    actions += `document.querySelector('.cta__link[data-id="${props.cta.id}"]').addEventListener('click',
+    () => { ${props.cta.action}; });`
   }
 
-  return true
+  return actions
 }
+
+useHead({
+  script: [
+    {
+      innerHTML: actions() ? `window.addEventListener('load', () => {${actions()}})` : null
+    }
+  ]
+})
 </script>
 
 <template>
@@ -47,9 +56,9 @@ const CTAAction = () => {
     <div class="cta__content">
       <div class="cta__header">{{ props.cta.header }}</div>
       <div class="cta__subheader">{{ props.cta.subheader }}</div>
-      <NuxtLink :to="CTALink"
-                class="cta__link"
-                @click.prevent="CTAAction">
+      <NuxtLink :data-id="props.cta.id"
+                :to="CTALink()"
+                class="cta__link">
         <GlassButton>{{ props.cta.button_text }}</GlassButton>
       </NuxtLink>
     </div>

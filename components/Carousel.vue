@@ -45,25 +45,37 @@ const carouselItemLink = (carouselItem: ICarouselItem) => {
 
 const getters = (carouselItem: ICarouselItem) => {
   return {
-    price: carouselItem.product?.price
+    ...carouselItem.product,
+    price: price(carouselItem.product?.price)
   }
 }
 
 const templateParser = (text: string, carouselItem: ICarouselItem): string => {
   return text.replaceAll(/%(.*)%/gi, (match: string, matchValue: string) => {
-    return price(getters(carouselItem)[matchValue])
+    return getters(carouselItem)[matchValue]
   })
 }
 
-const carouselAction = (carouselItem: ICarouselItem): boolean => {
-  if (carouselItem.action) {
-    eval(`window.${carouselItem.action}`)
+const actions = () => {
+  let actions = ''
 
-    return false
-  }
+  props.carousel.carousel_items.forEach((carouselItem) => {
+    if (carouselItem.action) {
+      actions += `document.querySelector('.splide-slide__content[data-id="${carouselItem.id}"]').addEventListener('click',
+      () => { ${carouselItem.action}; });`
+    }
+  })
 
-  return true
+  return actions
 }
+
+useHead({
+  script: [
+    {
+      innerHTML: actions() ? `window.addEventListener('load', () => {${actions()}})` : null
+    }
+  ]
+})
 </script>
 
 <template>
@@ -74,9 +86,9 @@ const carouselAction = (carouselItem: ICarouselItem): boolean => {
                    class="splide-slide">
         <div :style="{backgroundImage: `url(${URLHelpers.getBackendURLHref(carouselItem.image.url)})`}"
              class="splide-slide__background"></div>
-        <NuxtLink :to="carouselItemLink(carouselItem)"
-                  class="splide-slide__content"
-                  @click.prevent="carouselAction(carouselItem)">
+        <NuxtLink :data-id="carouselItem.id"
+                  :to="carouselItemLink(carouselItem)"
+                  class="splide-slide__content">
           <h2 class="splide-slide__title">{{ carouselItem.header }}</h2>
           <span class="splide-slide__subtitle">{{ carouselItem.subheader }}</span>
           <GlassButton class="splide-slide__button">{{
@@ -108,7 +120,7 @@ const carouselAction = (carouselItem: ICarouselItem): boolean => {
   }
 
   &-slide {
-    @apply w-full md:w-4/5 h-96 rounded-3xl overflow-hidden;
+    @apply w-full md:w-4/5 min-h-[24rem] rounded-3xl overflow-hidden;
 
     &__button {
       @apply mt-auto;

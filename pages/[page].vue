@@ -4,7 +4,7 @@ import {PageAPI} from '~/api/page';
 const route = useRoute()
 const {data} = await useAsyncData('page', async () => await PageAPI.show(route.params.page as string))
 
-if (data.value.data) {
+if (data.value && !data.value.error) {
   useHead({
     title: data.value.title,
     meta: [

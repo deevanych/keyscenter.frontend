@@ -1,149 +1,168 @@
 <script lang="ts" setup>
 import {computed, Ref} from 'vue';
-import {useCartStore} from "~/store/cart";
-import { useToastsStore } from '~/store/toasts';
-import { usePopupsStore } from '~/store/popups';
+import {useCartStore} from "../store/cart";
+import {useToastsStore} from "../store/toasts";
+import {usePopupsStore} from '../store/popups';
 
 const cartStore = useCartStore()
 const toastStore = useToastsStore()
 const popupsStore = usePopupsStore()
 
 interface IProps {
-	maxCount: number
-	productId: number
-	itemId?: number
-	quantity?: number
+  maxCount: number
+  productId: number
+  itemId?: number
+  quantity?: number
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-	quantity: 1
+  quantity: 1
 })
 const quantity: Ref<number> = ref(props.quantity)
 const isLoading: Ref<boolean> = ref(false)
 
 const changeValue = (increment = true): void => {
-	increment ? quantity.value++ : quantity.value--
+  increment ? quantity.value++ : quantity.value--
 }
 
 const isButtonDisabled = (increment = true): boolean => {
-	return (increment && quantity.value >= props.maxCount) || !increment && quantity.value <= 0;
+  return (increment && quantity.value >= props.maxCount) || !increment && quantity.value <= 0;
 }
 const isAddToCartButtonEnabled = computed(() => 0 < quantity.value && quantity.value <= props.maxCount)
 
 const cartAction = async (): Promise<void> => {
-	try {
-		isLoading.value = true
-		if (typeof props.itemId !== 'undefined' && quantity.value === props.quantity) {
-			await cartStore.removeFromCart(props.itemId)
-			window.ym(93533001,'reachGoal','removeFromCart')
-			toastStore.showToast('Товар удален из корзины')
-		} else {
-			window.ym(93533001,'reachGoal','addToCart')
-			await cartStore.addToCart(props.productId, quantity.value)
-			popupsStore.cartPopup = true
-			toastStore.showToast('Товар добавлен в корзину')
-		}
-	} catch (e) {
-		toastStore.showToast(e.response._data.error.message, 'error')
-	} finally {
-		isLoading.value = false
-	}
+  try {
+    isLoading.value = true
+    if (typeof props.itemId !== 'undefined' && quantity.value === props.quantity) {
+      await cartStore.removeFromCart(props.itemId)
+      window.ym(93533001, 'reachGoal', 'removeFromCart')
+      toastStore.showToast('Товар удален из корзины')
+    } else {
+      window.ym(93533001, 'reachGoal', 'addToCart')
+      await cartStore.addToCart(props.productId, quantity.value)
+      popupsStore.cartPopup = true
+      toastStore.showToast('Товар добавлен в корзину')
+    }
+  } catch (e) {
+    toastStore.showToast(e.response._data.error.message, 'error')
+  } finally {
+    isLoading.value = false
+  }
 }
 
 const addToCartButtonText = computed((): string => {
-	if (typeof props.itemId !== 'undefined') {
-		return quantity.value === props.quantity ? 'Удалить' : 'Обновить'
-	}
+  if (typeof props.itemId !== 'undefined') {
+    return quantity.value === props.quantity ? 'Удалить' : 'Обновить'
+  }
 
-	return 'Купить'
+  return 'Добавить в корзину'
 })
-	
-	const addToCartButtonClass = computed((): string | void => {
-		if (quantity.value === 0) {
-			return
-		}
 
-		let buttonClass = '_buy'
+const addToCartButtonClass = computed((): string | void => {
+  if (quantity.value === 0) {
+    return
+  }
 
-		if (typeof props.itemId !== 'undefined') {
-			buttonClass = quantity.value === props.quantity ? '_exists' : '_update'
-		}
-		
-		return `add-to-cart__cart-button${buttonClass}`
-	})
+  let buttonClass = '_buy'
+
+  if (typeof props.itemId !== 'undefined') {
+    buttonClass = quantity.value === props.quantity ? '_exists' : '_update'
+  }
+
+  return `add-to-cart__cart-button${buttonClass}`
+})
 </script>
 
 <template>
-	<div class="add-to-cart">
-		<div class="add-to-cart__wrapper">
-			<button class="add-to-cart__button"
-							@click="changeValue(false)"
-							:disabled="isButtonDisabled(false)">
-				<svg xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 448 512">
-					<path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/>
-				</svg>
-			</button>
-			<input type="number"
-						 class="add-to-cart__input"
-						 v-model="quantity"
-						 :max="props.maxCount"/>
-			<button class="add-to-cart__button"
-							@click="changeValue"
-							:disabled="isButtonDisabled()">
-				<svg xmlns="http://www.w3.org/2000/svg" width="14" viewBox="0 0 448 512">
-					<path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
-				</svg>
-			</button>
-		</div>
-		<UiButton :disabled="!isAddToCartButtonEnabled"
-							class="add-to-cart__cart-button"
-							:loading="isLoading"
-							@click="cartAction"
-							:class="addToCartButtonClass">
-			{{ addToCartButtonText }}
-		</UiButton>
-	</div>
+  <div class="add-to-cart">
+    <div class="add-to-cart__wrapper">
+      <button :disabled="isButtonDisabled(false)"
+              class="add-to-cart__button"
+              @click="changeValue(false)">
+        <svg viewBox="0 0 448 512" width="14" xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/>
+        </svg>
+      </button>
+      <input v-model="quantity"
+             :max="props.maxCount"
+             class="add-to-cart__input"
+             type="number"/>
+      <button :disabled="isButtonDisabled()"
+              class="add-to-cart__button"
+              @click="changeValue">
+        <svg viewBox="0 0 448 512" width="14" xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+        </svg>
+      </button>
+    </div>
+    <UiButton :class="addToCartButtonClass"
+              :disabled="!isAddToCartButtonEnabled"
+              :loading="isLoading"
+              class="add-to-cart__cart-button"
+              @click="cartAction">
+      <svg fill="none" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M12 18.5C9.66 18.5 7.75 16.59 7.75 14.25C7.75 13.84 8.09 13.5 8.5 13.5C8.91 13.5 9.25 13.84 9.25 14.25C9.25 15.77 10.48 17 12 17C13.52 17 14.75 15.77 14.75 14.25C14.75 13.84 15.09 13.5 15.5 13.5C15.91 13.5 16.25 13.84 16.25 14.25C16.25 16.59 14.34 18.5 12 18.5Z"
+            fill="currentColor"/>
+        <path
+            d="M5.18988 6.37994C4.99988 6.37994 4.79988 6.29994 4.65988 6.15994C4.36988 5.86994 4.36988 5.38994 4.65988 5.09994L8.28988 1.46994C8.57988 1.17994 9.05988 1.17994 9.34988 1.46994C9.63988 1.75994 9.63988 2.23994 9.34988 2.52994L5.71988 6.15994C5.56988 6.29994 5.37988 6.37994 5.18988 6.37994Z"
+            fill="currentColor"/>
+        <path
+            d="M18.8101 6.37994C18.6201 6.37994 18.4301 6.30994 18.2801 6.15994L14.6501 2.52994C14.3601 2.23994 14.3601 1.75994 14.6501 1.46994C14.9401 1.17994 15.4201 1.17994 15.7101 1.46994L19.3401 5.09994C19.6301 5.38994 19.6301 5.86994 19.3401 6.15994C19.2001 6.29994 19.0001 6.37994 18.8101 6.37994Z"
+            fill="currentColor"/>
+        <path
+            d="M20.21 10.6C20.14 10.6 20.07 10.6 20 10.6H19.77H4C3.3 10.61 2.5 10.61 1.92 10.03C1.46 9.57998 1.25 8.87998 1.25 7.84998C1.25 5.09998 3.26 5.09998 4.22 5.09998H19.78C20.74 5.09998 22.75 5.09998 22.75 7.84998C22.75 8.88998 22.54 9.57998 22.08 10.03C21.56 10.55 20.86 10.6 20.21 10.6ZM4.22 9.09998H20.01C20.46 9.10998 20.88 9.10998 21.02 8.96998C21.09 8.89998 21.24 8.65998 21.24 7.84998C21.24 6.71998 20.96 6.59998 19.77 6.59998H4.22C3.03 6.59998 2.75 6.71998 2.75 7.84998C2.75 8.65998 2.91 8.89998 2.97 8.96998C3.11 9.09998 3.54 9.09998 3.98 9.09998H4.22Z"
+            fill="currentColor"/>
+        <path
+            d="M14.89 22.75H8.86C5.28 22.75 4.48 20.62 4.17 18.77L2.76 10.12C2.69 9.71 2.97 9.33 3.38 9.26C3.78 9.19 4.17 9.47 4.24 9.88L5.65 18.52C5.94 20.29 6.54 21.25 8.86 21.25H14.89C17.46 21.25 17.75 20.35 18.08 18.61L19.76 9.86C19.84 9.45 20.23 9.18 20.64 9.27C21.05 9.35 21.31 9.74 21.23 10.15L19.55 18.9C19.16 20.93 18.51 22.75 14.89 22.75Z"
+            fill="currentColor"/>
+      </svg>
+      {{ addToCartButtonText }}
+    </UiButton>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-	.add-to-cart {
-		@apply flex gap-6 items-center;
-		
-		&__input {
-			@apply outline-none text-center w-full bg-gray-100 font-semibold hover:text-black
-			focus:text-black text-gray-700 outline-none;
-			
-			&::-webkit-inner-spin-button,
-			&::-webkit-outer-spin-button {
-				-webkit-appearance: none;
-				margin: 0;
-			}
-		}
-		
-		&__cart-button {
-			@apply w-auto md:w-32 shrink-0;
-			
-			&_update {
-				@apply bg-yellow-400 hover:bg-yellow-500;
-			}
-			
-			&_exists {
-				@apply bg-red-400 hover:bg-red-500;
-			}
-		}
-		
-		&__button {
-			@apply bg-gray-100 text-gray-600
-			hover:text-gray-700 hover:bg-gray-200
-			h-full w-20 cursor-pointer outline-none flex items-center justify-center;
-			
-			&:disabled {
-				@apply cursor-not-allowed bg-gray-50 hover:bg-gray-50;
-			}
-		}
-		
-		&__wrapper {
-			@apply flex h-10 bg-gray-100 rounded overflow-hidden;
-		}
-	}
+.add-to-cart {
+  @apply flex gap-6 w-full;
+
+  &__input {
+    @apply outline-none text-center w-full bg-gray-100 font-semibold hover:text-black
+    focus:text-black text-gray-700 outline-none;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &__cart-button {
+    @apply w-full grow transition;
+
+    &_update {
+      @apply from-green-400/40 to-green-400;
+    }
+
+    &_exists {
+      @apply from-red-400 to-red-500;
+    }
+  }
+
+  &__button {
+    @apply bg-gray-100 text-gray-600
+    hover:text-gray-700 hover:bg-gray-200
+    h-full w-20 cursor-pointer outline-none flex items-center justify-center;
+
+    &:disabled {
+      @apply cursor-not-allowed bg-gray-50 hover:bg-gray-50;
+    }
+  }
+
+  &__wrapper {
+    @apply flex bg-gray-100 rounded-full overflow-hidden;
+  }
+}
 </style>

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import {Product} from "~/models/Product";
-import AddToCart from '~/components/AddToCart.vue';
-import {useCartStore} from "~/store/cart";
+import {Product} from "../models/Product";
+import AddToCart from '../components/AddToCart.vue';
+import {useCartStore} from "../store/cart";
 
 interface IProps {
-    product: Product
+  product: Product
 }
 
 const cartStore = useCartStore()
@@ -14,70 +14,50 @@ const quantity = computed(() => typeof existsItem.value !== 'undefined' ? exists
 </script>
 
 <template>
-    <div v-if="props.product"
-         class="product-booking">
-        <img :src="props.product.preview"
-             :alt="props.product.title"
-             height="300"
-             width="245"
-             class="product-booking__image"/>
-        <div class="product-booking__prices" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-            <div class="product-booking__price-wrapper">
-                <div class="product-booking__price product-booking__price_current">
-                    {{ props.product.currentPrice }}
-                </div>
-            </div>
-            <div class="product-booking__price-wrapper">
-                <div class="product-booking__price product-booking__price_old">
-                    {{ props.product.oldPrice }}
-                </div>
-                <div class="product-booking__discount">
-                    <LazyUiTag>{{ props.product.discountPercent }}</LazyUiTag>
-                </div>
-            </div>
-					<meta itemprop="price" :content="props.product.currentPriceNonFormatted.toString()">
-					<meta itemprop="priceCurrency" content="RUB">
-					<meta itemprop="availability" href="https://schema.org/InStock" v-if="props.product.isInStock"/>
-        </div>
-        <div class="product-booking__availability">
-            {{ props.product.isInStockWithCountHumanized }}
-        </div>
-        <AddToCart :max-count="props.product.availableCount"
-                   :product-id="props.product.id"
-                   :item-id="existsItem ? existsItem.id : undefined"
-                   :quantity="quantity"
-                   :key="quantity"/>
+  <div v-if="props.product"
+       class="product-booking">
+    <div class="product-booking__prices" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+      <div class="product-booking__price product-booking__price_old">
+        {{ props.product.oldPrice }}
+      </div>
+      <div class="product-booking__price product-booking__price_current">
+        {{ props.product.currentPrice }}
+      </div>
+      <LazyUiTag class="product-booking__discount">{{ props.product.humanizedDiscountPercent }}</LazyUiTag>
+      <meta :content="props.product.currentPriceNonFormatted.toString()" itemprop="price">
+      <meta content="RUB" itemprop="priceCurrency">
+      <meta v-if="props.product.isInStock" href="https://schema.org/InStock" itemprop="availability"/>
     </div>
+    <AddToCart :key="quantity"
+               :item-id="existsItem ? existsItem.id : undefined"
+               :max-count="props.product.availableCount"
+               :product-id="props.product.id"
+               :quantity="quantity"/>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .product-booking {
-  @apply max-w-full md:p-8 md:shadow md:rounded-md flex flex-col gap-6;
+  @apply w-full flex flex-col gap-6;
 
-  &__image {
-    @apply rounded border m-auto;
-  }
-
-  &__prices {
-    @apply grid grid-cols-2 divide-x;
-  }
-
-  &__availability {
-    text-align: center;
+  &__discount {
+    @apply -mt-[6px];
   }
 
   &__price {
-    &-wrapper {
-      @apply flex flex-col text-center items-center justify-center;
-    }
+    @apply text-2xl;
 
     &_old {
-      @apply line-through;
+      @apply line-through text-gray-500;
     }
 
     &_current {
-      @apply font-bold leading-tight text-3xl;
+      @apply font-bold text-sky-600 text-3xl;
     }
+  }
+
+  &__prices {
+    @apply flex flex-row gap-4 items-center;
   }
 }
 </style>

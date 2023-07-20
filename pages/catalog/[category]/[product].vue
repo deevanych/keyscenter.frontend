@@ -1,8 +1,9 @@
-<script lang="ts" setup async>
-import { Ref } from "vue";
-import { Product } from "~/models/Product";
-import { ProductsAPI } from "~/api/products";
-import ProductReviews from '~/components/ProductReviews.vue';
+<script async lang="ts" setup>
+import {Ref} from "vue";
+import {Product} from "../../../models/Product";
+import {ProductsAPI} from "../../../api/products";
+import Breadcrumbs from "../../../components/Breadcrumbs.vue";
+// import ProductInfo from "../../../components/ProductInfo.vue";
 
 const route = useRoute()
 
@@ -11,92 +12,119 @@ const {data} = await useAsyncData('product', async () => (await ProductsAPI.show
 const product: Ref<Product | undefined> = ref()
 
 if (data.value) {
-	product.value = new Product(data.value as ProductsAPI.IProductResponse)
-	useHead({
-		title: product.value?.title,
-		meta: [
-			{
-				name: "description",
-				content: product.value?.metaDescription
-			},
-			{
-				property: "og:title",
-				content: product.value?.title
-			},
-			{
-				property: "og:image",
-				content: product.value?.preview
-			},
-			{
-				property: "og:url",
-				content: product.value?.url
-			}
-		]
-	})
+  product.value = new Product(data.value as ProductsAPI.IProductResponse)
+  useHead({
+    title: product.value?.title,
+    meta: [
+      {
+        name: "description",
+        content: product.value?.metaDescription
+      },
+      {
+        property: "og:title",
+        content: product.value?.title
+      },
+      {
+        property: "og:image",
+        content: product.value?.preview
+      },
+      {
+        property: "og:url",
+        content: product.value?.url
+      }
+    ]
+  })
 } else {
-	throw createError({statusCode: 404, statusMessage: 'Page Not Found'})
+  throw createError({statusCode: 404, statusMessage: 'Page Not Found'})
 }
+
+const breadcrumbs = [
+  {
+    title: 'Каталог',
+    url: useRouter().resolve({name: 'catalog'}).href
+  },
+  {
+    title: product.value.categoryTitle,
+    url: useRouter().resolve({name: 'catalog-category', params: {category: product.value.categorySlug}}).href
+  },
+  {
+    title: product.value.title
+  }
+]
 </script>
 
 <template>
-	<div v-if="product" class="product-page" itemscope itemtype="https://schema.org/Product">
-		<meta itemprop="url" :content="product.url">
-		<meta itemprop="image" :content="product.preview">
-		<ProductBooking :product="product"/>
-		<div class="col-span-2">
-			<h1 class="product-page__title" itemprop="name">{{ product.title }}</h1>
-			<LazyRatingComponent v-if="product.reviewsCount" :product="product"/>
-			<LazyProductDetails :product="product"
-													class="product-page__details"/>
-			<div v-if="product.description"
-					 itemprop="description"
-					 class="product-page__description">
-				<h3 class="product-page__description-title">Описание</h3>
-				<div class="product-page__description-content"
-						 v-html="product.description"></div>
-			</div>
-			<div v-if="product.instruction"
-					 class="product-page__description">
-				<h3 class="product-page__description-title">Инструкция</h3>
-				<div class="product-page__description-content"
-						 v-html="product.instruction"></div>
-			</div>
-			<div v-if="false"
-					 class="product-page__description">
-				<h3 class="product-page__description-title">Отзывы ({{ product.reviewsHumanize }}<span
-						v-if="product.reviewsCount">, {{ product.positiveReviewsPercent }}% положительных</span>)
-				</h3>
-				<div class="product-page__description-content product-page__reviews">
-					<ProductReviews :reviews="product.reviews"
-													:product-id="product.id"/>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div v-if="product" class="product-page" itemscope itemtype="https://schema.org/Product">
+    <meta :content="product.url" itemprop="url">
+    <meta :content="product.preview" itemprop="image">
+    <div class="col-span-2">
+      <img :src="product.preview"/>
+    </div>
+    <div class="product-page__content">
+      <Breadcrumbs :breadcrumbs="breadcrumbs" class="product-page__breadcrumbs"/>
+      <h1 class="product-page__title" itemprop="name">{{ product.title }}</h1>
+      <LazyRatingComponent v-if="product.reviewsCount" :product="product"/>
+      <div class="product-page__description" v-html="product.description"></div>
+      <!--      <ProductInfo/>-->
+      <div class="product-page__add-to-cart">
+        <ProductBooking :product="product"/>
+      </div>
+      <div class="product-page__payment-methods">
+        <div class="product-page__payment-methods__header">
+          <span class="product-page__payment-methods__header-text">оплата через</span>
+        </div>
+        <img alt="Платежные методы" class="product-page__payment-methods__image"
+             src="@/assets/images/ui/payment_methods-min.png"/>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .product-page {
-	@apply flex flex-col md:grid grid-cols-3 gap-12 items-start;
-	
-	&__reviews {
-		@apply flex gap-5 flex-col divide-y;
-	}
-	
-	&__description {
-		@apply mt-6 border p-8 pt-6 rounded;
-		
-		&-title {
-			@apply font-bold leading-tight text-xl mt-0 mb-4;
-		}
-	}
-	
-	&__title {
-		@apply font-bold leading-tight text-3xl mt-0 mb-2;
-	}
-	
-	&__details {
-		@apply mt-8;
-	}
+  @apply flex flex-col md:grid grid-cols-5 gap-12 items-start;
+
+  &__content {
+    @apply col-span-3 flex flex-col gap-4;
+  }
+
+  &__add-to-cart {
+    @apply mt-8;
+  }
+
+  &__payment-methods {
+    @apply flex flex-col items-center gap-4;
+
+    &__header {
+      @apply w-full flex flex-row items-center gap-5 text-sm text-gray-400;
+
+      &-text {
+        @apply flex-shrink-0;
+      }
+
+      &::after,
+      &::before {
+        @apply content-[''] w-full h-full border-b block;
+      }
+    }
+
+    &__image {
+      @apply max-w-sm m-auto;
+    }
+  }
+
+  &__reviews {
+    @apply flex gap-5 flex-col divide-y;
+  }
+
+  &__description {
+    &-title {
+      @apply font-bold leading-tight text-xl mt-0 mb-4;
+    }
+  }
+
+  &__title {
+    @apply font-bold leading-tight text-3xl mt-0;
+  }
 }
 </style>

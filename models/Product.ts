@@ -37,6 +37,8 @@ interface IShortProduct {
     get positiveReviewsPercent(): number;
 
     get reviewsHumanize(): string;
+
+    get humanizedDiscountPercent(): string;
 }
 
 interface IProduct extends IShortProduct {
@@ -132,6 +134,10 @@ export class ShortProduct extends Model implements IShortProduct {
 
     get discountPercent(): string {
         return ((this.salePrice - this.price) / (this.price / 100)).toFixed(0) + '%'
+    }
+
+    get humanizedDiscountPercent(): string {
+        return `Скидка: ${this.discountPercent}`
     }
 
     get oldPrice(): string | undefined {

@@ -5,6 +5,9 @@
 import {faviconLinks} from './helpers/favicon';
 
 export default defineNuxtConfig({
+    router: {
+        trailingSlash: true
+    },
     app: {
         head: {
             charset: 'utf-8',

@@ -11,7 +11,7 @@ const ratingValue = (props.product.positiveReviewsPercent / 20).toFixed(2)
 </script>
 
 <template>
-	<span class="text-xs flex items-center" itemprop="aggregateRating"
+	<span class="flex items-center" itemprop="aggregateRating"
         itemscope itemtype="https://schema.org/AggregateRating">
     <svg class="text-yellow-400" fill="none" height="16" viewBox="0 0 16 16" width="16"
          xmlns="http://www.w3.org/2000/svg">

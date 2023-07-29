@@ -64,8 +64,20 @@ const breadcrumbs = [
       <Breadcrumbs :breadcrumbs="breadcrumbs" class="product-page__breadcrumbs"/>
       <h1 class="product-page__title" itemprop="name">{{ product.title }}</h1>
       <LazyRatingComponent v-if="product.reviewsCount" :product="product"/>
+      <div class="product-page__badges">
+        <RouterLink :to="{ name: 'page', params: { page: 'instrukcziya-po-aktivaczii-microsoft-office' } }"
+                    class="product-page__badge">
+          <img alt="Иконка скачивания" class="product-page__badge-icon" src="@/assets/images/ui/download.svg"/>
+          <span>Скачать</span>
+        </RouterLink>
+        <RouterLink :to="{ name: 'page', params: { page: 'instrukcziya-po-aktivaczii-microsoft-office' } }"
+                    class="product-page__badge" target="_blank">
+          <img alt="Иконка звонка" class="product-page__badge-icon" src="@/assets/images/ui/call.svg"/>
+          <span>Активация по телефону</span>
+        </RouterLink>
+      </div>
       <div class="product-page__description" v-html="product.description"></div>
-      <!--      <ProductInfo/>-->
+      <ProductInfo/>
       <div class="product-page__add-to-cart">
         <ProductBooking :product="product"/>
       </div>
@@ -76,6 +88,9 @@ const breadcrumbs = [
         <img alt="Платежные методы" class="product-page__payment-methods__image"
              src="@/assets/images/ui/payment_methods-min.png"/>
       </div>
+      <div class="product-page__reviews">
+        <ProductReviews :product="product"/>
+      </div>
     </div>
   </div>
 </template>
@@ -83,6 +98,27 @@ const breadcrumbs = [
 <style lang="scss" scoped>
 .product-page {
   @apply flex flex-col md:grid grid-cols-5 gap-12 items-start;
+
+  &__badges {
+    @apply flex flex-row gap-4;
+  }
+
+  &__badge {
+    @apply p-3 px-4 rounded-lg border self-start flex flex-row gap-4 items-center
+    no-underline font-bold transition hover:shadow-xl;
+
+    &-icon {
+      @apply w-5;
+    }
+
+    &:first-of-type {
+      @apply border-emerald-100 bg-green-50 hover:bg-green-200
+    }
+
+    &:nth-of-type(2) {
+      @apply border-amber-100 bg-yellow-50 hover:bg-yellow-200
+    }
+  }
 
   &__content {
     @apply col-span-3 flex flex-col gap-4;
@@ -114,7 +150,7 @@ const breadcrumbs = [
   }
 
   &__reviews {
-    @apply flex gap-5 flex-col divide-y;
+    @apply mt-9;
   }
 
   &__description {

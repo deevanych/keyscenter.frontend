@@ -3,7 +3,7 @@ import {Ref} from "vue";
 import {Product} from "../../../models/Product";
 import {ProductsAPI} from "../../../api/products";
 import Breadcrumbs from "../../../components/Breadcrumbs.vue";
-// import ProductInfo from "../../../components/ProductInfo.vue";
+import ProductInfo from "../../../components/ProductInfo.vue";
 
 const route = useRoute()
 
@@ -65,19 +65,24 @@ const breadcrumbs = [
       <h1 class="product-page__title" itemprop="name">{{ product.title }}</h1>
       <LazyRatingComponent v-if="product.reviewsCount" :product="product"/>
       <div class="product-page__badges">
-        <RouterLink :to="{ name: 'page', params: { page: 'instrukcziya-po-aktivaczii-microsoft-office' } }"
-                    class="product-page__badge">
+        <a v-if="product.downloadLink" :href="product.downloadLink"
+           class="product-page__badge">
           <img alt="Иконка скачивания" class="product-page__badge-icon" src="@/assets/images/ui/download.svg"/>
           <span>Скачать</span>
-        </RouterLink>
-        <RouterLink :to="{ name: 'page', params: { page: 'instrukcziya-po-aktivaczii-microsoft-office' } }"
+        </a>
+        <RouterLink v-if="product.instructionLink && product.isActivationByPhone"
+                    :to="{ name: 'page', params: { page: product.instructionLink } }"
                     class="product-page__badge" target="_blank">
           <img alt="Иконка звонка" class="product-page__badge-icon" src="@/assets/images/ui/call.svg"/>
           <span>Активация по телефону</span>
         </RouterLink>
+        <div class="product-page__badge">
+          <img alt="Иконка звонка" class="product-page__badge-icon" src="@/assets/images/ui/fast.svg"/>
+          <span>Моментальная доставка</span>
+        </div>
       </div>
       <div class="product-page__description" v-html="product.description"></div>
-      <ProductInfo/>
+      <ProductInfo :product="product"/>
       <div class="product-page__add-to-cart">
         <ProductBooking :product="product"/>
       </div>
@@ -88,35 +93,39 @@ const breadcrumbs = [
         <img alt="Платежные методы" class="product-page__payment-methods__image"
              src="@/assets/images/ui/payment_methods-min.png"/>
       </div>
-      <div class="product-page__reviews">
-        <ProductReviews :product="product"/>
-      </div>
     </div>
+  </div>
+  <div v-if="product" class="product-page__reviews">
+    <ProductReviews :product="product"/>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .product-page {
-  @apply flex flex-col md:grid grid-cols-5 gap-12 items-start;
+  @apply flex flex-col md:grid grid-cols-5 gap-12 items-start border-b pb-20;
 
   &__badges {
-    @apply flex flex-row gap-4;
+    @apply grid grid-cols-2 gap-4;
   }
 
   &__badge {
     @apply p-3 px-4 rounded-lg border self-start flex flex-row gap-4 items-center
-    no-underline font-bold transition hover:shadow-xl;
+    no-underline font-bold transition hover:shadow-xl w-full;
 
     &-icon {
       @apply w-5;
     }
 
-    &:first-of-type {
+    &:first-child {
       @apply border-emerald-100 bg-green-50 hover:bg-green-200
     }
 
-    &:nth-of-type(2) {
+    &:nth-child(2) {
       @apply border-amber-100 bg-yellow-50 hover:bg-yellow-200
+    }
+
+    &:nth-child(3) {
+      @apply border-red-100 bg-red-50 hover:bg-red-200 col-span-2
     }
   }
 
@@ -150,7 +159,7 @@ const breadcrumbs = [
   }
 
   &__reviews {
-    @apply mt-9;
+    @apply mt-10;
   }
 
   &__description {

@@ -1,6 +1,13 @@
 <script lang="ts" setup>
+import type {Product} from "../models/Product";
+
+interface IProps {
+  product: Product
+}
+
 // @ts-ignore
 const chatClick = () => window.jivo_api.open()
+const props = defineProps<IProps>()
 </script>
 
 <template>
@@ -9,7 +16,8 @@ const chatClick = () => window.jivo_api.open()
       <img alt="Иконка звонка" class="product-info__item-icon" src="@/assets/images/ui/time.svg"/>
       Покупайте непосредственно перед активацией
     </div>
-    <RouterLink :to="{ name: 'page', params: { page: 'instrukcziya-po-aktivaczii-microsoft-office' } }"
+    <RouterLink v-if="props.product.instructionLink"
+                :to="{ name: 'page', params: { page: props.product.instructionLink } }"
                 class="product-info__item">
       <img alt="Иконка звонка" class="product-info__item-icon" src="@/assets/images/ui/guide.svg"/>
       Инструкция по активации
@@ -23,7 +31,7 @@ const chatClick = () => window.jivo_api.open()
 
 <style lang="scss" scoped>
 .product-info {
-  @apply grid grid-cols-2 gap-4 border-t py-6 border-b;
+  @apply grid grid-cols-2 gap-4 border-t py-6;
 
   &__item {
     @apply p-3 px-4 rounded-lg border border-blue-100 self-start flex flex-row gap-4 items-center

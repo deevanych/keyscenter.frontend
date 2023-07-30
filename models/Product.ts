@@ -42,12 +42,11 @@ interface IShortProduct {
 }
 
 interface IProduct extends IShortProduct {
-    platforms: string[];
-    views: number;
     productType: string;
-    productDelivery: string;
     description: string;
-    instruction: string;
+    isActivationByPhone: boolean;
+    downloadLink: string;
+    instructionLink: string;
 }
 
 export class ShortProduct extends Model implements IShortProduct {
@@ -171,18 +170,16 @@ export class ShortProduct extends Model implements IShortProduct {
 }
 
 export class Product extends ShortProduct implements IProduct {
-    public readonly platforms: string[];
-    public readonly views: number;
     public readonly productType: string;
-    public readonly productDelivery: string;
-    public readonly instruction: string;
+    public readonly downloadLink: string;
+    public readonly isActivationByPhone: boolean;
+    public readonly instructionLink: string;
 
     constructor(data: ProductsAPI.IProductResponse) {
         super(data);
-        this.platforms = data.attributes.platforms.data.map(platform => platform.attributes.title)
-        this.views = data.attributes.views
         this.productType = data.attributes.product_type.data.attributes.title
-        this.productDelivery = data.attributes.delivery_method.data.attributes.title
-        this.instruction = data.attributes.instruction
+        this.downloadLink = data.attributes.download_link
+        this.isActivationByPhone = data.attributes.activation_by_phone
+        this.instructionLink = data.attributes.instruction_page.data ? data.attributes.instruction_page.data.attributes.slug : ''
     }
 }

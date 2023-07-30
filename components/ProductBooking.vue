@@ -17,13 +17,13 @@ const quantity = computed(() => typeof existsItem.value !== 'undefined' ? exists
   <div v-if="props.product"
        class="product-booking">
     <div class="product-booking__prices" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-      <div class="product-booking__price product-booking__price_old">
-        {{ props.product.oldPrice }}
-      </div>
       <div class="product-booking__price product-booking__price_current">
         {{ props.product.currentPrice }}
       </div>
-      <LazyUiTag class="product-booking__discount">{{ props.product.humanizedDiscountPercent }}</LazyUiTag>
+      <div class="product-booking__price product-booking__price_old">
+        {{ props.product.oldPrice }}
+      </div>
+      <UiTag class="product-booking__discount">{{ props.product.humanizedDiscountPercent }}</UiTag>
       <meta :content="props.product.currentPriceNonFormatted.toString()" itemprop="price">
       <meta content="RUB" itemprop="priceCurrency">
       <meta v-if="props.product.isInStock" href="https://schema.org/InStock" itemprop="availability"/>
@@ -52,7 +52,7 @@ const quantity = computed(() => typeof existsItem.value !== 'undefined' ? exists
     }
 
     &_current {
-      @apply font-bold text-sky-600 text-3xl;
+      @apply font-bold text-4xl;
     }
   }
 

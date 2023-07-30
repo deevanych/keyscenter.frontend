@@ -1,7 +1,7 @@
 import {$API} from "./instance";
 
 export namespace ProductsAPI {
-   export interface IImage {
+    export interface IImage {
         ext: '.webp',
         url: string,
         hash: string,
@@ -12,12 +12,14 @@ export namespace ProductsAPI {
         width: number,
         height: number
     }
+
     export interface IImageFormats {
         large: IImage,
         small: IImage,
         medium: IImage,
         thumbnail: IImage
     }
+
     export interface IReview {
         attributes: {
             text: string,
@@ -25,6 +27,7 @@ export namespace ProductsAPI {
             createdAt: string
         }
     }
+
     export interface IShortProductResponse {
         id: number,
         attributes: {
@@ -70,7 +73,8 @@ export namespace ProductsAPI {
             price: number,
             salePrice: number,
             slug: string,
-            views: number,
+            download_link: string,
+            activation_by_phone: boolean,
             product_type: {
                 data: {
                     attributes: {
@@ -90,28 +94,18 @@ export namespace ProductsAPI {
                     id: number
                 }
             },
-            delivery_method: {
+            description: string,
+            instruction_page: {
                 data: {
                     attributes: {
-                        title: string
+                        slug: string
                     }
                 }
             },
-            description: string,
-            instruction: string,
             product_keys: {
                 data: [
                     {
                         id: number
-                    }
-                ]
-            },
-            platforms: {
-                data: [
-                    {
-                        attributes: {
-                            title: string
-                        }
                     }
                 ]
             },

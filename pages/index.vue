@@ -1,10 +1,11 @@
 <script async lang="ts" setup>
 import {Ref} from 'vue';
-import {ShortProduct} from '~/models/Product';
-import {ProductsAPI} from "~/api/products";
-import Carousel from "../components/Carousel.vue";
+import {ShortProduct} from '../models/Product';
+import {ProductsAPI} from "../api/products";
 import {CarouselAPI} from "../api/carousel";
 import {CtaAPI} from "../api/cta";
+import Carousel from "../components/Carousel.vue";
+import Cta from "../components/Cta.vue";
 
 useHead({
   title: 'Главная',
@@ -26,15 +27,15 @@ try {
     await useAsyncData('CTA', async () => await CtaAPI.get('chat'))
   ])
 
-  if (productsResult.status === 'fulfilled') {
+  if (productsResult.status === 'fulfilled' && typeof productsResult.value.data.value?.data !== 'undefined') {
     products.value = productsResult.value.data.value.data.map((product: ProductsAPI.IShortProductResponse) => new ShortProduct(product))
   }
 
-  if (carouselResult.status === 'fulfilled') {
+  if (carouselResult.status === 'fulfilled' && typeof carouselResult.value.data.value?.error === 'undefined') {
     carousel.value = carouselResult.value.data.value
   }
 
-  if (CTAResult.status === 'fulfilled') {
+  if (CTAResult.status === 'fulfilled' && typeof CTAResult.value.data.value?.error === 'undefined') {
     CTA.value = CTAResult.value.data.value
   }
 } catch (e) {
@@ -44,9 +45,9 @@ try {
 
 <template>
   <section class="page">
-    <section v-if="carousel" class="page-section">
+    <section class="page-section">
       <h1 class="page-section__title">Главная</h1>
-      <div class="page-section__content">
+      <div v-if="carousel" class="page-section__content">
         <Carousel :carousel="carousel"/>
       </div>
     </section>
@@ -58,7 +59,7 @@ try {
         </div>
       </div>
     </section>
-    <section class="page-section">
+    <section v-if="CTA" class="page-section">
       <div class="page-section__content">
         <div class="page-section__content">
           <Cta :cta="CTA"/>

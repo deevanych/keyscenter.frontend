@@ -10,7 +10,8 @@ export namespace CarouselAPI {
     export interface ICarousel {
         id: number,
         handler: TCarouselHandler,
-        carousel_items: ICarouselItem[]
+        carousel_items: ICarouselItem[],
+        error: {}
     }
 
     export const list = async (): Promise<ICarousel[]> => {

@@ -25,7 +25,8 @@ export namespace CtaAPI {
         page: {
             slug: string
         } | null,
-        action: string | null
+        action: string | null,
+        error: {}
     }
 
     export const get = async (slug: string): Promise<ICTA> => {

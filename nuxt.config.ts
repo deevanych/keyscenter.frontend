@@ -118,5 +118,10 @@ export default defineNuxtConfig({
     sitemap: {
         inferStaticPagesAsRoutes: false,
         siteUrl: process.env.BASE_URL,
+    },
+    vue: {
+        compilerOptions: {
+            isCustomElement: (tag) => ['lottie-player'].includes(tag),
+        },
     }
 })

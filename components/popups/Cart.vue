@@ -140,7 +140,7 @@ const applyCoupon = async (): Promise<void> => {
 
 <style lang="scss" scoped>
 .cart-popup {
-  @apply fixed flex w-full h-full top-0 left-0 z-10;
+  @apply fixed flex w-full h-full top-0 left-0 z-20;
 
   &__payment {
     @apply flex gap-4 flex-col;

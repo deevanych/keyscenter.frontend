@@ -110,7 +110,7 @@ const breadcrumbs = [
 
   &__badge {
     @apply p-3 px-4 rounded-lg border self-start flex flex-row gap-4 items-center
-    no-underline font-bold transition hover:shadow-xl w-full;
+    no-underline font-bold transition hover:shadow-xl w-full max-sm:col-span-full;
 
     &-icon {
       @apply w-5;
@@ -130,7 +130,7 @@ const breadcrumbs = [
   }
 
   &__content {
-    @apply col-span-3 flex flex-col gap-4;
+    @apply col-span-3 flex flex-col gap-4 w-full;
   }
 
   &__add-to-cart {
@@ -154,7 +154,7 @@ const breadcrumbs = [
     }
 
     &__image {
-      @apply max-w-sm m-auto;
+      @apply max-w-full md:max-w-sm m-auto;
     }
   }
 

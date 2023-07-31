@@ -28,7 +28,7 @@ onBeforeUnmount(() => {
       <NuxtLink :to="{ name: 'index' }" title="Главная">
         <img alt="Keyscenter" class="header__logo" src="/logo.svg"/>
       </NuxtLink>
-      <UiSearch/>
+      <UiSearch class="header__search"/>
       <nav class="header__links">
         <NuxtLink :to="{ name: 'catalog' }">Каталог</NuxtLink>
         <NuxtLink :to="{ name: 'page', params: { page: 'kontakty' } }">Контакты</NuxtLink>
@@ -46,6 +46,10 @@ onBeforeUnmount(() => {
     @apply shadow-sm;
   }
 
+  &__search {
+    @apply hidden md:flex;
+  }
+
   &__wrapper {
     @apply flex justify-between container mx-auto h-full items-center;
   }
@@ -55,7 +59,7 @@ onBeforeUnmount(() => {
   }
 
   &__links {
-    @apply flex gap-11 px-1;
+    @apply hidden md:flex gap-11 px-1;
   }
 }
 </style>

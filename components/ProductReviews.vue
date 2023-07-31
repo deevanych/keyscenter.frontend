@@ -86,7 +86,7 @@ const submitForm = async () => {
   @apply flex gap-5 flex-col;
 
   &__footer {
-    @apply flex gap-5 items-stretch;
+    @apply flex gap-5 items-stretch flex-col md:flex-row;
   }
 
   &__input {

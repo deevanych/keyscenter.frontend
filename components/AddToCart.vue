@@ -130,7 +130,7 @@ const addToCartButtonClass = computed((): string | void => {
 
   &__input {
     @apply outline-none text-center w-full bg-gray-100 font-semibold hover:text-black
-    focus:text-black text-gray-700 outline-none;
+    focus:text-black text-gray-700;
 
     &::-webkit-inner-spin-button,
     &::-webkit-outer-spin-button {
@@ -154,7 +154,7 @@ const addToCartButtonClass = computed((): string | void => {
   &__button {
     @apply bg-gray-100 text-gray-600
     hover:text-gray-700 hover:bg-gray-200
-    h-full w-20 cursor-pointer outline-none flex items-center justify-center;
+    h-full px-3 cursor-pointer outline-none flex items-center justify-center;
 
     &:disabled {
       @apply cursor-not-allowed bg-gray-50 hover:bg-gray-50;

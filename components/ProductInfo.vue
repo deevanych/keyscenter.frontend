@@ -35,7 +35,7 @@ const props = defineProps<IProps>()
 
   &__item {
     @apply p-3 px-4 rounded-lg border border-blue-100 self-start flex flex-row gap-4 items-center
-    no-underline bg-sky-50 hover:bg-sky-200 font-bold transition hover:shadow-xl;
+    no-underline bg-sky-50 hover:bg-sky-200 font-bold transition hover:shadow-xl max-sm:col-span-full;
 
     &:first-child {
       @apply col-span-2 cursor-help;

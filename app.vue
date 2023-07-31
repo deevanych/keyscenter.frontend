@@ -2,5 +2,5 @@
 </script>
 
 <template>
-  <nuxt-layout />
+  <NuxtLayout/>
 </template>

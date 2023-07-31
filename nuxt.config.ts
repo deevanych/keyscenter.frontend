@@ -20,6 +20,10 @@ export default defineNuxtConfig({
                     href: 'https://fonts.googleapis.com'
                 },
                 {
+                    rel: 'manifest',
+                    href: '/site.webmanifest'
+                },
+                {
                     rel: 'preconnect',
                     href: 'https://fonts.gstatic.com',
                     crossorigin: true
@@ -40,7 +44,7 @@ export default defineNuxtConfig({
                 },
                 {
                     name: 'msapplication-TileImage',
-                    content: '/ms-icon-144x144.png'
+                    content: '/mstile-150x150.png'
                 },
                 {
                     name: 'theme-color',

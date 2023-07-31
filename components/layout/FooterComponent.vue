@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import {PageAPI} from "~/api/page";
-import {URLHelpers} from '~/helpers/URL';
+import {PageAPI} from "../../api/page";
+import {URLHelpers} from '../../helpers/URL';
 
-const pages = ref([])
-const {data} = await useAsyncData('pages', async () => await PageAPI.list())
+interface IProps {
+  pages: PageAPI.IPage[]
+}
+
+const props = defineProps<IProps>()
+
 const {getBackendURLHref} = URLHelpers
-
-pages.value = data.value.data
 </script>
 
 <template>

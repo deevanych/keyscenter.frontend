@@ -36,7 +36,7 @@ const actions = () => {
 
   if (props.cta.action) {
     actions += `document.querySelector('.cta__link[data-id="${props.cta.id}"]').addEventListener('click',
-    () => { ${props.cta.action}; });`
+    () => { ${props.cta.action}; }, { passive: true });`
   }
 
   return actions
@@ -45,7 +45,7 @@ const actions = () => {
 useHead({
   script: [
     {
-      innerHTML: actions() ? `window.addEventListener('load', () => {${actions()}})` : null
+      innerHTML: actions() ? `window.addEventListener('load', () => {${actions()}}, { passive: true })` : null
     }
   ]
 })

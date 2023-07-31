@@ -104,8 +104,12 @@ export default defineNuxtConfig({
         '@pinia/nuxt',
         '@pinia-plugin-persistedstate/nuxt',
         'nuxt-simple-sitemap',
+        '@nuxtjs/device',
         '@nuxtjs/robots'
     ],
+    device: {
+        refreshOnResize: true
+    },
     robots: {
         rules: {
             UserAgent: '*',

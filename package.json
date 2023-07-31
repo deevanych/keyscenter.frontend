@@ -31,5 +31,8 @@
   },
   "overrides": {
     "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@nuxtjs/device": "^3.1.0"
   }
 }

@@ -62,7 +62,7 @@ const actions = () => {
   props.carousel.carousel_items.forEach((carouselItem) => {
     if (carouselItem.action) {
       actions += `document.querySelector('.splide-slide__content[data-id="${carouselItem.id}"]').addEventListener('click',
-      () => { ${carouselItem.action}; });`
+      () => { ${carouselItem.action}; }, { passive: true });`
     }
   })
 
@@ -72,7 +72,7 @@ const actions = () => {
 useHead({
   script: [
     {
-      innerHTML: actions() ? `window.addEventListener('load', () => {${actions()}})` : null
+      innerHTML: actions() ? `window.addEventListener('load', () => {${actions()}}, { passive: true })` : null
     }
   ]
 })

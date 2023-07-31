@@ -19,14 +19,14 @@ const props = withDefaults(defineProps<IProps>(), {
 
 <style lang="scss" scoped>
 .search {
-  @apply h-12 px-11 rounded bg-gray-100 rounded-full;
+  @apply h-12 px-4 pl-10 md:px-11 bg-gray-100 rounded-full w-full;
 
   &__wrapper {
     @apply relative flex items-center;
   }
 
   &__icon {
-    @apply absolute ml-4;
+    @apply absolute ml-4 w-3 md:w-4;
   }
 }
 </style>

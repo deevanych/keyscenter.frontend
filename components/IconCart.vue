@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import {useCartStore} from "~/store/cart";
-import {usePopupsStore} from "~/store/popups";
+import {useCartStore} from "../store/cart";
+import {usePopupsStore} from "../store/popups";
 import {storeToRefs} from "pinia";
 
 const {getItemsCount, getHumanizedItemsCount} = storeToRefs(useCartStore())
+const {isMobile} = toRefs(useDevice())
 
 const showCartPopup = () => {
   usePopupsStore().toggleCartPopup()
@@ -14,7 +15,7 @@ const showCartPopup = () => {
   <Transition>
     <div class="cart-icon__wrapper"
          @click="showCartPopup">
-      Корзина
+      <span v-if="!isMobile">Корзина</span>
       <img alt="Корзина"
            class="cart-icon__wrapper"
            src="@/assets/images/ui/shopping-bag.svg"/>
@@ -32,7 +33,7 @@ const showCartPopup = () => {
   @apply h-6 w-6;
 
   &__wrapper {
-    @apply relative cursor-pointer hover:text-purple-500 transition flex gap-4 items-center;
+    @apply relative cursor-pointer hover:text-purple-500 transition flex gap-4 items-center shrink-0;
   }
 
   &__counter {

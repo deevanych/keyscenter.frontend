@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     app: {
         head: {
             charset: 'utf-8',
-            viewport: 'width=device-width, initial-scale=1',
+            viewport: 'width=device-width, initial-scale=1.0',
             titleTemplate: '%s - Магазин цифровых ключей',
             link: [
                 ...faviconLinks(),
@@ -52,11 +52,11 @@ export default defineNuxtConfig({
                 }
             ],
             script: [
-                {
-                    src: 'https://code.jivo.ru/widget/8zZVWp2rVE',
-                    async: true,
-                    tagPosition: 'head',
-                },
+                // {
+                //     src: 'https://code.jivo.ru/widget/8zZVWp2rVE',
+                //     async: true,
+                //     tagPosition: 'head',
+                // },
                 {
                     innerHTML: '   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};\n' +
                         '   m[i].l=1*new Date();\n' +

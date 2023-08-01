@@ -94,7 +94,7 @@ useHead({
   }
 
   &__lottie {
-    @apply h-[300px] w-[400px];
+    @apply md:h-[300px] w-full md:w-[400px];
   }
 }
 </style>

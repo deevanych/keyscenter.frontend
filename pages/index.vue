@@ -22,9 +22,9 @@ const CTA: Ref<CtaAPI.ICTA | null> = ref(null)
 
 try {
   const [productsResult, carouselResult, CTAResult] = await Promise.allSettled([
-    await useAsyncData('products', async () => await ProductsAPI.list()),
-    await useAsyncData('carousel', async () => await CarouselAPI.get('homepage')),
-    await useAsyncData('CTA', async () => await CtaAPI.get('chat'))
+    useAsyncData('products', async () => await ProductsAPI.list()),
+    useAsyncData('carousel', async () => await CarouselAPI.get('homepage')),
+    useAsyncData('CTA', async () => await CtaAPI.get('chat'))
   ])
 
   if (productsResult.status === 'fulfilled' && typeof productsResult.value.data.value?.data !== 'undefined') {

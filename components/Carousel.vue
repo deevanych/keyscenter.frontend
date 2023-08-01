@@ -46,13 +46,13 @@ const carouselItemLink = (carouselItem: ICarouselItem) => {
 const getters = (carouselItem: ICarouselItem) => {
   return {
     ...carouselItem.product,
-    price: price(carouselItem.product?.price)
+    price: price(carouselItem.product?.salePrice || carouselItem.product?.price)
   }
 }
 
 const templateParser = (text: string, carouselItem: ICarouselItem): string => {
   return text.replaceAll(/%(.*)%/gi, (match: string, matchValue: string) => {
-    return getters(carouselItem)[matchValue]
+    return getters(carouselItem)[matchValue] as string
   })
 }
 

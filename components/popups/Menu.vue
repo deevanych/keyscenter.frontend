@@ -49,14 +49,14 @@ watch(isShow, (val) => {
 
 <style lang="scss" scoped>
 .menu-modal {
-  @apply w-8 z-50 relative;
+  @apply w-8 z-50 relative flex-shrink-0;
 
   &__body {
     @apply py-6 px-10;
   }
 
   &__links {
-    @apply flex flex-col m-auto items-center gap-4;
+    @apply flex flex-col m-auto items-center gap-4 text-center;
   }
 
   &__wrapper {

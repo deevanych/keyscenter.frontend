@@ -128,7 +128,13 @@ export class ShortProduct extends Model implements IShortProduct {
     }
 
     get preview(): string {
-        return URLHelpers.getBackendURLHref(this.imagesByFormat('small')[0].url)
+        try {
+            return URLHelpers.getBackendURLHref(this.imagesByFormat('small')[0].url)
+        } catch (_) {
+
+        }
+
+        return ''
     }
 
     get discountPercent(): string {

@@ -6,14 +6,14 @@ interface IProps {
 }
 
 const props: IProps = defineProps<IProps>()
-const products = ref({})
+const products = ref<{ [K: string]: ShortProduct[] }>({})
 
 props.products.forEach(product => {
-  if (typeof products.value[product.categorySlug] === 'undefined') {
-    products.value[product.categorySlug] = []
+  if (typeof products.value[product.categoryTitle] === 'undefined') {
+    products.value[product.categoryTitle] = []
   }
 
-  products.value[product.categorySlug].push(product)
+  products.value[product.categoryTitle].push(product)
 })
 </script>
 

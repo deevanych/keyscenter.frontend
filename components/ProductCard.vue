@@ -34,7 +34,7 @@ const addToCart = async () => {
     <span class="product-card__preview-wrapper">
         <span class="product-card__preview-bg"></span>
         <span
-            class="product-card__preview"></span>
+            class="product-card__preview-blur"></span>
         <img :src="product.preview"
              alt=""
              class="product-card__preview"
@@ -91,7 +91,11 @@ const addToCart = async () => {
 
   &__preview {
     @apply aspect-square object-center object-scale-down m-auto drop-shadow-xl z-10
-    will-change-transform relative transition backdrop-blur-md;
+    will-change-transform relative transition;
+
+    &-blur {
+      @apply backdrop-blur-md absolute w-full h-full;
+    }
 
     &-wrapper {
       @apply relative m-auto flex items-center justify-center;

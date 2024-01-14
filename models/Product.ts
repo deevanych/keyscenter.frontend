@@ -1,7 +1,7 @@
-import {price} from '~/helpers/price';
-import {Model} from '~/models/Model';
-import {URLHelpers} from '~/helpers/URL';
-import {ProductsAPI} from "~/api/products";
+import {price} from '../helpers/price';
+import {Model} from '../models/Model';
+import {URLHelpers} from '../helpers/URL';
+import {ProductsAPI} from "../api/products";
 import {useRouter} from 'vue-router'
 import IImage = ProductsAPI.IImage;
 import IImageFormats = ProductsAPI.IImageFormats;
@@ -97,6 +97,10 @@ export class ShortProduct extends Model implements IShortProduct {
     }
 
     get metaDescription(): string {
+        if (!this.description) {
+            return ''
+        }
+
         return (this.description.replace(/<[^>]*>/g, '') as string)
     }
 

@@ -62,7 +62,7 @@ useHead({
         <GlassButton>{{ props.cta.button_text }}</GlassButton>
       </NuxtLink>
     </div>
-    <template v-if="props.cta.lottie.length">
+    <template v-if="props.cta.lottie && props.cta.lottie.length">
       <client-only>
         <lottie-player
             :src="URLHelpers.getBackendURLHref(props.cta.lottie[0].url)"

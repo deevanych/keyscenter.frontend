@@ -13,7 +13,7 @@ export namespace CtaAPI {
         },
         lottie: {
             url: string
-        },
+        }[],
         product: {
             slug: string,
             price: number,
